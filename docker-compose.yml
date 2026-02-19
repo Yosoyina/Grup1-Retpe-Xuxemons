@@ -38,6 +38,13 @@ services:
     depends_on:
       basedatos:
         condition: service_healthy
+    command: >
+      sh -c "
+        composer install --no-interaction --prefer-dist &&
+        php artisan key:generate --force &&
+        php artisan migrate --force &&
+        apache2-foreground
+      "
 
   # Base de Datos (MySQL)
   basedatos:
