@@ -11,8 +11,8 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'nombre'    => 'required|string|max:255',
-            'apellidos' => 'required|string|max:255',
+            'nombre'    => 'required|string|max:25',
+            'apellidos' => 'required|string|max:25',
             'email'     => 'required|email|unique:users,email',
             'password'  => 'required|string|min:6|confirmed',
         ]);
@@ -49,7 +49,28 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
+        $request->validate([
+            'id_jugador' => 'required|string',
+            'password'   => 'required|string',
+        ]);
 
+        // Buscar usuari pel id_jugador
+        $user = User::where('id_jugador', $request->id_jugador)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Credencials incorrectes',
+            ], 401);
+        }
+
+        $token = Auth::guard('api')->login($user);
+
+        return response()->json([
+            'message'    => 'Login correcte',
+            'user'       => $user,
+            'token'      => $token,
+            'token_type' => 'bearer',
+        ]);
     }
 
     // ── HOME ──────────────────────────────────────────────
