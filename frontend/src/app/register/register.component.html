@@ -1,1 +1,96 @@
-<p>register works!</p>
+<h1>Registre</h1>
+
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+    <!-- nom del jugador -->
+    <div>
+        <label for="nombre">Nom:</label>
+        <input id="nombre" type="text" formControlName="nombre" placeholder="El teu nom">
+
+        @if (isFieldInvalid('nombre')) {
+        <span style="color: red;">
+            {{ getErrorMessage('nombre') }}
+        </span>
+        }
+    </div>
+
+    <!-- cognoms del jugador -->
+    <div>
+        <label for="apellidos">Cognoms:</label>
+        <input id="apellidos" type="text" formControlName="apellidos" placeholder="Els teus cognoms">
+
+        @if (isFieldInvalid('apellidos')) {
+        <span style="color: red;">
+            {{ getErrorMessage('apellidos') }}
+        </span>
+        }
+    </div>
+
+    <!-- correu electronic -->
+    <div>
+        <label for="email">Email:</label>
+        <input id="email" type="email" formControlName="email" placeholder="correu@exemple.com">
+
+        @if (isFieldInvalid('email')) {
+        <span style="color: red;">
+            {{ getErrorMessage('email') }}
+        </span>
+        }
+    </div>
+
+    <!-- contrasenya, minim 6 caracters -->
+    <div>
+        <label for="password">Contrasenya:</label>
+        <input id="password" type="password" formControlName="password" placeholder="Minim 6 caracters">
+
+        @if (isFieldInvalid('password')) {
+        <span style="color: red;">
+            {{ getErrorMessage('password') }}
+        </span>
+        }
+    </div>
+
+    <!-- repetir contrasenya per confirmar -->
+    <div>
+        <label for="password_confirmation">Repetir contrasenya:</label>
+        <input id="password_confirmation" type="password" formControlName="password_confirmation"
+            placeholder="Repeteix la contrasenya">
+
+        @if (isFieldInvalid('password_confirmation')) {
+        <span style="color: red;">
+            {{ getErrorMessage('password_confirmation') }}
+        </span>
+        }
+    </div>
+
+    <!-- error creuat: surt si les contrasenyes no coincideixen -->
+    <!-- aquest error esta a registerForm.errors i no a cap camp concret -->
+    @if (
+    registerForm.errors?.['contrasenjesDiferents'] &&
+    registerForm.get('password_confirmation')?.touched
+    ) {
+    <span style="color: red;">
+        Les contrasenyes no coincideixen
+    </span>
+    }
+
+    <!-- missatge d'error que ve del backend -->
+    @if (errorMessage) {
+    <span style="color: red;">
+        {{ errorMessage }}
+    </span>
+    }
+
+    <!-- missatge d'exit amb l'ID de jugador generat -->
+    @if (successMessage) {
+    <span style="color: green;">
+        {{ successMessage }}
+    </span>
+    }
+
+    <!-- boto deshabilitat mentres el formulari no sigui valid o s'esta enviant -->
+    <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Registrant...' : 'Crear compte' }}
+    </button>
+
+</form>

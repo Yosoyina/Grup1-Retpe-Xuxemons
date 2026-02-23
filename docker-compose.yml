@@ -62,7 +62,17 @@ services:
     networks:
       - red
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-proot_password",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -73,5 +83,3 @@ volumes:
 networks:
   red:
     driver: bridge
-
-
