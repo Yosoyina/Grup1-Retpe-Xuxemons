@@ -15,9 +15,8 @@ Route::post('/login',[AuthController::class, 'login']);
 
 // ── RUTES PROTEGIDAS ──────────────────────────────────────
 Route::middleware('auth:api')->group(function () {
-
+    
     Route::post('/logout',[AuthController::class, 'logout']);
-
     Route::get('/home',[UserController::class, 'home']);
     Route::get('/profile',[UserController::class, 'perfil']);
     Route::put('/profile',[UserController::class, 'updatePerfil']);
