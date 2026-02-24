@@ -44,7 +44,7 @@ services:
         php artisan key:generate --force &&
         php artisan migrate --force &&
         apache2-foreground &&
-        composer update --no-interaction --prefer-dist 
+        composer update --no-interaction --prefer-dist
       "
 
   # Base de Datos (MySQL)
