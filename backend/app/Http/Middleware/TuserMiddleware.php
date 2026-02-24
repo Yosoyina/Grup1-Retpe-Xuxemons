@@ -22,7 +22,7 @@ class TuserMiddleware
     {
 
         $user = Auth::guard('api')->user();
-        if (!$user || $user->role !== 'tuser') {
+        if (!$user || $user->role !== 'admin') {
             return response()->json(['message' => 'Acces denegat'], 403);
         }
         return $next($request);
