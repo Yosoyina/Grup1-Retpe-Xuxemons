@@ -1,1 +1,37 @@
-<p>login works!</p>
+<h1>Login</h1>
+
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+  <!-- id de jugador -->
+  <div>
+    <label for="id_jugador">ID de jugador:</label>
+    <input id="id_jugador" type="text" formControlName="id_jugador" placeholder="#NomXXXX">
+
+    @if (isFieldInvalid('id_jugador')) {
+    <span style="color: red;">Aquest camp es obligatori</span>
+    }
+  </div>
+
+  <!-- contrasenya -->
+  <div>
+    <label for="password">Contrasenya:</label>
+    <input id="password" type="password" formControlName="password" placeholder="La teva contrasenya">
+
+    @if (isFieldInvalid('password')) {
+    <span style="color: red;">Aquest camp es obligatori</span>
+    }
+  </div>
+
+  <!-- missatge d'error que ve del backend -->
+  @if (errorMessage) {
+  <span style="color: red;">{{ errorMessage }}</span>
+  }
+
+  <!-- missatge d'exit -->
+  @if (successMessage) {
+  <span style="color: green;">{{ successMessage }}</span>
+  }
+
+  <button type="submit">Iniciar sessio</button>
+
+</form>
