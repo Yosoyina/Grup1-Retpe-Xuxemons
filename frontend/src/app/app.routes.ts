@@ -2,24 +2,31 @@ import { Routes } from '@angular/router';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login';
 import { MenuPrincipal } from './menu-principal/menu-principal';
-import { PaginaUsuario } from './pagina-usuario/pagina-usuario';
+import { InfoUsuari } from './info-usuario/info-usuari';
 
 export const routes: Routes = [
-  { path: 'registrar', 
+  { 
+    path: 'registrar', 
     title: 'Registrar', 
     component: RegisterComponent 
   },
 
-  { path: 'login', 
+  { 
+    path: 'login', 
     title: 'Login'
     ,component: LoginComponent 
   },
 
-  { path: 'menu-principal', 
+  { 
+    path: 'menu-principal', 
     title: 'Menu Principal',
     component: MenuPrincipal, 
     children: [
-      { path: 'pagina-usuario', title: 'Página de Usuario', component: PaginaUsuario },
+      { 
+        path: 'info-usuari', 
+        title: 'Página de Usuario', 
+        component: InfoUsuari 
+      },
     ]
   },
 ];
