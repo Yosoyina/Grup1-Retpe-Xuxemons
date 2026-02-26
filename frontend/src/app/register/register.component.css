@@ -148,6 +148,25 @@ button[type="submit"]{
   transition: transform .08s ease, filter .15s ease, opacity .15s ease;
 }
 
+/* Contenedor del texto */
+p {
+  margin: 8px 0 4px;
+  font-size: 14px;
+  color: #2b2b2b;
+}
+
+/* Quita el morado y el subrayado del link */
+p a {
+  color: #2b2b2b;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Opcional: efecto al pasar el ratón */
+p a:hover {
+  text-decoration: underline; /* quítalo si no lo quieres */
+}
+
 button[type="submit"]:hover{
   filter: brightness(1.03);
   transform: translateY(-1px);
