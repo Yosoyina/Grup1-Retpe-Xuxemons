@@ -3,6 +3,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +18,8 @@ export class RegisterComponent {
   errorMessage = '';
   successMessage = '';
   isLoading = false;
+  showModal = false;
+  idJugadorGenerat = '';
 
   registerForm = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.maxLength(25)]),
@@ -26,7 +30,7 @@ export class RegisterComponent {
 
   }, { validators: this.contrasenjesIgualsValidator });
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   contrasenjesIgualsValidator(form: AbstractControl): ValidationErrors | null {
     const password = form.get('password')?.value;
@@ -42,12 +46,18 @@ export class RegisterComponent {
 
     this.authService.register(this.registerForm.value as any).subscribe({
       next: (response) => {
-        this.successMessage = `Registre correcte! El teu ID de jugador es: ${response.user.id_jugador}`;
+        this.idJugadorGenerat = response.user.id_jugador;
+        this.showModal = true;
+        this.cdr.detectChanges();
       },
       error: (err: HttpErrorResponse) => {
         this.errorMessage = err.error?.message ?? 'Error inesperat. Torna-ho a intentar.';
       }
     });
+  }
+
+  anarAlLogin() {
+    this.router.navigate(['/login']);
   }
 
   isFieldInvalid(field: string): boolean {
