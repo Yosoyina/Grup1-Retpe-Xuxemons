@@ -26,7 +26,7 @@ class UserFactory extends Factory
         return [
             'nombre' => fake()->name(),
             'apellidos' => fake()->lastName(),
-            'id_jugador' => '#' . fake()->name() . fake()->numberBetween(0000, 9999),
+            'id_jugador' => '#' . str_replace(' ', '', trim(fake()->firstName())) . fake()->numerify('####'),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
