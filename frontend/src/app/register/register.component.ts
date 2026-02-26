@@ -3,13 +3,15 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
+
+
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -20,6 +22,7 @@ export class RegisterComponent {
   isLoading = false;
   showModal = false;
   idJugadorGenerat = '';
+  submitted = false;
 
   registerForm = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.maxLength(25)]),
@@ -39,10 +42,7 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
-      return;
-    }
+    this.submitted = true;
 
     this.authService.register(this.registerForm.value as any).subscribe({
       next: (response) => {
@@ -62,12 +62,12 @@ export class RegisterComponent {
 
   isFieldInvalid(field: string): boolean {
     const control = this.registerForm.get(field);
-    return !!(control && control.invalid && control.touched);
+    return !!(control && control.invalid && this.submitted);
   }
 
   getErrorMessage(field: string): string {
     const control = this.registerForm.get(field);
-    if (!control || !control.errors || !control.touched) return '';
+    if (!control || !control.errors || !this.submitted) return '';
 
     if (control.errors['required']) return 'Aquest camp es obligatori';
     if (control.errors['email']) return 'El format del correu no es valid';
