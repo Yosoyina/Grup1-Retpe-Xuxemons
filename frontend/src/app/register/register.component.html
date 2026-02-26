@@ -95,4 +95,15 @@
         {{ isLoading ? 'Registrant...' : 'Crear compte' }}
     </button>
 
+    @if (showModal) {
+    <div class="modal-overlay">
+        <div class="modal">
+            <h2>Registre correcte!</h2>
+            <p>El teu ID de jugador és:</p>
+            <strong>{{ idJugadorGenerat }}</strong>
+            <button (click)="anarAlLogin()">Anar al Login</button>
+        </div>
+    </div>
+    }
+
 </form>
