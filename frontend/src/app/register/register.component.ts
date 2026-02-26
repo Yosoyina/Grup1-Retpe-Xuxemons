@@ -3,11 +3,13 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule,RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
