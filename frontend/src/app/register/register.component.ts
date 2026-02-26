@@ -16,6 +16,7 @@ export class RegisterComponent {
   errorMessage = '';
   successMessage = '';
   isLoading = false;
+  submitted = false;
 
   registerForm = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.maxLength(25)]),
@@ -35,35 +36,43 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
-      return;
-    }
+  this.submitted = true;
 
-    this.authService.register(this.registerForm.value as any).subscribe({
-      next: (response) => {
-        this.successMessage = `Registre correcte! El teu ID de jugador es: ${response.user.id_jugador}`;
-      },
-      error: (err: HttpErrorResponse) => {
-        this.errorMessage = err.error?.message ?? 'Error inesperat. Torna-ho a intentar.';
-      }
-    });
+  if (this.registerForm.invalid) {
+    this.registerForm.markAllAsTouched();
+    return;
   }
 
+  this.isLoading = true;
+  this.errorMessage = '';
+  this.successMessage = '';
+
+  this.authService.register(this.registerForm.value as any).subscribe({
+    next: (response) => {
+      this.successMessage = `Registre correcte! El teu ID de jugador es: ${response.user.id_jugador}`;
+      this.isLoading = false;
+    },
+    error: (err: HttpErrorResponse) => {
+      this.errorMessage = err.error?.message ?? 'Error inesperat. Torna-ho a intentar.';
+      this.isLoading = false;
+    }
+  });
+}
+
   isFieldInvalid(field: string): boolean {
-    const control = this.registerForm.get(field);
-    return !!(control && control.invalid && control.touched);
+  const control = this.registerForm.get(field);
+  return !!(control && control.invalid && this.submitted);
   }
 
   getErrorMessage(field: string): string {
-    const control = this.registerForm.get(field);
-    if (!control || !control.errors || !control.touched) return '';
+  const control = this.registerForm.get(field);
+  if (!control || !control.errors || !this.submitted) return '';
 
-    if (control.errors['required']) return 'Aquest camp es obligatori';
-    if (control.errors['email']) return 'El format del correu no es valid';
-    if (control.errors['minlength']) return `Minim ${control.errors['minlength'].requiredLength} caracters`;
-    if (control.errors['maxlength']) return `Maxim ${control.errors['maxlength'].requiredLength} caracters`;
+  if (control.errors['required']) return 'Aquest camp es obligatori';
+  if (control.errors['email']) return 'El format del correu no es valid';
+  if (control.errors['minlength']) return `Minim ${control.errors['minlength'].requiredLength} caracters`;
+  if (control.errors['maxlength']) return `Maxim ${control.errors['maxlength'].requiredLength} caracters`;
 
-    return 'Error de validacio';
+  return 'Error de validacio';
   }
 }
