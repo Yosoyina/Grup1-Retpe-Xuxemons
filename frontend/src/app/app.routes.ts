@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login';
 import { MenuPrincipal } from './menu-principal/menu-principal';
-import { InfoUsuari } from './info-usuario/info-usuari';
+import { InfoUsuari } from './info-usuari/info-usuari';
 
 export const routes: Routes = [
   { 
