@@ -14,10 +14,10 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'nombre'    => 'required|string|max:25',
+            'nombre' => 'required|string|max:25',
             'apellidos' => 'required|string|max:25',
-            'email'     => 'required|email|unique:users,email',
-            'password'  => 'required|string|min:6|confirmed',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         // El primer usuari registrat serà admin
@@ -41,9 +41,9 @@ class AuthController extends Controller
         $token = Auth::guard('api')->login($user);
 
         return response()->json([
-            'message'    => 'Usuari registrat correctament',
-            'user'       => $user,
-            'token'      => $token,
+            'message' => 'Usuari registrat correctament',
+            'user' => $user,
+            'token' => $token,
             'token_type' => 'bearer',
         ], 201);
     }
@@ -54,7 +54,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'id_jugador' => 'required|string',
-            'password'   => 'required|string',
+            'password' => 'required|string',
         ]);
 
         $user = User::where('id_jugador', $request->id_jugador)->first();
@@ -68,9 +68,9 @@ class AuthController extends Controller
         $token = Auth::guard('api')->login($user);
 
         return response()->json([
-            'message'    => 'Login correcte',
-            'user'       => $user,
-            'token'      => $token,
+            'message' => 'Login correcte',
+            'user' => $user,
+            'token' => $token,
             'token_type' => 'bearer',
         ]);
     }
