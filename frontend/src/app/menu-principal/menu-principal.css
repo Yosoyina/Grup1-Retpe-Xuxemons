@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap');
+
+.titulo-genral {
+  font-family: 'Fredoka', cursive;
+  font-weight: 700;
+  font-size: 96px;
+  color: #FFD400;
+  text-transform: uppercase;
+  -webkit-text-stroke: 8px #1E2A78;
+  paint-order: stroke fill;
+  filter: drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.5));
+  line-height: 1;
+  letter-spacing: 0;
+  margin: 0;
+}
