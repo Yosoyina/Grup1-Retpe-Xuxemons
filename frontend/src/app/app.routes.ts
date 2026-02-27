@@ -27,12 +27,11 @@ export const routes: Routes = [
     path: 'menu-principal',
     title: 'Menu Principal',
     component: MenuPrincipal,
-    children: [
-      {
-        path: 'info-usuari',
-        title: 'Página de Usuario',
-        component: InfoUsuari
-      },
-    ]
+  },
+
+  {
+    path: 'info-usuari',
+    title: 'Página de Usuario',
+    component: InfoUsuari
   },
 ];
