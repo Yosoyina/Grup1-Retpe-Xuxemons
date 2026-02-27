@@ -1,1 +1,61 @@
-<p>info-usuari works!</p>
+@if (usuari) {
+
+<h1>Perfil d'Usuari</h1>
+
+<!-- informacio personal -->
+<div>
+    <h2>Informació Personal</h2>
+
+    <form [formGroup]="editForm" (ngSubmit)="guardarCanvis()">
+
+        <div>
+            <label>Nom:</label>
+            <input type="text" formControlName="nombre">
+        </div>
+
+        <div>
+            <label>Cognom:</label>
+            <input type="text" formControlName="apellidos">
+        </div>
+
+        <div>
+            <label>Correu Electrònic:</label>
+            <input type="email" formControlName="email">
+        </div>
+
+        <div>
+            <label>Nova Contrasenya:</label>
+            <input type="password" formControlName="password" placeholder="Deixa buit per no canviar">
+        </div>
+
+        <button type="submit">Guardar</button>
+
+    </form>
+
+</div>
+
+<!-- id jugador -->
+<p>{{ usuari.id_jugador }}</p>
+
+<!-- missatges -->
+@if (successMessage) {
+<span style="color: green;">{{ successMessage }}</span>
+}
+@if (errorMessage) {
+<span style="color: red;">{{ errorMessage }}</span>
+}
+
+<!-- botons -->
+<button (click)="mostrarConfirmacio = true">Dona-se de Baixa</button>
+<button (click)="tornarAlMenu()">Sortir</button>
+
+<!-- dialeg confirmacio eliminar -->
+@if (mostrarConfirmacio) {
+<div>
+    <p>Segur que vols eliminar el compte?</p>
+    <button (click)="confirmarEliminar()">Sí, eliminar</button>
+    <button (click)="mostrarConfirmacio = false">Cancel·lar</button>
+</div>
+}
+
+}

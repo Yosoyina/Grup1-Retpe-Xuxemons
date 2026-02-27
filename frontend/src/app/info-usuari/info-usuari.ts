@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-info-usuari',
-  imports: [],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './info-usuari.html',
   styleUrl: './info-usuari.css',
 })
