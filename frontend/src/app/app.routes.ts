@@ -19,20 +19,19 @@ export const routes: Routes = [
 
   {
     path: 'login',
-    title: 'Login'
-    , component: LoginComponent
+    title: 'Login',
+    component: LoginComponent
   },
 
   {
     path: 'menu-principal',
     title: 'Menu Principal',
     component: MenuPrincipal,
-    children: [
-      {
-        path: 'info-usuari',
-        title: 'Página de Usuario',
-        component: InfoUsuari
-      },
-    ]
+  },
+
+  {
+    path: 'info-usuari',
+    title: 'Info Usuari',
+    component: InfoUsuari
   },
 ];
