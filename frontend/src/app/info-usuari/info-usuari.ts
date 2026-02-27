@@ -23,6 +23,7 @@ export class InfoUsuari {
     apellidos: new FormControl('', [Validators.required, Validators.maxLength(25)]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.minLength(6)]),
+    password_confirmation: new FormControl('', [Validators.minLength(6)]),
   });
 
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {
@@ -57,7 +58,7 @@ export class InfoUsuari {
     };
     if (this.editForm.value.password) {
       dades.password = this.editForm.value.password;
-      dades.password_confirmation = this.editForm.value.password;
+      dades.password_confirmation = this.editForm.value.password_confirmation;
     }
 
     this.authService.updatePerfil(dades).subscribe({

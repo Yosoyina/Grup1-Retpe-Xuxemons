@@ -34,16 +34,22 @@ class UserController extends Controller
         $user = Auth::guard('api')->user();
 
         $request->validate([
-            'nombre'=> 'sometimes|string|max:25',
-            'apellidos'=> 'sometimes|string|max:25',
-            'email'=> 'sometimes|email|unique:users,email,' . $user->id,
-            'password'=> 'sometimes|string|min:6|confirmed',
+            'nombre' => 'sometimes|string|max:25',
+            'apellidos' => 'sometimes|string|max:25',
+            'email' => 'sometimes|email|unique:users,email,' . $user->id,
+            'password' => 'sometimes|string|min:6|confirmed',
+            'password_confirmation' => 'sometimes|string|min:6',
+
         ]);
 
-        if ($request->has('nombre')) $user->nombre = $request->nombre;
-        if ($request->has('apellidos')) $user->apellidos = $request->apellidos;
-        if ($request->has('email')) $user->email = $request->email;
-        if ($request->has('password')) $user->password  = Hash::make($request->password);
+        if ($request->has('nombre'))
+            $user->nombre = $request->nombre;
+        if ($request->has('apellidos'))
+            $user->apellidos = $request->apellidos;
+        if ($request->has('email'))
+            $user->email = $request->email;
+        if ($request->has('password'))
+            $user->password = Hash::make($request->password);
 
         $user->save();
 
@@ -66,5 +72,5 @@ class UserController extends Controller
             'message' => 'Usuari eliminat correctament',
         ]);
     }
-    
+
 }
