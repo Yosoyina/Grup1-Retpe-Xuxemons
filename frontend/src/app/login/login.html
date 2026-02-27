@@ -34,6 +34,8 @@
 
   <p>No tens conta? <a routerLink="/registrar">Registrat.</a></p>
 
-  <button type="submit">Iniciar sessio</button>
+  <button type="submit" [disabled]="isLoading">
+    {{ isLoading ? 'Carregant...' : 'Login' }}
+  </button>
 
 </form>

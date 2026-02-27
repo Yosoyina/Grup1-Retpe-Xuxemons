@@ -5,27 +5,33 @@ import { MenuPrincipal } from './menu-principal/menu-principal';
 import { InfoUsuari } from './info-usuari/info-usuari';
 
 export const routes: Routes = [
-  { 
-    path: 'registrar', 
-    title: 'Registrar', 
-    component: RegisterComponent 
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
   },
 
-  { 
-    path: 'login', 
+  {
+    path: 'registrar',
+    title: 'Registrar',
+    component: RegisterComponent
+  },
+
+  {
+    path: 'login',
     title: 'Login'
-    ,component: LoginComponent 
+    , component: LoginComponent
   },
 
-  { 
-    path: 'menu-principal', 
+  {
+    path: 'menu-principal',
     title: 'Menu Principal',
-    component: MenuPrincipal, 
+    component: MenuPrincipal,
     children: [
-      { 
-        path: 'info-usuari', 
-        title: 'Página de Usuario', 
-        component: InfoUsuari 
+      {
+        path: 'info-usuari',
+        title: 'Página de Usuario',
+        component: InfoUsuari
       },
     ]
   },

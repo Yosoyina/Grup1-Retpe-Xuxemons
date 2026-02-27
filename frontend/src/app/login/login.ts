@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 
 @Component({
@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 })
 export class LoginComponent {
   errorMessage = '';
+  isLoading = false;
   successMessage = '';
 
   // FormGroup amb els camps del login
@@ -22,21 +23,27 @@ export class LoginComponent {
     password: new FormControl('', Validators.required)
   });
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   // quan es fa submit comprovem si el form es valid
   onSubmit() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
+    if (this.loginForm.invalid || this.isLoading) return;
+
+    this.loginForm.markAllAsTouched();
+    this.isLoading = true;
+    this.errorMessage = '';
+
 
     this.authService.login(this.loginForm.value as any).subscribe({
-      next: (response: any) => {
-        this.successMessage = `Benvingut, ${response.user.nombre}! ID: ${response.user.id_jugador}`;
+      next: () => {
+        this.isLoading = false;
+        this.router.navigate(['/menu-principal']);
       },
       error: (err: HttpErrorResponse) => {
-        this.errorMessage = err.error?.message ?? 'Error inesperat. Torna-ho a intentar.';
+        this.isLoading = false;
+        this.errorMessage = err.error?.message ?? 'Credencials incorrectes. Torna-ho a provar.';
+        this.cdr.detectChanges();
+
       }
     });
   }
