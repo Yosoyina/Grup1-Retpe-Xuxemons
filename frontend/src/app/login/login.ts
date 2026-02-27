@@ -43,7 +43,6 @@ export class LoginComponent {
         this.isLoading = false;
         this.errorMessage = err.error?.message ?? 'Credencials incorrectes. Torna-ho a provar.';
         this.cdr.detectChanges();
-
       }
     });
   }
