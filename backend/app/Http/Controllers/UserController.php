@@ -34,14 +34,16 @@ class UserController extends Controller
         $user = Auth::guard('api')->user();
 
         $request->validate([
+            'avatar' => 'sometimes|string|max:25',
             'nombre' => 'sometimes|string|max:25',
             'apellidos' => 'sometimes|string|max:25',
             'email' => 'sometimes|email|unique:users,email,' . $user->id,
             'password' => 'sometimes|string|min:6|confirmed',
             'password_confirmation' => 'sometimes|string|min:6',
-
         ]);
 
+        if ($request->has('avatar'))
+            $user->avatar = $request->avatar;
         if ($request->has('nombre'))
             $user->nombre = $request->nombre;
         if ($request->has('apellidos'))
