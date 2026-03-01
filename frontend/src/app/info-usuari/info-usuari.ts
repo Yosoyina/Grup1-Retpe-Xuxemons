@@ -17,6 +17,21 @@ export class InfoUsuari {
   successMessage = '';
   mostrarFormEdicio = false;
   mostrarConfirmacio = false;
+  mostrarSeleccioAvatar = false;
+
+  // llista de avatars disponibles
+  avatars = [
+    'Futsin.png',
+    'Piturrin.png',
+    'Avatar3.png',
+    'Avatar4.png',
+    'Avatar5.png',
+    'Avatar6.png',
+    'Avatar7.png',
+    'Avatar8.png',
+    'Avatar9.png',
+    'Avatar10.png',
+  ];
 
   editForm = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.maxLength(25)]),
@@ -40,6 +55,22 @@ export class InfoUsuari {
       },
       error: () => {
         this.router.navigate(['/login']);
+      }
+    });
+  }
+
+  // canvia l'avatar de l'usuari
+  seleccionarAvatar(nomAvatar: string) {
+    this.authService.updatePerfil({ avatar: nomAvatar }).subscribe({
+      next: (response: any) => {
+        this.usuari = response.user;
+        this.mostrarSeleccioAvatar = false;
+        this.successMessage = 'Avatar actualitzat!';
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.errorMessage = 'Error en canviar l\'avatar.';
+        this.cdr.detectChanges();
       }
     });
   }

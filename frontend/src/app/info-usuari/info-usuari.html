@@ -2,6 +2,22 @@
 
 <h1>Perfil d'Usuari</h1>
 
+<!-- avatar -->
+<div>
+    <img [src]="usuari.avatar" [alt]="usuari.nombre" width="100">
+    <button (click)="mostrarSeleccioAvatar = !mostrarSeleccioAvatar">Canviar avatar</button>
+</div>
+
+<!-- seleccio d'avatar -->
+@if (mostrarSeleccioAvatar) {
+<div>
+    @for (avatar of avatars; track avatar) {
+    <img [src]="avatar" [alt]="avatar" width="80" (click)="seleccionarAvatar(avatar)" style="cursor:pointer">
+    }
+</div>
+}
+
+
 <!-- informacio personal -->
 <div>
     <h2>Informació Personal</h2>
