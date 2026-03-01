@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login';
 import { MenuPrincipal } from './menu-principal/menu-principal';
 import { InfoUsuari } from './info-usuari/info-usuari';
 import { authGuard } from './guards/auth-guard';
+import { noAuthGuard } from './guards/no-auth-guard';
 
 export const routes: Routes = [
   {
@@ -15,13 +16,15 @@ export const routes: Routes = [
   {
     path: 'registrar',
     title: 'Registrar',
-    component: RegisterComponent
+    component: RegisterComponent,
+    canActivate: [noAuthGuard]
   },
 
   {
     path: 'login',
     title: 'Login',
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [noAuthGuard]
   },
 
   {
