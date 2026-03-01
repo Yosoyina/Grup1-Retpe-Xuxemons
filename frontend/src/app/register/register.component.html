@@ -95,15 +95,31 @@
         {{ isLoading ? 'Registrant...' : 'Crear compte' }}
     </button>
 
-    @if (showModal) {
-    <div class="modal-overlay">
-        <div class="modal">
-            <h2>Registre correcte!</h2>
-            <p>El teu ID de jugador és:</p>
-            <strong>{{ idJugadorGenerat }}</strong>
-            <button (click)="anarAlLogin()">Anar al Login</button>
-        </div>
+@if (showModal) {
+<div class="modal-overlay">
+  <div class="modal">
+
+    <h2>Registre correcte!</h2>
+
+    <p>El teu ID de jugador és:</p>
+
+    <div class="id-box">
+      <strong>{{ idJugadorGenerat }}</strong>
+      <button class="btn-copy" (click)="copiarID()">
+        📋
+      </button>
     </div>
-    }
+
+    <span class="copy-feedback" *ngIf="copiat">
+      Copiat!
+    </span>
+
+    <button class="btn-login" (click)="anarAlLogin()">
+      Anar al Login
+    </button>
+
+  </div>
+</div>
+}
 
 </form>

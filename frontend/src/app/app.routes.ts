@@ -19,8 +19,8 @@ export const routes: Routes = [
 
   {
     path: 'login',
-    title: 'Login'
-    , component: LoginComponent
+    title: 'Login',
+    component: LoginComponent
   },
 
   {
@@ -31,7 +31,7 @@ export const routes: Routes = [
 
   {
     path: 'info-usuari',
-    title: 'Página de Usuario',
+    title: 'Info Usuari',
     component: InfoUsuari
   },
 ];

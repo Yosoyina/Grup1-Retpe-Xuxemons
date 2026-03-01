@@ -76,4 +76,17 @@ export class RegisterComponent {
 
     return 'Error de validacio';
   }
+
+  copiat = false;
+
+copiarID() {
+  navigator.clipboard.writeText(this.idJugadorGenerat);
+  this.copiat = true;
+
+  setTimeout(() => {
+    this.copiat = false;
+  }, 2000);
 }
+
+}
+
