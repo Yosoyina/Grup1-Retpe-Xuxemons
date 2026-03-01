@@ -45,4 +45,10 @@ export class AuthService {
       tap(() => localStorage.removeItem('token'))
     );
   }
+
+  // Comprobacion de si el usuario está autenticado
+  Autentificacion(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
 }
