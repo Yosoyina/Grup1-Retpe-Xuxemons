@@ -44,6 +44,7 @@ services:
         php artisan key:generate --force &&
         php artisan jwt:secret --force &&
         php artisan migrate --force &&
+        php artisan db:seed --force &&
         apache2-foreground &&
         composer update --no-interaction --prefer-dist
       "
