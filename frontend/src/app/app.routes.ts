@@ -3,6 +3,7 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login';
 import { MenuPrincipal } from './menu-principal/menu-principal';
 import { InfoUsuari } from './info-usuari/info-usuari';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -27,11 +28,13 @@ export const routes: Routes = [
     path: 'menu-principal',
     title: 'Menu Principal',
     component: MenuPrincipal,
+    canActivate: [authGuard]
   },
 
   {
     path: 'info-usuari',
     title: 'Info Usuari',
-    component: InfoUsuari
+    component: InfoUsuari,
+    canActivate: [authGuard]
   },
 ];
