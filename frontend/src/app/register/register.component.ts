@@ -57,6 +57,7 @@ export class RegisterComponent {
   }
 
   anarAlLogin() {
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 
