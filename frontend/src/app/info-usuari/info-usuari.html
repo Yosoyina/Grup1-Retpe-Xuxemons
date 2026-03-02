@@ -1,82 +1,113 @@
 @if (usuari) {
 
-<h1>Perfil d'Usuari</h1>
+<div class="pagina">
 
-<!-- avatar -->
-<div>
-    <img [src]="usuari.avatar" [alt]="usuari.nombre" width="100">
-    <button (click)="mostrarSeleccioAvatar = !mostrarSeleccioAvatar">Canviar avatar</button>
-</div>
+  <h1 class="titol">Perfil d'Usuari</h1>
 
-<!-- seleccio d'avatar -->
-@if (mostrarSeleccioAvatar) {
-<div>
-    @for (avatar of avatars; track avatar) {
-    <img [src]="avatar" [alt]="avatar" width="80" (click)="seleccionarAvatar(avatar)" style="cursor:pointer">
-    }
-</div>
-}
+  <div class="contingut">
 
+    <!-- columna esquerra: avatar + id -->
+    <div class="columna-esquerra">
 
-<!-- informacio personal -->
-<div>
-    <h2>Informació Personal</h2>
+      <!-- foto de perfil -->
+      <div class="cercle-avatar">
+        <img [src]="'/' + usuari.avatar"[alt]="usuari.nombre" class="avatar-img">
+      </div>
 
-    <form [formGroup]="editForm" (ngSubmit)="guardarCanvis()">
+      <!-- id jugador -->
+      <div class="id-jugador">
+        <span>{{ usuari.id_jugador }}</span>
+      </div>
 
-        <div>
-            <label>Nom:</label>
-            <input type="text" formControlName="nombre">
+      <!-- boto canviar avatar -->
+      <button class="btn-avatar" (click)="mostrarSeleccioAvatar = !mostrarSeleccioAvatar">
+        Canviar avatar
+      </button>
+
+      <!-- seleccio d'avatars -->
+      @if (mostrarSeleccioAvatar) {
+        <div class="grid-avatars">
+          @for (avatar of avatars; track avatar) {
+            <img [src]="avatar" [alt]="avatar" class="avatar-opcio" (click)="seleccionarAvatar(avatar)">
+          }
         </div>
+      }
 
-        <div>
-            <label>Cognom:</label>
-            <input type="text" formControlName="apellidos">
-        </div>
+      <!-- missatges -->
+      @if (successMessage) {
+        <span class="msg-exit">{{ successMessage }}</span>
+      }
+      @if (errorMessage) {
+        <span class="msg-error">{{ errorMessage }}</span>
+      }
 
-        <div>
-            <label>Correu Electrònic:</label>
+      <!-- boto dona-se de baixa -->
+      <button class="btn-baixa" (click)="mostrarConfirmacio = true">
+        Dona-se de Baixa
+      </button>
+
+    </div>
+
+    <!-- columna dreta: formulari -->
+    <div class="columna-dreta">
+      <div class="card-form">
+        <h2>Informació Personal</h2>
+
+        <form [formGroup]="editForm" (ngSubmit)="guardarCanvis()">
+
+          <div class="fila-dos">
+            <div class="camp">
+              <label>Nom</label>
+              <input type="text" formControlName="nombre">
+            </div>
+            <div class="camp">
+              <label>Cognom</label>
+              <input type="text" formControlName="apellidos">
+            </div>
+          </div>
+
+          <div class="camp">
+            <label>Correu Electrònic</label>
             <input type="email" formControlName="email">
-        </div>
+          </div>
 
-        <div>
-            <label>Nova Contrasenya:</label>
+          <div class="camp">
+            <label>Nova Contrasenya</label>
             <input type="password" formControlName="password" placeholder="Deixa buit per no canviar">
-        </div>
+          </div>
 
-        <div>
-            <label>Confirmar Contrasenya:</label>
+          <div class="camp">
+            <label>Confirmar Contrasenya</label>
             <input type="password" formControlName="password_confirmation" placeholder="Repeteix la contrasenya">
-        </div>
+          </div>
 
-        <button type="submit">Guardar</button>
+          <div class="boto-guardar-container">
+            <button type="submit" class="btn-guardar">Guardar</button>
+          </div>
 
-    </form>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- boto sortir baix a la dreta -->
+  <button class="btn-sortir" (click)="tornarAlMenu()">SORTIR</button>
 
 </div>
-
-<!-- id jugador -->
-<p>{{ usuari.id_jugador }}</p>
-
-<!-- missatges -->
-@if (successMessage) {
-<span style="color: green;">{{ successMessage }}</span>
-}
-@if (errorMessage) {
-<span style="color: red;">{{ errorMessage }}</span>
-}
-
-<!-- botons -->
-<button (click)="mostrarConfirmacio = true">Dona-se de Baixa</button>
-<button (click)="tornarAlMenu()">Tornar al menu</button>
 
 <!-- dialeg confirmacio eliminar -->
 @if (mostrarConfirmacio) {
-<div>
-    <p>Segur que vols eliminar el compte?</p>
-    <button (click)="confirmarEliminar()">Sí, eliminar</button>
-    <button (click)="mostrarConfirmacio = false">Cancel·lar</button>
-</div>
+  <div class="modal-overlay">
+    <div class="modal">
+      <p>Segur que vols eliminar el compte?</p>
+      <p>Aquesta acció no es pot desfer.</p>
+      <div class="modal-botons">
+        <button class="btn-baixa" (click)="confirmarEliminar()">Sí, eliminar</button>
+        <button (click)="mostrarConfirmacio = false">Cancel·lar</button>
+      </div>
+    </div>
+  </div>
 }
 
 }
