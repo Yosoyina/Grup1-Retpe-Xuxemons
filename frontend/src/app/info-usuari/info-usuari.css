@@ -1,0 +1,357 @@
+/* ===== PERFIL D'USUARI (FONDO + TÍTULO) ===== */
+
+:host{
+  display:block;
+
+  min-height:100dvh;
+  height:100dvh;
+  width:100%;
+  overflow:hidden;
+
+  background-image: url("/Fondo-Principal.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0b2d84;
+
+  position:relative;
+  isolation:isolate;
+
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  padding: clamp(18px, 4vh, 42px) 16px;
+  box-sizing:border-box;
+}
+
+:host::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255,255,255,.18), rgba(255,255,255,0) 55%),
+    linear-gradient(to bottom, rgba(10,20,60,.18), rgba(10,20,60,.06));
+  pointer-events:none;
+}
+
+/* ===== TÍTULO ===== */
+:host h1{
+  position:relative;
+  z-index:2;
+
+  margin: 0 0 24px;
+  text-align:center;
+
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+
+  font-size: clamp(42px, 4.8vw, 72px);
+  color: #FFD400;
+
+  -webkit-text-stroke: 7px #1E2A78;
+  paint-order: stroke fill;
+
+  text-shadow:
+    0 8px 0 rgba(30,42,120,.40),
+    0 16px 28px rgba(0,0,0,.28);
+}
+
+@media (max-width: 560px){
+  :host h1{
+    -webkit-text-stroke: 7px rgba(25, 40, 95, .95);
+    font-size: clamp(34px, 9vw, 52px);
+    margin-bottom: 18px;
+  }
+}
+
+/* =========================================================
+   AVATAR (izquierda)
+========================================================= */
+
+:host > div:first-of-type{
+  position:absolute;
+  left: 6.5%;
+  top: 44%;
+  transform: translateY(-50%);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+
+  z-index:2;
+}
+
+/* círculo */
+:host > div:first-of-type img{
+  width: 270px;
+  height: 270px;
+  object-fit: cover;
+
+  border-radius: 50%;
+  border: 8px solid rgba(255, 214, 0, .95);
+
+  background: rgba(255,255,255,.96);
+
+  box-shadow:
+    0 22px 44px rgba(0,0,0,.32),
+    inset 0 2px 0 rgba(255,255,255,.55);
+}
+
+/* botón cambiar avatar */
+:host > div:first-of-type button{
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 3px solid rgba(0,0,0,.88);
+  background: rgba(255,255,255,.90);
+  font-weight:800;
+  cursor:pointer;
+
+  box-shadow:
+    0 12px 20px rgba(0,0,0,.22),
+    inset 0 2px 0 rgba(255,255,255,.45);
+
+  transition: transform .12s ease, filter .12s ease;
+}
+
+:host > div:first-of-type button:hover{ transform: translateY(-2px); filter:saturate(1.05); }
+:host > div:first-of-type button:active{ transform: translateY(0) scale(.99); }
+
+/* =========================================================
+   PANEL INFORMACIÓN PERSONAL (derecha)
+========================================================= */
+
+:host > div:nth-of-type(2){
+  position:absolute;
+  z-index:2;
+
+  width: min(760px, 92vw);
+
+  /* ✅ más a la derecha y un pelín más abajo */
+  left: 50%;
+  top: 54%;
+  transform: translate(-10%, -50%);
+
+  border-radius: 30px;
+
+  background: rgba(255,255,255,.80);
+  border: 6px solid rgba(255, 214, 0, .95);
+
+  /* efecto glass suave */
+  backdrop-filter: blur(3px);
+
+  box-shadow: 0 22px 55px rgba(0,0,0,.26);
+
+  padding: 28px;
+}
+
+/* título interno */
+:host > div:nth-of-type(2) h2{
+  text-align:center;
+  margin: 0 0 18px;
+
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing:.06em;
+
+  color:#1f2a44;
+}
+
+/* form */
+:host > div:nth-of-type(2) form{
+  display:grid;
+  gap:16px;
+}
+
+/* grupo */
+:host > div:nth-of-type(2) form > div{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+:host > div:nth-of-type(2) label{
+  font-weight:800;
+  font-size:13px;
+  color:#1f2a44;
+}
+
+/* inputs */
+:host > div:nth-of-type(2) input{
+  height:44px;
+  border-radius:14px;
+  border: 2.5px solid rgba(255, 214, 0, .95);
+  padding:0 14px;
+
+  background: rgba(255,255,255,.92);
+
+  font-size:14px;
+  font-family: Inter, sans-serif;
+
+  outline:none;
+  transition:.2s;
+}
+
+:host > div:nth-of-type(2) input:focus{
+  box-shadow: 0 0 0 4px rgba(255, 214, 0, .22);
+}
+
+/* botón guardar */
+:host > div:nth-of-type(2) form button[type="submit"]{
+  margin-top: 8px;
+  justify-self:center;
+
+  padding: 12px 40px;
+
+  border-radius: 999px;
+  border: 3px solid rgba(0,0,0,.88);
+
+  background: #48b04d;
+  color:#111;
+
+  font-weight: 900;
+  letter-spacing:.06em;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 16px 28px rgba(0,0,0,.28),
+    inset 0 2px 0 rgba(255,255,255,.35);
+
+  transition: transform .12s ease, filter .12s ease;
+}
+
+:host > div:nth-of-type(2) form button[type="submit"]:hover{
+  transform: translateY(-2px);
+  filter:saturate(1.05);
+}
+:host > div:nth-of-type(2) form button[type="submit"]:active{
+  transform: translateY(0) scale(.99);
+}
+
+/* =========================================================
+   ID JUGADOR (pill debajo del avatar)
+========================================================= */
+
+:host > p{
+  position:absolute;
+  left: 6.5%;
+  top: calc(44% + 175px);
+
+  padding: 10px 26px;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.90);
+  border: 6px solid rgba(255, 214, 0, .95);
+
+  font-weight: 900;
+  letter-spacing:.06em;
+
+  box-shadow: 0 16px 30px rgba(0,0,0,.22);
+
+  z-index:2;
+}
+
+/* =========================================================
+   BOTONES ABAJO IZQUIERDA (Dona-se de Baixa + Tornar al menu)
+   En tu HTML son los dos últimos buttons antes del diálogo.
+========================================================= */
+
+:host > button:nth-of-type(1),
+:host > button:nth-of-type(2){
+  position:absolute;
+  left: 22px;
+  bottom: 18px;
+
+  z-index:2;
+
+  border:none;
+  cursor:pointer;
+
+  padding: 10px 18px;
+  border-radius: 999px;
+
+  border: 3px solid rgba(0,0,0,.88);
+  font-weight: 900;
+  letter-spacing:.03em;
+
+  box-shadow:
+    0 16px 28px rgba(0,0,0,.25),
+    inset 0 2px 0 rgba(255,255,255,.35);
+
+  transition: transform .12s ease, filter .12s ease;
+}
+
+/* Dona-se de Baixa (rojo) */
+:host > button:nth-of-type(1){
+  background: #e46b5f;
+  color:#101010;
+}
+
+/* Tornar al menu (blanco/crema) */
+:host > button:nth-of-type(2){
+  left: 170px;          /* separación horizontal */
+  background: rgba(255,255,255,.90);
+  color:#101010;
+}
+
+:host > button:nth-of-type(1):hover,
+:host > button:nth-of-type(2):hover{
+  transform: translateY(-2px);
+  filter:saturate(1.05);
+}
+
+:host > button:nth-of-type(1):active,
+:host > button:nth-of-type(2):active{
+  transform: translateY(0) scale(.99);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px){
+
+  :host{
+    height:auto;
+    min-height:100dvh;
+    overflow:auto;
+  }
+
+  :host > div:first-of-type{
+    position:relative;
+    left:auto;
+    top:auto;
+    transform:none;
+    margin: 10px auto 14px;
+  }
+
+  :host > p{
+    position:relative;
+    left:auto;
+    top:auto;
+    margin: 0 auto 18px;
+    width: fit-content;
+    text-align:center;
+  }
+
+  :host > div:nth-of-type(2){
+    position:relative;
+    left:auto;
+    top:auto;
+    transform:none;
+    margin: 0 auto 18px;
+  }
+
+  :host > button:nth-of-type(1),
+  :host > button:nth-of-type(2){
+    position:relative;
+    left:auto;
+    bottom:auto;
+    display:inline-flex;
+    margin: 8px 8px 18px;
+  }
+
+}
