@@ -23,7 +23,7 @@ export class InfoUsuari {
   avatars = [
     'Futsin.png',
     'Piturrin.png',
-    'Avatar3.png',
+    'avatarpordefecto.png',
     'Avatar4.png',
     'Avatar5.png',
     'Avatar6.png',
