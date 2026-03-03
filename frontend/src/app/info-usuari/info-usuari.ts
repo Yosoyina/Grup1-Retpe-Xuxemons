@@ -65,7 +65,6 @@ export class InfoUsuari {
       next: (response: any) => {
         this.usuari = response.user;
         this.mostrarSeleccioAvatar = false;
-        this.successMessage = 'Avatar actualitzat!';
         this.cdr.detectChanges();
       },
       error: () => {
@@ -124,4 +123,18 @@ export class InfoUsuari {
   tornarAlMenu() {
     this.router.navigate(['/menu-principal']);
   }
+
+  copiado = false;
+
+copiarId(texto: string) {
+  if (!texto) return;
+
+  navigator.clipboard.writeText(texto).then(() => {
+    this.copiado = true;
+
+    setTimeout(() => {
+      this.copiado = false;
+    }, 1200);
+  });
+}
 } 

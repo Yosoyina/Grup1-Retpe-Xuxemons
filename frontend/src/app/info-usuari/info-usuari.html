@@ -14,10 +14,16 @@
         <img [src]="'/' + usuari.avatar"[alt]="usuari.nombre" class="avatar-img">
       </div>
 
-      <!-- id jugador -->
       <div class="id-jugador">
-        <span>{{ usuari.id_jugador }}</span>
-      </div>
+<span #playerId>{{ usuari.id_jugador }}</span>
+      <button
+        type="button"
+        class="btn-copiar"
+        (click)="copiarId(playerId.textContent!)"
+        aria-label="Copiar ID">
+        {{ copiado ? '✔️' : '📋' }}
+      </button>
+     </div>
 
       <!-- boto canviar avatar -->
       <button class="btn-avatar" (click)="mostrarSeleccioAvatar = !mostrarSeleccioAvatar">
