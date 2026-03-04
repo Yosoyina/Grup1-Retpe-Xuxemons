@@ -10,11 +10,15 @@ import { AuthService } from '../services/auth.service';
 })
 export class MenuPrincipal {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']);
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: () => {
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
+      }
     });
   }
 }
