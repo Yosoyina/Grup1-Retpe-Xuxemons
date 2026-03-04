@@ -10,7 +10,20 @@ import { AuthService } from '../services/auth.service';
 })
 export class MenuPrincipal {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  carregant = true;
+
+  constructor(private authService: AuthService, private router: Router) {
+    // verificar que el backend esta disponible i el token es valid
+    this.authService.getPerfil().subscribe({
+      next: () => {
+        this.carregant = false;
+      },
+      error: () => {
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
+      }
+    });
+  }
 
   logout() {
     this.authService.logout().subscribe({
