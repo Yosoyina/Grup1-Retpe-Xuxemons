@@ -5,7 +5,6 @@ import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 
-
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
@@ -17,39 +16,49 @@ export class LoginComponent {
   isLoading = false;
   successMessage = '';
 
-  // FormGroup amb els camps del login
+  // 👇 CLAVE: solo mostramos errores de required después de intentar enviar
+  submitted = false;
+
   loginForm = new FormGroup({
-    id_jugador: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required)
+    id_jugador: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
 
-  constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  // quan es fa submit comprovem si el form es valid
   onSubmit() {
-    if (this.loginForm.invalid || this.isLoading) return;
+    if (this.isLoading) return;
 
-    this.loginForm.markAllAsTouched();
+    this.submitted = true;                 // 👈 ahora sí
+    this.loginForm.markAllAsTouched();     // opcional, pero útil
+
+    if (this.loginForm.invalid) return;
+
     this.isLoading = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
-
-    this.authService.login(this.loginForm.value as any).subscribe({
+    this.authService.login(this.loginForm.getRawValue() as any).subscribe({
       next: () => {
         this.isLoading = false;
         this.router.navigate(['/menu-principal']);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message ?? 'Credencials incorrectes. Torna-ho a provar.';
+        this.errorMessage =
+          err.error?.message ?? 'Credencials incorrectes. Torna-ho a provar.';
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
-  // comprova si un camp es invalid i l'usuari ja l'ha tocat
-  isFieldInvalid(field: string): boolean {
+  // ✅ ahora NO depende de touched (click), depende de submitted (login)
+  isFieldInvalid(field: 'id_jugador' | 'password'): boolean {
     const control = this.loginForm.get(field);
-    return !!(control && control.invalid && control.touched);
+    return !!(control && control.invalid && this.submitted);
   }
 }
