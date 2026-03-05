@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('nombre_xuxemon');
             $table->enum('tipo_elemento', ['Aigua', 'Terra', 'Aire']);
             $table->enum('tamano', ['Petit', 'Mitja', 'Gran'])->default('Petit');
+            $table->text('descripcio')->nullable();
+            $table->string('imagen')->nullable();
             $table->timestamps();
         });
     }

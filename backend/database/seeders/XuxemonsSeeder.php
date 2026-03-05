@@ -16,74 +16,82 @@ class XuxemonsSeeder extends Seeder
     public function run(): void
     {
         $xuxemons = [
-
             // Aigua
-            
             [
-             'nom' => 'Goteta',
-             'tipus' => 'Aigua',
-             'mida' => 'Petit',
+             'nombre_xuxemon' => 'Goteta',
+             'tipo_elemento' => 'Aigua',
+             'tamano' => 'Petit',
              'descripcio' => "Una petita gota d'aigua que salta alegrement.",
+             'imagen' => null,
             ],
             [
-             'nom' => 'Bassot',
-             'tipus' => 'Aigua',
-             'mida' => 'Mitjà',
+             'nombre_xuxemon' => 'Bassot',
+             'tipo_elemento' => 'Aigua',
+             'tamano' => 'Mitja',
              'descripcio' => 'Un bassiot profund ple de misteris aquàtics.',
+             'imagen' => null,
             ],
             [
-             'nom' => 'Laguna',
-             'tipus' => 'Aigua',
-             'mida' => 'Gran',
+             'nombre_xuxemon' => 'Laguna',
+             'tipo_elemento' => 'Aigua',
+             'tamano' => 'Gran',
              'descripcio' => "Una laguna ancestral plena d'energia hidden.",
+             'imagen' => null,
             ],
 
             // Aire
 
             [
-             'nom' => 'Sospir',
-             'tipus' => 'Aire',
-             'mida' => 'Petit',
+             'nombre_xuxemon' => 'Sospir',
+             'tipo_elemento' => 'Aire',
+             'tamano' => 'Petit',
              'descripcio' => 'Un sospir de vent calent que escampa les llavors.',
+             'imagen' => null,
             ],
             [
-             'nom' => 'Ratxot',
-             'tipus' => 'Aire',
-             'mida' => 'Mitjà',
+             'nombre_xuxemon' => 'Ratxot',
+             'tipo_elemento' => 'Aire',
+             'tamano' => 'Mitja',
              'descripcio' => 'Una ratxa de vent que apareix de forma inesperada.',
+             'imagen' => null,
             ],
             [
-             'nom' => 'Estratós',
-             'tipus' => 'Aire',
-             'mida' => 'Gran',
+             'nombre_xuxemon' => 'Estratós',
+             'tipo_elemento' => 'Aire',
+             'tamano' => 'Gran',
              'descripcio' => "Un ésser de l'estratosfera amb poder il·limitat.",
+             'imagen' => null,
             ],
 
             // Terra
 
             [
-             'nom' => 'Fanguet',
-             'tipus' => 'Terra',
-             'mida' => 'Petit',
+             'nombre_xuxemon' => 'Fanguet',
+             'tipo_elemento' => 'Terra',
+             'tamano' => 'Petit',
              'descripcio' => "Un fanguet tou que s'infiltra per qualsevol escletxa.",
+             'imagen' => null,
             ],
             [
-             'nom' => 'Escarpat',
-             'tipus' => 'Terra',
-             'mida' => 'Mitjà',
+             'nombre_xuxemon' => 'Escarpat',
+             'tipo_elemento' => 'Terra',
+             'tamano' => 'Mitja',
              'descripcio' => 'Un escarpat rocós que escala qualsevol superfície.',
-            ],
+             'imagen' => null,
+             ],
             [
-             'nom' => 'Terramut',
-             'tipus' => 'Terra',
-             'mida' => 'Gran',
+             'nombre_xuxemon' => 'Terramut',
+             'tipo_elemento' => 'Terra',
+             'tamano' => 'Gran',
              'descripcio' => 'Un colossal guardià de terra que fa trontollar el sòl.',
+             'imagen' => null,
             ],
             [
-             'nom' => 'Megalit',
-             'tipus' => 'Terra',
-             'mida' => 'Gran',
+             'nombre_xuxemon' => 'Megalit',
+             'tipo_elemento' => 'Terra',
+             'tamano' => 'Gran',
              'descripcio' => 'Un megalit antic amb poder ancestral immens.',
+             'imagen' => null,
             ],
         ];
 
