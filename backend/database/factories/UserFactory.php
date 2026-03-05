@@ -24,7 +24,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'avatar' => 'avatar.png',
+            'avatar' => 'avatarpordefecto.png',
             'nombre' => fake()->name(),
             'apellidos' => fake()->lastName(),
             'id_jugador' => '#' . str_replace(' ', '', trim(fake()->firstName())) . fake()->numerify('####'),
