@@ -25,6 +25,16 @@
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
+/* Capa blanca (equivalente a “imagen blanca” al 8%) */
+:host::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(255,255,255,.08); /* 8% */
+  z-index:-2; /* encima del fondo, debajo del radial */
+}
+
+/* Tu overlay radial */
 :host::before{
   content:"";
   position:absolute;
@@ -173,15 +183,12 @@ button[type="submit"]:hover{
 button[type="submit"]:active{ transform: translateY(0) scale(.99); }
 button[disabled]{ opacity: .65; cursor: not-allowed; box-shadow: none; }
 
-/* Pantallas bajas */
-@media (max-height: 760px){
-  input{ height: 48px; }
-  form > div{ margin-bottom: 12px; }
-  button[type="submit"]{ height: 52px; }
-}
-
-/* Móvil */
 @media (max-width: 520px){
-  :host{ background-position: 50% 10%; }
-  form{ width: min(520px, 94vw); border-radius: 22px; }
+  :host{
+    background-image: url("/23.png");
+
+    background-size: cover;        /* mantiene la pantalla llena */
+    background-position: 50% 6%;   /* sube el título */
+    background-repeat: no-repeat;
+  }
 }
