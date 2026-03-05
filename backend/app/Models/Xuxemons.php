@@ -16,7 +16,9 @@ class Xuxemons extends Model
     protected $fillable = [
         'nombre_xuxemon',
         'tipo_elemento',
-        'grandeza',
+        'tamano',
+        'descripcio',
+        'imagen',
     ];
 
     protected function casts(): array
@@ -24,7 +26,9 @@ class Xuxemons extends Model
         return [
             'nombre_xuxemon' => 'string',
             'tipo_elemento' => 'string',
-            'grandeza' => 'string',
+            'tamano' => 'string',
+            'descripcio' => 'string',
+            'imagen' => 'string',
         ];
     }
 }

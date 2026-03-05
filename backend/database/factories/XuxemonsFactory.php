@@ -20,6 +20,8 @@ class XuxemonsFactory extends Factory
             'nombre_xuxemon' => fake()->name(),
             'tipo_elemento' => fake()->randomElement(['Aigua', 'Terra', 'Aire']),
             'tamano' => fake()->randomElement(['Petit', 'Mitja', 'Gran']),
+            'descripcio' => fake()->sentence(),
+            'imagen' => null,
         ];
     }
 }
