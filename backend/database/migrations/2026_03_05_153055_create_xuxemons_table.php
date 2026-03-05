@@ -8,6 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * 
+     * Relacion Usuario - Xuxemon a traves de la id del usuario, y la id del xuxemon 
      */
     public function up(): void
     {
