@@ -24,13 +24,6 @@ export class InfoUsuari {
     'Futsin.png',
     'Piturrin.png',
     'avatarpordefecto.png',
-    'Avatar4.png',
-    'Avatar5.png',
-    'Avatar6.png',
-    'Avatar7.png',
-    'Avatar8.png',
-    'Avatar9.png',
-    'Avatar10.png',
   ];
 
   editForm = new FormGroup({

@@ -5,6 +5,7 @@ import { MenuPrincipal } from './menu-principal/menu-principal';
 import { InfoUsuari } from './info-usuari/info-usuari';
 import { authGuard } from './guards/auth-guard';
 import { noAuthGuard } from './guards/no-auth-guard';
+import { Xuxedex } from './xuxedex/xuxedex';
 
 export const routes: Routes = [
   {
@@ -40,4 +41,12 @@ export const routes: Routes = [
     component: InfoUsuari,
     canActivate: [authGuard]
   },
+
+  { 
+    path: 'xuxedex', 
+    title: 'Xuxedex', 
+    component: Xuxedex, 
+    canActivate: [authGuard] 
+  },
+
 ];
