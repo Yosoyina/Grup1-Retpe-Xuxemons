@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('xuxemons', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre_xuxemon');
+            $table->enum('tipo_elemento', ['Aigua', 'Terra', 'Aire']);
+            $table->enum('tamano', ['Petit', 'Mitja', 'Gran'])->default('Petit');
             $table->timestamps();
         });
     }
