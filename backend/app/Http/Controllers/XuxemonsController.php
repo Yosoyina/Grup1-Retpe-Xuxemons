@@ -81,7 +81,39 @@ class XuxemonsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $existe = DB::select("SELECT id FROM xuxemons WHERE id = :id", ['id' => $id]);
+
+        if (empty($existe)) {
+            return response()->json(['message' => 'Xuxemon no encontrado'], 404);
+        }
+
+        $request->validate([
+            'nombre_xuxemon' => 'sometimes|string',
+            'tipo_elemento' => 'sometimes|in:Aigua,Terra,Aire',
+            'tamano' => 'sometimes|in:Petit,Mitja,Gran',
+            'descripcio' => 'nullable|string',
+            'imagen' => 'nullable|string',
+        ]);
+
+        DB::update("
+            UPDATE xuxemons
+            SET nombre_xuxemon = COALESCE(:nombre_xuxemon, nombre_xuxemon),
+                tipo_elemento = COALESCE(:tipo_elemento, tipo_elemento),
+                tamano = COALESCE(:tamano, tamano),
+                descripcio = COALESCE(:descripcio, descripcio),
+                imagen = COALESCE(:imagen, imagen),
+                updated_at = NOW()
+            WHERE id = :id
+        ", [
+            'nombre_xuxemon' => $request->nombre_xuxemon,
+            'tipo_elemento' => $request->tipo_elemento,
+            'tamano' => $request->tamano,
+            'descripcio' => $request->descripcio,
+            'imagen' => $request->imagen,
+            'id' => $id,
+        ]);
+
+        return response()->json(['message' => 'Xuxemon actualizado correctamente'], 200);
     }
 
     /**
