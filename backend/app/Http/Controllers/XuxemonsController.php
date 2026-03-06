@@ -32,6 +32,9 @@ class XuxemonsController extends Controller
         return response()->json($xuxemons, 200);
     }
 
+
+    //── XUXEMONS ─────────────────────────────────────────────
+
     /**
      * Store a newly created resource in storage.
      */
@@ -121,6 +124,13 @@ class XuxemonsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $existe = DB::select("SELECT id FROM xuxemons WHERE id = :id", ['id' => $id]);
+
+        if (empty($existe)) {
+            return response()->json(['message' => 'Xuxemon no encontrado'], 404);
+        }
+
+        DB::delete(" DELETE FROM xuxemons WHERE id = :id", ['id' => $id,]);
+        
+        return response()->json(['message' => 'Xuxemon eliminado correctamente'], 200);
     }
-}
