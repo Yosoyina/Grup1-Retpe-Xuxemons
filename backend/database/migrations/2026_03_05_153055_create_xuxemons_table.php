@@ -8,11 +8,18 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * 
+     * Relacion Usuario - Xuxemon a traves de la id del usuario, y la id del xuxemon 
      */
     public function up(): void
     {
         Schema::create('xuxemons', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre_xuxemon');
+            $table->enum('tipo_elemento', ['Aigua', 'Terra', 'Aire']);
+            $table->enum('tamano', ['Petit', 'Mitja', 'Gran'])->default('Petit');
+            $table->text('descripcio')->nullable();
+            $table->string('imagen')->nullable();
             $table->timestamps();
         });
     }
