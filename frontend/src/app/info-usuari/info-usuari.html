@@ -34,7 +34,7 @@
       @if (mostrarSeleccioAvatar) {
         <div class="grid-avatars">
           @for (avatar of avatars; track avatar) {
-            <img [src]="avatar" [alt]="avatar" class="avatar-opcio" (click)="seleccionarAvatar(avatar)">
+            <img [src]="'/' + avatar" [alt]="avatar" class="avatar-opcio" (click)="seleccionarAvatar(avatar)">
           }
         </div>
       }

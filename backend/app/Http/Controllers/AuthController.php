@@ -30,12 +30,14 @@ class AuthController extends Controller
         } while (User::where('id_jugador', $id_jugador)->exists());
 
         $user = User::create([
-            'nombre'     => $request->nombre,
-            'apellidos'  => $request->apellidos,
+            'nombre' => $request->nombre,
+            'apellidos' => $request->apellidos,
             'id_jugador' => $id_jugador,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
-            'role'       => $role,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $role,
+            'avatar' => 'avatarpordefecto.png',
+
         ]);
 
         $token = Auth::guard('api')->login($user);
