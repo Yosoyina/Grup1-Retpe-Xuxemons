@@ -18,6 +18,8 @@ class AuthController extends Controller
             'apellidos' => 'required|string|max:25',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
+        ], [
+            'email.unique' => 'Aquest correu ja està registrat.',
         ]);
 
         // El primer usuari registrat serà admin

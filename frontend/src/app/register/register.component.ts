@@ -43,15 +43,24 @@ export class RegisterComponent {
 
   onSubmit() {
     this.submitted = true;
+    if (this.registerForm.invalid) return;
+
+    this.isLoading = true;
+    this.errorMessage = '';
 
     this.authService.register(this.registerForm.value as any).subscribe({
       next: (response) => {
+        this.isLoading = false;
         this.idJugadorGenerat = response.user.id_jugador;
         this.showModal = true;
         this.cdr.detectChanges();
       },
       error: (err: HttpErrorResponse) => {
-        this.errorMessage = err.error?.message ?? 'Error inesperat. Torna-ho a intentar.';
+        this.isLoading = false;
+        this.errorMessage = err.error?.errors
+          ? Object.values(err.error.errors).flat()[0] as string
+          : err.error?.message ?? 'Error inesperat. Torna-ho a intentar.';
+        this.cdr.detectChanges();
       }
     });
   }
@@ -80,14 +89,14 @@ export class RegisterComponent {
 
   copiat = false;
 
-copiarID() {
-  navigator.clipboard.writeText(this.idJugadorGenerat);
-  this.copiat = true;
+  copiarID() {
+    navigator.clipboard.writeText(this.idJugadorGenerat);
+    this.copiat = true;
 
-  setTimeout(() => {
-    this.copiat = false;
-  }, 2000);
-}
+    setTimeout(() => {
+      this.copiat = false;
+    }, 2000);
+  }
 
 }
 
