@@ -37,7 +37,27 @@ class XuxemonsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_xuxemon' => 'required|string',
+            'tipo_elemento' => 'required|in:Aigua,Terra,Aire',
+            'tamano' => 'required|in:Petit,Mitja,Gran',
+            'descripcio' => 'nullable|string',
+            'imagen' => 'nullable|string',
+        ]);
+
+        DB::insert("
+            INSERT INTO xuxemons (nombre_xuxemon, tipo_elemento, tamano, descripcio, imagen, created_at, updated_at)
+            VALUES (:nombre_xuxemon, :tipo_elemento, :tamano, :descripcio, :imagen, NOW(), NOW())
+        ", [
+            'nombre_xuxemon' => $request->nombre_xuxemon,
+            'tipo_elemento' => $request->tipo_elemento,
+            'tamano' => $request->tamano,
+            'descripcio' => $request->descripcio,
+            'imagen' => $request->imagen,
+        ]);
+
+        return response()->json(['message' => 'Xuxemon creado correctamente'], 201);
+
     }
 
     /**
