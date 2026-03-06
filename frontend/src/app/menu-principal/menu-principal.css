@@ -1,4 +1,4 @@
-/* ===== MENU PRINCIPAL (clavado a la 2ª imagen) ===== */
+﻿/* ===== MENU PRINCIPAL (clavado a la 2Âª imagen) ===== */
 
 :host {
   display: block;
@@ -38,7 +38,7 @@
   pointer-events: none;
 }
 
-/* ===== TÍTULO ===== */
+/* ===== TÃTULO ===== */
 .titulo-general {
   position: relative;
   z-index: 2;
@@ -54,11 +54,11 @@
 
   color: #FFD400;
 
-  /* Stroke más visible */
+  /* Stroke mÃ¡s visible */
   -webkit-text-stroke: 7px #1E2A78;
   paint-order: stroke fill;
 
-  /* Sombra más definida */
+  /* Sombra mÃ¡s definida */
   text-shadow:
     0 8px 0 rgba(30, 42, 120, .40),
     0 16px 28px rgba(0, 0, 0, .28);
@@ -66,7 +66,7 @@
 
 /* ===== PANEL CENTRAL (UN SOLO BORDE + 80% OPACIDAD) ===== */
 .menu-grid-container {
-  /* ✅ más estrecho como el mock */
+  /* âœ… mÃ¡s estrecho como el mock */
   width: min(860px, 92vw);
 
   position: relative;
@@ -74,24 +74,24 @@
 
   border-radius: 30px;
 
-  /* ✅ fondo blanco 80% */
+  /* âœ… fondo blanco 80% */
   background: rgba(255, 255, 255, .80);
 
-  /* ✅ un solo borde amarillo */
+  /* âœ… un solo borde amarillo */
   border: 6px solid rgba(255, 214, 0, .95);
 
-  /* ✅ sombra suave */
+  /* âœ… sombra suave */
   box-shadow: 0 22px 55px rgba(0, 0, 0, .26);
 
-  /* ✅ padding para que respire */
+  /* âœ… padding para que respire */
   padding: 22px;
 }
 
-/* Grid interior (SIN “segunda caja”) */
+/* Grid interior (SIN â€œsegunda cajaâ€) */
 .menu-grid {
   border-radius: 22px;
 
-  /* ✅ sin fondo aquí para evitar doble marco */
+  /* âœ… sin fondo aquÃ­ para evitar doble marco */
   background: transparent;
 
   padding: 0;
@@ -103,7 +103,7 @@
   gap: 18px;
 }
 
-/* ===== BOTONES (fondo blanco 80% + más grandes) ===== */
+/* ===== BOTONES (fondo blanco 80% + mÃ¡s grandes) ===== */
 .btn-menu {
   appearance: none;
   border: none;
@@ -115,16 +115,16 @@
   align-items: center;
   justify-content: center;
 
-  /* más aire */
+  /* mÃ¡s aire */
   gap: 12px;
 
-  /* ✅ botones más altos como mock */
+  /* âœ… botones mÃ¡s altos como mock */
   min-height: 150px;
   padding: 18px 16px;
 
   border-radius: 22px;
 
-  /* ✅ fondo blanco 80% */
+  /* âœ… fondo blanco 80% */
   background: rgba(255, 255, 255, .80);
 
   /* borde amarillo fino */
@@ -161,7 +161,7 @@
   transform: translateY(0) scale(.99);
 }
 
-/* ✅ ICONOS MÁS GRANDES (como la 2ª) */
+/* âœ… ICONOS MÃS GRANDES (como la 2Âª) */
 .btn-menu img {
   width: clamp(110px, 12vw, 160px);
   height: auto;
@@ -171,7 +171,7 @@
   filter: drop-shadow(0 10px 12px rgba(0, 0, 0, .16));
 }
 
-/* ✅ TEXTO MÁS GRANDE */
+/* âœ… TEXTO MÃS GRANDE */
 .btn-menu span {
   font-family: Inter, system-ui, sans-serif;
   font-weight: 900;
@@ -186,12 +186,12 @@
     0 8px 16px rgba(0, 0, 0, .10);
 }
 
-/* ===== FOOTER / SORTIR (más grande + más pegado) ===== */
+/* ===== FOOTER / SORTIR (mÃ¡s grande + mÃ¡s pegado) ===== */
 .menu-footer {
   position: relative;
   z-index: 2;
 
-  /* ✅ más pegado al panel como mock */
+  /* âœ… mÃ¡s pegado al panel como mock */
   margin-top: 10px;
 
   width: min(860px, 92vw);
@@ -208,7 +208,7 @@
   justify-content: center;
   gap: 12px;
 
-  /* ✅ más grande */
+  /* âœ… mÃ¡s grande */
   padding: 14px 34px;
 
   border-radius: 999px;
@@ -283,5 +283,139 @@
   .btn-sortir {
     padding: 13px 28px;
     font-size: 15px;
+  }
+}
+
+/* ===== HEADER SUPERIOR (solo menu principal) ===== */
+.menu-top-header {
+  position: absolute;
+  top: clamp(10px, 2.1vh, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+
+  width: min(1060px, 95vw);
+  padding: 10px 14px;
+
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 24px);
+
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-bottom: 2px solid rgba(26, 49, 120, 0.82);
+  border-radius: 16px;
+  backdrop-filter: blur(2px);
+}
+
+.menu-top-header__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-top-header__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 4px solid #28469d;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.14) 60%),
+    linear-gradient(145deg, rgba(40, 78, 173, 0.45), rgba(18, 42, 112, 0.45));
+  box-shadow: 0 8px 16px rgba(8, 20, 58, 0.25);
+}
+
+.menu-top-header__user {
+  color: #143173;
+  font-family: "Fredoka", "Trebuchet MS", sans-serif;
+  font-size: clamp(18px, 2vw, 30px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.menu-top-header__nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.8vw, 20px);
+}
+
+.menu-top-header__link {
+  text-decoration: none;
+  color: #102455;
+  font-family: "Fredoka", "Trebuchet MS", sans-serif;
+  font-size: clamp(16px, 1.45vw, 23px);
+  font-weight: 700;
+  line-height: 1;
+  padding: 4px 2px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+}
+
+.menu-top-header__link:hover {
+  color: #ffd643;
+  border-bottom-color: #ffd643;
+  transform: translateY(-1px);
+}
+
+.menu-top-header__link.is-active {
+  color: #ff8a3d;
+  border-bottom-color: #ff8a3d;
+}
+
+.menu-top-header__logout {
+  margin-left: auto;
+  appearance: none;
+  border: 2px solid #1f3889;
+  background: rgba(255, 255, 255, 0.84);
+  color: #1a2f76;
+  border-radius: 12px;
+  padding: 6px 16px;
+  font-family: "Fredoka", "Trebuchet MS", sans-serif;
+  font-weight: 800;
+  font-size: clamp(14px, 1.2vw, 17px);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+}
+
+.menu-top-header__logout:hover {
+  background: #1f3889;
+  color: #ffd643;
+  border-color: #ffd643;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .menu-top-header {
+    width: min(720px, 96vw);
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 14px;
+    padding: 10px;
+  }
+
+  .menu-top-header__avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .menu-top-header__user {
+    font-size: 22px;
+  }
+
+  .menu-top-header__logout {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .menu-top-header__nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .menu-top-header__link {
+    font-size: 18px;
   }
 }
