@@ -22,7 +22,7 @@ class XuxemonsSeeder extends Seeder
              'tipo_elemento' => 'Aigua',
              'tamano' => 'Petit',
              'descripcio' => "Una petita gota d'aigua que salta alegrement.",
-             'imagen' => null,
+             'imagen' => 'Xuxemons/Aigua-Petit-Graveta.png',
             ],
             [
              'nombre_xuxemon' => 'Bassot',
@@ -63,15 +63,53 @@ class XuxemonsSeeder extends Seeder
              'imagen' => null,
             ],
 
-            // Terra
+            // Terra - Petit (con imágenes)
 
             [
              'nombre_xuxemon' => 'Fanguet',
              'tipo_elemento' => 'Terra',
              'tamano' => 'Petit',
              'descripcio' => "Un fanguet tou que s'infiltra per qualsevol escletxa.",
-             'imagen' => null,
+             'imagen' => 'Imatges/Xuxemons/Terra-Petit-Fanguet.png',
             ],
+            [
+             'nombre_xuxemon' => 'Graveta',
+             'tipo_elemento' => 'Terra',
+             'tamano' => 'Petit',
+             'descripcio' => 'Una graveta petita que salta alegrement.',
+             'imagen' => 'Imatges/Xuxemons/Terra-Petit-Graveta.png',
+             ],
+            [
+             'nombre_xuxemon' => 'Grumoll',
+             'tipo_elemento' => 'Terra',
+             'tamano' => 'Petit',
+             'descripcio' => 'Un grumoll de terra compacta i sòlida.',
+             'imagen' => 'Imatges/Xuxemons/Terra-Petit-Grumoll.png',
+            ],
+            [
+             'nombre_xuxemon' => 'Pedrot',
+             'tipo_elemento' => 'Terra',
+             'tamano' => 'Petit',
+             'descripcio' => 'Un pedrot rodó i lleuger que roda pels camps.',
+             'imagen' => 'Imatges/Xuxemons/Terra-Petit-Pedrot.png',
+            ],
+            [
+             'nombre_xuxemon' => 'Sorreta',
+             'tipo_elemento' => 'Terra',
+             'tamano' => 'Petit',
+             'descripcio' => 'Una sorreta fina que flueix amb elegància.',
+             'imagen' => 'Imatges/Xuxemons/Terra-Petit-Sorreta.png',
+            ],
+            [
+             'nombre_xuxemon' => 'Terros',
+             'tipo_elemento' => 'Terra',
+             'tamano' => 'Petit',
+             'descripcio' => 'Un terroset petit i acomodatici que viu sous terra.',
+             'imagen' => 'Imatges/Xuxemons/Terra-Petit-Terros.png',
+            ],
+
+            // Terra - Mitja i Gran
+
             [
              'nombre_xuxemon' => 'Escarpat',
              'tipo_elemento' => 'Terra',

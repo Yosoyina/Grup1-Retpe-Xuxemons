@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      * 
      * Taula pivot que relaciona usuaris amb els seus Xuxemons capturats
-     * Emmagatzema informació de captura: nivell, experiència, estat de captura
+     * Emmagatzema informació de captura: estat de captura
      */
     public function up(): void
     {
@@ -18,8 +18,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_usuario')->constrained('users')->onDelete('cascade');
             $table->foreignId('id_xuxemon')->constrained('xuxemons')->onDelete('cascade');
-            $table->integer('nivel')->default(1);
-            $table->integer('experiencia')->default(0);
             $table->boolean('esta_capturado')->default(true);
             $table->timestamps();
             

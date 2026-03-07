@@ -29,8 +29,6 @@ class XuxemonsController extends Controller
                 'xuxemons.tamano',
                 'xuxemons.descripcio',
                 'xuxemons.imagen',
-                'xuxedex.nivel',
-                'xuxedex.experiencia',
                 'xuxedex.esta_capturado'
             )
             ->where('xuxedex.id_usuario', $userId);
