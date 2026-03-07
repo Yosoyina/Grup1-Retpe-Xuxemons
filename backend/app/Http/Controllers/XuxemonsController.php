@@ -9,6 +9,43 @@ use Illuminate\Support\Facades\DB;
 class XuxemonsController extends Controller
 {
     /**
+     * Obtenir tots els Xuxemons del usuari autenticat de la seva Xuxedex
+     * Suporta filtres per tipus d'element
+     * 
+     * GET /api/xuxedex
+     * GET /api/xuxedex?tipo=Aigua
+     */
+    public function getUserXuxedex(Request $request)
+    {
+        $userId = $request->user()->id;
+        $tipo = $request->query('tipo');
+
+        $query = DB::table('xuxedex')
+            ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')
+            ->select(
+                'xuxemons.id',
+                'xuxemons.nombre_xuxemon',
+                'xuxemons.tipo_elemento',
+                'xuxemons.tamano',
+                'xuxemons.descripcio',
+                'xuxemons.imagen',
+                'xuxedex.nivel',
+                'xuxedex.experiencia',
+                'xuxedex.esta_capturado'
+            )
+            ->where('xuxedex.id_usuario', $userId);
+
+        // Aplicar filtro de tipo si es proporcionado
+        if ($tipo && $tipo !== 'Todos') {
+            $query->where('xuxemons.tipo_elemento', $tipo);
+        }
+
+        $xuxemons = $query->get();
+
+        return response()->json($xuxemons, 200);
+    }
+
+    /**
      * Display a listing of the resource.
      */
 
