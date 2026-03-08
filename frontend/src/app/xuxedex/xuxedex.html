@@ -3,55 +3,84 @@
 </header>
 
 <div class="container">
+
   <!-- FILTROS -->
   <div class="filtros">
-    <button *ngFor="let tipo of tiposElementos" 
-            (click)="cambiarFiltro(tipo)"
-            [class.activo]="filtroActual === tipo">
+    @for (tipo of tiposElementos; track tipo) {
+    <button (click)="cambiarFiltro(tipo)" [class.activo]="filtroActual === tipo">
       {{ tipo }}
     </button>
+    }
   </div>
 
   <!-- GRID DE XUXEMONS -->
-  <div class="xuxemons-grid" *ngIf="(xuxemonesFiltrados$ | async) as xuxemons">
-    <div *ngFor="let xuxemon of getXuxemonesPaginados(xuxemons)"
-         class="xuxemon-card"
-         [class]="getClaseTipo(xuxemon.tipo_elemento)"
-         (click)="seleccionarXuxemon(xuxemon)">
-      
-      <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
+  @if (xuxemonesFiltrados$ | async; as xuxemons) {
+  @if (xuxemons.length === 0) {
+  <p class="missatge-buit">No hi ha Xuxemons disponibles.</p>
+  } @else {
+  <div class="xuxemons-grid">
+    @for (xuxemon of getXuxemonesPaginados(xuxemons); track xuxemon.id) {
+    <div class="xuxemon-card {{ getClaseTipo(xuxemon.tipo_elemento) }}" (click)="seleccionarXuxemon(xuxemon)">
+
+      <!-- Si té imatge la mostra, si no mostra placeholder amb l'inicial -->
+      @if (xuxemon.imagen) {
+      <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon" (error)="onImageError($event)">
+      } @else {
+      <div class="placeholder-img">
+        {{ xuxemon.nombre_xuxemon.charAt(0) }}
+      </div>
+      }
+
       <h3>{{ xuxemon.nombre_xuxemon }}</h3>
-      <p class="tipo">{{ xuxemon.tipo_elemento }}</p>
-      <p class="nivel">Nivel: {{ xuxemon.nivel }}</p>
-      
-      <span *ngIf="estaCapturaado(xuxemon)" class="capturado">✓ Capturado</span>
-      <span *ngIf="!estaCapturaado(xuxemon)" class="no-capturado">Bloqueado</span>
+      <p class="tipus">{{ xuxemon.tipo_elemento }}</p>
+      <p class="mida">{{ xuxemon.tamano }}</p>
+
+      @if (estaCapturaado(xuxemon)) {
+      <span class="capturado">✓ Capturat</span>
+      } @else {
+      <span class="no-capturado">🔒 Bloquejat</span>
+      }
     </div>
+    }
   </div>
 
-  <!-- PAGINACIÓN -->
-  <div class="paginacion" *ngIf="(xuxemonesFiltrados$ | async) as xuxemons">
-    <button (click)="paginaAnterior(xuxemons)">← Anterior</button>
-    <span>Página {{ paginaActual + 1 }}</span>
-    <button (click)="paginaSiguiente(xuxemons)">Siguiente →</button>
+  <!-- PAGINACIÓ -->
+  <div class="paginacion">
+    <button (click)="paginaAnterior(xuxemons)" [disabled]="paginaActual === 0">← Anterior</button>
+    <span>Pàgina {{ paginaActual + 1 }} / {{ getTotalPagines(xuxemons) }}</span>
+    <button (click)="paginaSiguiente(xuxemons)" [disabled]="paginaActual >= getTotalPagines(xuxemons) - 1">Següent
+      →</button>
   </div>
+  }
+  }
 
-  <!-- DETALLES -->
-  <div class="detalle" *ngIf="xuxemonSeleccionado">
+  <!-- DETALL XUXEMON SELECCIONAT -->
+  @if (xuxemonSeleccionado) {
+  <div class="detalle">
+    <button class="tancar-detall" (click)="xuxemonSeleccionado = null">✕</button>
     <h2>{{ xuxemonSeleccionado.nombre_xuxemon }}</h2>
-    <img [src]="xuxemonSeleccionado.imagen" [alt]="xuxemonSeleccionado.nombre_xuxemon">
-    
+
+    @if (xuxemonSeleccionado.imagen) {
+    <img [src]="xuxemonSeleccionado.imagen" [alt]="xuxemonSeleccionado.nombre_xuxemon" (error)="onImageError($event)">
+    } @else {
+    <div class="placeholder-img placeholder-gran">
+      {{ xuxemonSeleccionado.nombre_xuxemon.charAt(0) }}
+    </div>
+    }
+
     <div class="info">
-      <p><strong>Tipo:</strong> {{ xuxemonSeleccionado.tipo_elemento }}</p>
-      <p><strong>Tamaño:</strong> {{ xuxemonSeleccionado.tamano }}</p>
-      <p><strong>Nivel:</strong> {{ xuxemonSeleccionado.nivel }}</p>
-      <p><strong>Experiencia:</strong> {{ xuxemonSeleccionado.experiencia }}</p>
-      <p><strong>Descripción:</strong> {{ xuxemonSeleccionado.descripcio }}</p>
-      <p *ngIf="estaCapturaado(xuxemonSeleccionado)" class="capturado">✓ Capturado</p>
-      <p *ngIf="!estaCapturaado(xuxemonSeleccionado)" class="no-capturado">No capturado</p>
+      <p><strong>Tipus:</strong> {{ xuxemonSeleccionado.tipo_elemento }}</p>
+      <p><strong>Mida:</strong> {{ xuxemonSeleccionado.tamano }}</p>
+      <p><strong>Descripció:</strong> {{ xuxemonSeleccionado.descripcio }}</p>
+      @if (estaCapturaado(xuxemonSeleccionado)) {
+      <p class="capturado">✓ Capturat</p>
+      } @else {
+      <p class="no-capturado">🔒 No capturat</p>
+      }
     </div>
   </div>
+  }
 
-  <!-- BOTÓN SORTIR -->
+  <!-- BOTÓ SORTIR -->
   <button class="sortir-btn" (click)="sortir()">🚪 SORTIR</button>
 </div>
