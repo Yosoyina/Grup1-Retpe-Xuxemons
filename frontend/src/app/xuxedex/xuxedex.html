@@ -31,19 +31,14 @@
     <!-- CARTA NORMAL -->
     } @else {
     <div class="xuxemon-card {{ getClaseTipo(xuxemon.tipo_elemento) }}" (click)="seleccionarXuxemon(xuxemon)">
-
       @if (xuxemon.imagen) {
       <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon" (error)="onImageError($event)">
       } @else {
-      <div class="placeholder-img">
-        {{ xuxemon.nombre_xuxemon.charAt(0) }}
-      </div>
+      <div class="placeholder-img">{{ xuxemon.nombre_xuxemon.charAt(0) }}</div>
       }
-
       <h3>{{ xuxemon.nombre_xuxemon }}</h3>
       <p class="tipus">{{ xuxemon.tipo_elemento }}</p>
       <p class="mida">{{ xuxemon.tamano }}</p>
-
       @if (xuxemon.esta_capturado) {
       <span class="capturado">✓ Capturat</span>
       } @else {
@@ -54,7 +49,8 @@
     }
   </div>
 
-  <!-- PAGINACIÓ -->
+  <!-- PAGINACIÓ: només quan el filtre és "Todos" -->
+  @if (mostrarPaginacio) {
   <div class="paginacion">
     <button (click)="paginaAnterior(xuxemons)" [disabled]="paginaActual === 0">← Anterior</button>
     <span>Pàgina {{ paginaActual + 1 }} / {{ getTotalPagines(xuxemons) }}</span>
@@ -63,21 +59,18 @@
   </div>
   }
   }
+  }
 
-  <!-- DETALL XUXEMON SELECCIONAT (només si no és bloquejat) -->
+  <!-- DETALL -->
   @if (xuxemonSeleccionado && !xuxemonSeleccionado.bloquejat) {
   <div class="detalle">
     <button class="tancar-detall" (click)="xuxemonSeleccionado = null">✕</button>
     <h2>{{ xuxemonSeleccionado.nombre_xuxemon }}</h2>
-
     @if (xuxemonSeleccionado.imagen) {
     <img [src]="xuxemonSeleccionado.imagen" [alt]="xuxemonSeleccionado.nombre_xuxemon" (error)="onImageError($event)">
     } @else {
-    <div class="placeholder-img placeholder-gran">
-      {{ xuxemonSeleccionado.nombre_xuxemon.charAt(0) }}
-    </div>
+    <div class="placeholder-img placeholder-gran">{{ xuxemonSeleccionado.nombre_xuxemon.charAt(0) }}</div>
     }
-
     <div class="info">
       <p><strong>Tipus:</strong> {{ xuxemonSeleccionado.tipo_elemento }}</p>
       <p><strong>Mida:</strong> {{ xuxemonSeleccionado.tamano }}</p>

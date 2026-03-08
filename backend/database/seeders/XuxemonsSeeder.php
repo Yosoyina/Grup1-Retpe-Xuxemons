@@ -63,28 +63,49 @@ class XuxemonsSeeder extends Seeder
             // Aire
 
             [
-                'nombre_xuxemon' => 'Sospir',
+                'nombre_xuxemon' => 'Bufet',
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Petit',
                 'descripcio' => 'Un sospir de vent calent que escampa les llavors.',
                 'imagen' => null,
             ],
             [
-                'nombre_xuxemon' => 'Ratxot',
+                'nombre_xuxemon' => 'Briseta',
                 'tipo_elemento' => 'Aire',
-                'tamano' => 'Mitja',
+                'tamano' => 'Petit',
                 'descripcio' => 'Una ratxa de vent que apareix de forma inesperada.',
                 'imagen' => null,
             ],
             [
-                'nombre_xuxemon' => 'Estratós',
+                'nombre_xuxemon' => 'Xiulet',
                 'tipo_elemento' => 'Aire',
-                'tamano' => 'Gran',
+                'tamano' => 'Petit',
+                'descripcio' => "Un ésser de l'estratosfera amb poder il·limitat.",
+                'imagen' => null,
+            ],
+            [
+                'nombre_xuxemon' => 'Airós',
+                'tipo_elemento' => 'Aire',
+                'tamano' => 'Petit',
+                'descripcio' => 'Un sospir de vent calent que escampa les llavors.',
+                'imagen' => null,
+            ],
+            [
+                'nombre_xuxemon' => 'Alenat',
+                'tipo_elemento' => 'Aire',
+                'tamano' => 'Petit',
+                'descripcio' => 'Una ratxa de vent que apareix de forma inesperada.',
+                'imagen' => null,
+            ],
+            [
+                'nombre_xuxemon' => 'Sospir',
+                'tipo_elemento' => 'Aire',
+                'tamano' => 'Petit',
                 'descripcio' => "Un ésser de l'estratosfera amb poder il·limitat.",
                 'imagen' => null,
             ],
 
-            // Terra - Petit (con imágenes)
+            // Terra
 
             [
                 'nombre_xuxemon' => 'Fanguet',

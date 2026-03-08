@@ -14,7 +14,6 @@ export class Xuxedex {
   paginaActual = 0;
   itemsPorPagina = 6;
   filtroActual = 'Todos';
-
   xuxemonSeleccionado: Xuxemon | null = null;
 
   get xuxemonesFiltrados$() {
@@ -23,6 +22,11 @@ export class Xuxedex {
 
   get tiposElementos(): string[] {
     return this.xuxemonService.getTiposElementos();
+  }
+
+  // Si el filtre és un tipus concret, no cal paginació (sempre 6 cartes = 1 pàgina)
+  get mostrarPaginacio(): boolean {
+    return this.filtroActual === 'Todos';
   }
 
   constructor(
@@ -35,10 +39,12 @@ export class Xuxedex {
   cambiarFiltro(tipo: string): void {
     this.filtroActual = tipo;
     this.paginaActual = 0;
+    this.xuxemonSeleccionado = null;
     this.xuxemonService.aplicarFiltro(tipo);
   }
 
   getXuxemonesPaginados(xuxemons: Xuxemon[]): Xuxemon[] {
+    if (!this.mostrarPaginacio) return xuxemons; // Tipus concret: tots (sempre 6)
     const inicio = this.paginaActual * this.itemsPorPagina;
     return xuxemons.slice(inicio, inicio + this.itemsPorPagina);
   }
@@ -48,21 +54,15 @@ export class Xuxedex {
   }
 
   paginaAnterior(xuxemons: Xuxemon[]): void {
-    const maxPaginas = Math.ceil(xuxemons.length / this.itemsPorPagina);
-    if (this.paginaActual > 0) {
-      this.paginaActual--;
-    }
+    if (this.paginaActual > 0) this.paginaActual--;
   }
 
   paginaSiguiente(xuxemons: Xuxemon[]): void {
-    const maxPaginas = Math.ceil(xuxemons.length / this.itemsPorPagina);
-    if (this.paginaActual < maxPaginas - 1) {
-      this.paginaActual++;
-    }
+    if (this.paginaActual < this.getTotalPagines(xuxemons) - 1) this.paginaActual++;
   }
 
   seleccionarXuxemon(xuxemon: Xuxemon): void {
-    this.xuxemonSeleccionado = xuxemon;
+    if (!xuxemon.bloquejat) this.xuxemonSeleccionado = xuxemon;
   }
 
   getClaseTipo(tipo: string): string {
@@ -72,10 +72,6 @@ export class Xuxedex {
       'Aire': 'type-aire'
     };
     return clases[tipo] || '';
-  }
-
-  estaCapturaado(xuxemon: Xuxemon): boolean {
-    return xuxemon.esta_capturado ?? false;
   }
 
   onImageError(event: Event): void {

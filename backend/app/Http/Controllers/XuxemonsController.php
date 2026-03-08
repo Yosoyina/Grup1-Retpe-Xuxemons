@@ -8,67 +8,52 @@ use Illuminate\Support\Facades\DB;
 
 class XuxemonsController extends Controller
 {
-    /**
-     * Obtenir tots els Xuxemons del usuari autenticat de la seva Xuxedex
-     * Suporta filtres per tipus d'element
-     * 
-     * GET /api/xuxedex
-     * GET /api/xuxedex?tipo=Aigua
-     */
     public function getUserXuxedex(Request $request)
     {
         $userId = $request->user()->id;
         $tipo   = $request->query('tipo');
 
-        // Tots els xuxemons del catàleg (filtrats per tipus si cal)
-        $catalogQuery = DB::table('xuxemons');
-        if ($tipo && $tipo !== 'Todos') {
-            $catalogQuery->where('tipo_elemento', $tipo);
+        $tipus = ($tipo && $tipo !== 'Todos')
+            ? [$tipo]
+            : ['Aigua', 'Terra', 'Aire'];
+
+        $resultat = collect();
+
+        foreach ($tipus as $t) {
+            // Els 6 xuxemons del jugador per aquest tipus
+            // esta_capturado=true → desbloquejat, false → bloquejat
+            $xuxemons = DB::table('xuxedex')
+                ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')
+                ->where('xuxedex.id_usuario', $userId)
+                ->where('xuxemons.tipo_elemento', $t)
+                ->select(
+                    'xuxemons.id',
+                    'xuxemons.nombre_xuxemon',
+                    'xuxemons.tipo_elemento',
+                    'xuxemons.tamano',
+                    'xuxemons.descripcio',
+                    'xuxemons.imagen',
+                    'xuxedex.esta_capturado'
+                )
+                ->limit(6)
+                ->get()
+                ->map(fn($x) => [
+                    'id'             => $x->id,
+                    // Si està bloquejat amaguem el nom i la imatge
+                    'nombre_xuxemon' => $x->esta_capturado ? $x->nombre_xuxemon : '???',
+                    'tipo_elemento'  => $x->tipo_elemento,
+                    'tamano'         => $x->esta_capturado ? $x->tamano : '???',
+                    'descripcio'     => $x->esta_capturado ? $x->descripcio : '',
+                    'imagen'         => $x->esta_capturado ? $x->imagen : null,
+                    'esta_capturado' => (bool) $x->esta_capturado,
+                    'bloquejat'      => !(bool) $x->esta_capturado,
+                ]);
+
+            $resultat = $resultat->concat($xuxemons);
         }
-        $cataleg = $catalogQuery->get();
 
-        // Els xuxemons que té el jugador
-        $meus = DB::table('xuxedex')
-            ->where('id_usuario', $userId)
-            ->pluck('esta_capturado', 'id_xuxemon'); // [id_xuxemon => esta_capturado]
-
-        // Construir la resposta: els que té amb dades, els que no com a bloquejats
-        $resultat = $cataleg->map(function ($xuxemon) use ($meus) {
-            if ($meus->has($xuxemon->id)) {
-                // El jugador el té: mostrar totes les dades
-                return [
-                    'id'             => $xuxemon->id,
-                    'nombre_xuxemon' => $xuxemon->nombre_xuxemon,
-                    'tipo_elemento'  => $xuxemon->tipo_elemento,
-                    'tamano'         => $xuxemon->tamano,
-                    'descripcio'     => $xuxemon->descripcio,
-                    'imagen'         => $xuxemon->imagen,
-                    'esta_capturado' => (bool) $meus[$xuxemon->id],
-                    'bloquejat'      => false,
-                ];
-            } else {
-                // El jugador NO el té: carta bloquejada sense dades
-                return [
-                    'id'             => $xuxemon->id,
-                    'nombre_xuxemon' => '???',
-                    'tipo_elemento'  => $xuxemon->tipo_elemento,
-                    'tamano'         => '???',
-                    'descripcio'     => '',
-                    'imagen'         => null,
-                    'esta_capturado' => false,
-                    'bloquejat'      => true,
-                ];
-            }
-        });
-
-        return response()->json($resultat, 200);
+        return response()->json($resultat->values(), 200);
     }
-
-    /**
-     * Display a listing of the resource.
-     */
-
-    // ── XUXEDEX ─────────────────────────────────────────────
 
     public function index(Request $request)
     {
@@ -76,29 +61,22 @@ class XuxemonsController extends Controller
         $tamano = $request->tamano;
 
         $xuxemons = DB::select("
-            SELECT *
-            FROM xuxemons
+            SELECT * FROM xuxemons
             WHERE (tipo_elemento = :tipo   OR :tipo   IS NULL)
-            AND (tamano = :tamano OR :tamano IS NULL)
-        ", [
-            'tipo'   => $tipo,
-            'tamano' => $tamano,
-        ]);
+            AND   (tamano        = :tamano OR :tamano IS NULL)
+        ", ['tipo' => $tipo, 'tamano' => $tamano]);
 
         return response()->json($xuxemons, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
             'nombre_xuxemon' => 'required|string',
-            'tipo_elemento' => 'required|in:Aigua,Terra,Aire',
-            'tamano' => 'required|in:Petit,Mitja,Gran',
-            'descripcio' => 'nullable|string',
-            'imagen' => 'nullable|string',
+            'tipo_elemento'  => 'required|in:Aigua,Terra,Aire',
+            'tamano'         => 'required|in:Petit,Mitja,Gran',
+            'descripcio'     => 'nullable|string',
+            'imagen'         => 'nullable|string',
         ]);
 
         DB::insert("
@@ -106,44 +84,17 @@ class XuxemonsController extends Controller
             VALUES (:nombre_xuxemon, :tipo_elemento, :tamano, :descripcio, :imagen, NOW(), NOW())
         ", [
             'nombre_xuxemon' => $request->nombre_xuxemon,
-            'tipo_elemento' => $request->tipo_elemento,
-            'tamano' => $request->tamano,
-            'descripcio' => $request->descripcio,
-            'imagen' => $request->imagen,
+            'tipo_elemento'  => $request->tipo_elemento,
+            'tamano'         => $request->tamano,
+            'descripcio'     => $request->descripcio,
+            'imagen'         => $request->imagen,
         ]);
 
-        return response()->json(['message' => 'Xuxemon creado correctamente'], 201);
+        return response()->json(['message' => 'Xuxemon creat correctament'], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    public function show(string $id) {}
+    public function edit(string $id) {}
+    public function update(Request $request, string $id) {}
+    public function destroy(string $id) {}
 }
