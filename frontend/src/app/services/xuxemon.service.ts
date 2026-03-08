@@ -10,9 +10,8 @@ export interface Xuxemon {
   tamano: string;
   descripcio: string;
   imagen: string;
-  nivel?: number;
-  experiencia?: number;
   esta_capturado?: boolean;
+  bloquejat?: boolean;
 }
 
 @Injectable({
@@ -47,7 +46,8 @@ export class XuxemonService {
       map(xuxemons => xuxemons.map(x => ({
         ...x,
         imagen: this.resolverImagen(x.imagen),
-        esta_capturado: x.esta_capturado === 1 || x.esta_capturado === true
+        esta_capturado: x.esta_capturado === 1 || x.esta_capturado === true, 
+        bloquejat: x.bloquejat === true,
       }))),
       catchError((error) => {
         console.error('Error al obtenir Xuxemons:', error);

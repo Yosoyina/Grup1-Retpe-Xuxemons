@@ -20,9 +20,18 @@
   } @else {
   <div class="xuxemons-grid">
     @for (xuxemon of getXuxemonesPaginados(xuxemons); track xuxemon.id) {
+
+    <!-- CARTA BLOQUEJADA -->
+    @if (xuxemon.bloquejat) {
+    <div class="xuxemon-card bloquejat">
+      <div class="bloqueig-icona">🔒</div>
+      <p class="bloqueig-text">Bloquejat</p>
+    </div>
+
+    <!-- CARTA NORMAL -->
+    } @else {
     <div class="xuxemon-card {{ getClaseTipo(xuxemon.tipo_elemento) }}" (click)="seleccionarXuxemon(xuxemon)">
 
-      <!-- Si té imatge la mostra, si no mostra placeholder amb l'inicial -->
       @if (xuxemon.imagen) {
       <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon" (error)="onImageError($event)">
       } @else {
@@ -35,12 +44,13 @@
       <p class="tipus">{{ xuxemon.tipo_elemento }}</p>
       <p class="mida">{{ xuxemon.tamano }}</p>
 
-      @if (estaCapturaado(xuxemon)) {
+      @if (xuxemon.esta_capturado) {
       <span class="capturado">✓ Capturat</span>
       } @else {
-      <span class="no-capturado">🔒 Bloquejat</span>
+      <span class="vist">👁 Vist</span>
       }
     </div>
+    }
     }
   </div>
 
@@ -54,8 +64,8 @@
   }
   }
 
-  <!-- DETALL XUXEMON SELECCIONAT -->
-  @if (xuxemonSeleccionado) {
+  <!-- DETALL XUXEMON SELECCIONAT (només si no és bloquejat) -->
+  @if (xuxemonSeleccionado && !xuxemonSeleccionado.bloquejat) {
   <div class="detalle">
     <button class="tancar-detall" (click)="xuxemonSeleccionado = null">✕</button>
     <h2>{{ xuxemonSeleccionado.nombre_xuxemon }}</h2>
@@ -72,15 +82,14 @@
       <p><strong>Tipus:</strong> {{ xuxemonSeleccionado.tipo_elemento }}</p>
       <p><strong>Mida:</strong> {{ xuxemonSeleccionado.tamano }}</p>
       <p><strong>Descripció:</strong> {{ xuxemonSeleccionado.descripcio }}</p>
-      @if (estaCapturaado(xuxemonSeleccionado)) {
+      @if (xuxemonSeleccionado.esta_capturado) {
       <p class="capturado">✓ Capturat</p>
       } @else {
-      <p class="no-capturado">🔒 No capturat</p>
+      <p class="vist">👁 Vist</p>
       }
     </div>
   </div>
   }
 
-  <!-- BOTÓ SORTIR -->
   <button class="sortir-btn" (click)="sortir()">🚪 SORTIR</button>
 </div>

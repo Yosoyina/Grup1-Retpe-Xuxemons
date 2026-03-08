@@ -18,29 +18,50 @@ class XuxemonsController extends Controller
     public function getUserXuxedex(Request $request)
     {
         $userId = $request->user()->id;
-        $tipo = $request->query('tipo');
+        $tipo   = $request->query('tipo');
 
-        $query = DB::table('xuxedex')
-            ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')
-            ->select(
-                'xuxemons.id',
-                'xuxemons.nombre_xuxemon',
-                'xuxemons.tipo_elemento',
-                'xuxemons.tamano',
-                'xuxemons.descripcio',
-                'xuxemons.imagen',
-                'xuxedex.esta_capturado'
-            )
-            ->where('xuxedex.id_usuario', $userId);
-
-        // Aplicar filtro de tipo si es proporcionado
+        // Tots els xuxemons del catàleg (filtrats per tipus si cal)
+        $catalogQuery = DB::table('xuxemons');
         if ($tipo && $tipo !== 'Todos') {
-            $query->where('xuxemons.tipo_elemento', $tipo);
+            $catalogQuery->where('tipo_elemento', $tipo);
         }
+        $cataleg = $catalogQuery->get();
 
-        $xuxemons = $query->get();
+        // Els xuxemons que té el jugador
+        $meus = DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->pluck('esta_capturado', 'id_xuxemon'); // [id_xuxemon => esta_capturado]
 
-        return response()->json($xuxemons, 200);
+        // Construir la resposta: els que té amb dades, els que no com a bloquejats
+        $resultat = $cataleg->map(function ($xuxemon) use ($meus) {
+            if ($meus->has($xuxemon->id)) {
+                // El jugador el té: mostrar totes les dades
+                return [
+                    'id'             => $xuxemon->id,
+                    'nombre_xuxemon' => $xuxemon->nombre_xuxemon,
+                    'tipo_elemento'  => $xuxemon->tipo_elemento,
+                    'tamano'         => $xuxemon->tamano,
+                    'descripcio'     => $xuxemon->descripcio,
+                    'imagen'         => $xuxemon->imagen,
+                    'esta_capturado' => (bool) $meus[$xuxemon->id],
+                    'bloquejat'      => false,
+                ];
+            } else {
+                // El jugador NO el té: carta bloquejada sense dades
+                return [
+                    'id'             => $xuxemon->id,
+                    'nombre_xuxemon' => '???',
+                    'tipo_elemento'  => $xuxemon->tipo_elemento,
+                    'tamano'         => '???',
+                    'descripcio'     => '',
+                    'imagen'         => null,
+                    'esta_capturado' => false,
+                    'bloquejat'      => true,
+                ];
+            }
+        });
+
+        return response()->json($resultat, 200);
     }
 
     /**
@@ -92,7 +113,6 @@ class XuxemonsController extends Controller
         ]);
 
         return response()->json(['message' => 'Xuxemon creado correctamente'], 201);
-
     }
 
     /**
