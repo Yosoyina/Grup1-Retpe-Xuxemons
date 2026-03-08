@@ -134,3 +134,4 @@ class XuxemonsController extends Controller
         
         return response()->json(['message' => 'Xuxemon eliminado correctamente'], 200);
     }
+}
