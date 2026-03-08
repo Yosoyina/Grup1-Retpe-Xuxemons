@@ -9,6 +9,62 @@ use Illuminate\Support\Facades\DB;
 class XuxemonsController extends Controller
 {
     /**
+     * Obtenir tots els Xuxemons del usuari autenticat de la seva Xuxedex
+     * Suporta filtres per tipus d'element
+     * 
+     * GET /api/xuxedex
+     * GET /api/xuxedex?tipo=Aigua
+     */
+    public function getUserXuxedex(Request $request)
+    {
+        $userId = $request->user()->id;
+        $tipo   = $request->query('tipo');
+
+        // Tots els xuxemons del catàleg (filtrats per tipus si cal)
+        $catalogQuery = DB::table('xuxemons');
+        if ($tipo && $tipo !== 'Todos') {
+            $catalogQuery->where('tipo_elemento', $tipo);
+        }
+        $cataleg = $catalogQuery->get();
+
+        // Els xuxemons que té el jugador
+        $meus = DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->pluck('esta_capturado', 'id_xuxemon'); // [id_xuxemon => esta_capturado]
+
+        // Construir la resposta: els que té amb dades, els que no com a bloquejats
+        $resultat = $cataleg->map(function ($xuxemon) use ($meus) {
+            if ($meus->has($xuxemon->id)) {
+                // El jugador el té: mostrar totes les dades
+                return [
+                    'id'             => $xuxemon->id,
+                    'nombre_xuxemon' => $xuxemon->nombre_xuxemon,
+                    'tipo_elemento'  => $xuxemon->tipo_elemento,
+                    'tamano'         => $xuxemon->tamano,
+                    'descripcio'     => $xuxemon->descripcio,
+                    'imagen'         => $xuxemon->imagen,
+                    'esta_capturado' => (bool) $meus[$xuxemon->id],
+                    'bloquejat'      => false,
+                ];
+            } else {
+                // El jugador NO el té: carta bloquejada sense dades
+                return [
+                    'id'             => $xuxemon->id,
+                    'nombre_xuxemon' => '???',
+                    'tipo_elemento'  => $xuxemon->tipo_elemento,
+                    'tamano'         => '???',
+                    'descripcio'     => '',
+                    'imagen'         => null,
+                    'esta_capturado' => false,
+                    'bloquejat'      => true,
+                ];
+            }
+        });
+
+        return response()->json($resultat, 200);
+    }
+
+    /**
      * Display a listing of the resource.
      */
 
@@ -60,7 +116,6 @@ class XuxemonsController extends Controller
         ]);
 
         return response()->json(['message' => 'Xuxemon creado correctamente'], 201);
-
     }
 
     /**

@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Xuxemons;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -41,6 +43,29 @@ class AuthController extends Controller
             'avatar' => 'avatarpordefecto.png',
 
         ]);
+
+        // Assignar xuxemons inicials al nou usuari
+        $xuxemons = Xuxemons::all();
+
+        $xuxemons->take(5)->each(function ($xuxemon) use ($user) {
+            DB::table('xuxedex')->insert([
+                'id_usuario'     => $user->id,
+                'id_xuxemon'     => $xuxemon->id,
+                'esta_capturado' => true,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+        });
+
+        $xuxemons->slice(5, 3)->each(function ($xuxemon) use ($user) {
+            DB::table('xuxedex')->insert([
+                'id_usuario'     => $user->id,
+                'id_xuxemon'     => $xuxemon->id,
+                'esta_capturado' => false,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+        });
 
         $token = Auth::guard('api')->login($user);
 
