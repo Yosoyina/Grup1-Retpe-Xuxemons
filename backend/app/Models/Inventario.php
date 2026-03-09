@@ -13,19 +13,13 @@ class Inventario extends Model
 
     protected $table = 'inventario';
 
+    const MAX_STACK = 5;   // Màximas unidades por espacio en el apilable
+    const MAX_SLOTS = 20;  // Total de espacios disponibles que hay en la mochila
+
     protected $fillable = [
         'xuxemon_id',
-        'tipo_item',
-        'xuxe_id',
-        'cantidad',
+        'xuxa_id',
+        'quantity',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'xuxemon_id' => 'integer',
-            'xuxe_id' => 'integer',
-            'cantidad' => 'integer',
-        ];
-    }
 }
