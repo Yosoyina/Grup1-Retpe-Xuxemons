@@ -31,4 +31,10 @@ class Xuxemons extends Model
             'imagen' => 'string',
         ];
     }
+
+    // Un xuxemon pertany a un usuari
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
