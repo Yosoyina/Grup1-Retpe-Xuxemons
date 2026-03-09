@@ -9,86 +9,115 @@ use Illuminate\Support\Facades\DB;
 class XuxemonsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * GET /api/xuxedex
+     * GET /api/xuxedex?tipo=Aigua
+     * GET /api/xuxedex?tipo=Aigua&tamano=Petit
      */
 
-    // ── XUXEDEX ─────────────────────────────────────────────
-
-    public function index(Request $request)
+    // Retorna els xuxemons del jugador, els bloquejats surten com a ???
+    public function getUserXuxedex(Request $request)
     {
-        $tipo   = $request->tipo_elemento;
-        $tamano = $request->tamano;
+        $userId = $request->user()->id;
+        $tipo   = $request->query('tipo');
+        $tamano = $request->query('tamano');
 
-        $xuxemons = DB::select("
-            SELECT *
-            FROM xuxemons
-            WHERE (tipo_elemento = :tipo   OR :tipo   IS NULL)
-            AND (tamano = :tamano OR :tamano IS NULL)
-        ", [
-            'tipo'   => $tipo,
-            'tamano' => $tamano,
-        ]);
+        $query = DB::table('xuxedex')
+            ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')
+            ->where('xuxedex.id_usuario', $userId)
+            ->select(
+                'xuxemons.id',
+                'xuxemons.nombre_xuxemon',
+                'xuxemons.tipo_elemento',
+                'xuxemons.tamano',
+                'xuxemons.descripcio',
+                'xuxemons.imagen',
+                'xuxedex.esta_capturado'
+            );
+
+        // Aplica filtres si l'usuari els ha enviat
+        if ($tipo && $tipo !== 'Todos') {
+            $query->where('xuxemons.tipo_elemento', $tipo);
+        }
+
+        if ($tamano) {
+            $query->where('xuxemons.tamano', $tamano);
+        }
+
+        $xuxemons = $query->get()
+            ->map(fn($x) => [
+                'id'             => $x->id,
+                'nombre_xuxemon' => $x->esta_capturado ? $x->nombre_xuxemon : '???',
+                'tipo_elemento'  => $x->tipo_elemento,
+                'tamano'         => $x->esta_capturado ? $x->tamano : '???',
+                'descripcio'     => $x->esta_capturado ? $x->descripcio : '',
+                'imagen'         => $x->esta_capturado ? $x->imagen : null,
+                'esta_capturado' => (bool) $x->esta_capturado,
+                'bloquejat'      => !(bool) $x->esta_capturado,
+            ]);
 
         return response()->json($xuxemons, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    /** GET /api/xuxemons */
+
+    // Retorna tots els xuxemons del catàleg, amb filtres opcionals per tipus i mida
+    public function index(Request $request)
+    {
+        $xuxemons = Xuxemons::query()
+            ->when($request->query('tipo_elemento'), fn($q, $v) => $q->where('tipo_elemento', $v))
+            ->when($request->query('tamano'),        fn($q, $v) => $q->where('tamano', $v))
+            ->get();
+
+        return response()->json($xuxemons, 200);
+    }
+
+    /** POST /api/xuxemons */
+
+    // Crea un nou xuxemon al catàleg, només per a administradors
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre_xuxemon' => 'required|string',
-            'tipo_elemento' => 'required|in:Aigua,Terra,Aire',
-            'tamano' => 'required|in:Petit,Mitja,Gran',
-            'descripcio' => 'nullable|string',
-            'imagen' => 'nullable|string',
-        ]);
+        $xuxemon = Xuxemons::create($request->validate([
+            'nombre_xuxemon' => 'required|string|max:50',
+            'tipo_elemento'  => 'required|in:Aigua,Terra,Aire',
+            'tamano'         => 'required|in:Petit,Mitja,Gran',
+            'descripcio'     => 'nullable|string',
+            'imagen'         => 'nullable|string',
+        ]));
 
-        DB::insert("
-            INSERT INTO xuxemons (nombre_xuxemon, tipo_elemento, tamano, descripcio, imagen, created_at, updated_at)
-            VALUES (:nombre_xuxemon, :tipo_elemento, :tamano, :descripcio, :imagen, NOW(), NOW())
-        ", [
-            'nombre_xuxemon' => $request->nombre_xuxemon,
-            'tipo_elemento' => $request->tipo_elemento,
-            'tamano' => $request->tamano,
-            'descripcio' => $request->descripcio,
-            'imagen' => $request->imagen,
-        ]);
-
-        return response()->json(['message' => 'Xuxemon creado correctamente'], 201);
-
+        return response()->json($xuxemon, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    /** GET /api/xuxemons/{id} */
+
+    // Retorna un xuxemon pel seu ID, només per a administradors
     public function show(string $id)
     {
-        //
+        return response()->json(Xuxemons::findOrFail($id), 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+    /** PUT /api/xuxemons/{id} */
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Actualitza un xuxemon pel seu ID, només per a administradors
     public function update(Request $request, string $id)
     {
-        //
+        $xuxemon = Xuxemons::findOrFail($id);
+        $xuxemon->update($request->validate([
+            'nombre_xuxemon' => 'sometimes|string|max:50',
+            'tipo_elemento'  => 'sometimes|in:Aigua,Terra,Aire',
+            'tamano'         => 'sometimes|in:Petit,Mitja,Gran',
+            'descripcio'     => 'nullable|string',
+            'imagen'         => 'nullable|string',
+        ]));
+
+        return response()->json($xuxemon, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    /** DELETE /api/xuxemons/{id} */
+
+    // Elimina un xuxemon pel seu ID, només per a administradors
     public function destroy(string $id)
     {
-        //
+        Xuxemons::findOrFail($id)->delete();
+        return response()->json(['message' => 'Xuxemon eliminat correctament'], 200);
     }
 }
