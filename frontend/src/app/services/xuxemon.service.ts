@@ -18,42 +18,38 @@ export interface Xuxemon {
   providedIn: 'root'
 })
 export class XuxemonService {
-  public xuxemonesFiltrados$ = new BehaviorSubject<Xuxemon[]>([]);
+  xuxemons$ = new BehaviorSubject<Xuxemon[]>([]);
   private apiUrl = 'http://localhost:8000/api/xuxedex';
-  private storageUrl = 'http://localhost:8000';
 
   constructor(private http: HttpClient) { }
 
-  getXuxemonesFiltrados(): Observable<Xuxemon[]> {
-    return this.xuxemonesFiltrados$.asObservable();
-  }
+  // Carrega els xuxemons de la API segons el filtre de tipus
+  carregarXuxemons(tipo: string): void {
+    const url = tipo === 'Todos' ? this.apiUrl : `${this.apiUrl}?tipo=${tipo}`;
 
-  private resolverImagen(imagen: string | null): string | null {
-    if (!imagen) return null;
-    if (imagen.startsWith('http')) return imagen;
-    return `${this.storageUrl}/${imagen}`;
-  }
-
-  aplicarFiltro(tipo: string): void {
-    const url = tipo === 'Todos'
-      ? this.apiUrl
-      : `${this.apiUrl}?tipo=${tipo}`;
-
-    this.http.get<any[]>(url).pipe(
-      map(xuxemons => xuxemons.map(x => ({
+    this.http.get<Xuxemon[]>(url).pipe(
+      catchError(() => of([]))
+    ).subscribe(llista => {
+      // Converteix la ruta relativa de la imatge a URL completa
+      const llistaAmbImatges = llista.map(x => ({
         ...x,
-        imagen: this.resolverImagen(x.imagen),
-        esta_capturado: x.esta_capturado === 1 || x.esta_capturado === true,
-        bloquejat: x.bloquejat === true,
-      }))),
-      catchError((error) => {
-        console.error('Error al obtenir Xuxemons:', error);
-        return of([]);
-      })
-    ).subscribe((xuxemons) => this.xuxemonesFiltrados$.next(xuxemons));
+        imagen: x.imagen ? `http://localhost:8000/${x.imagen}` : null
+      }));
+      this.xuxemons$.next(llistaAmbImatges);
+    });
   }
 
-  getTiposElementos(): string[] {
+  // Filtra la llista per mida localment sense fer cap crida a la API
+  filtrarPerMida(xuxemons: Xuxemon[], mida: string): Xuxemon[] {
+    if (mida === 'Tots') return xuxemons;
+    return xuxemons.filter(x => x.tamano === mida);
+  }
+
+  getTipus(): string[] {
     return ['Todos', 'Aigua', 'Terra', 'Aire'];
+  }
+
+  getMides(): string[] {
+    return ['Tots', 'Petit', 'Mitja', 'Gran'];
   }
 }
