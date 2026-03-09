@@ -3,15 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Inventario;
+use Illuminate\Support\Facades\DB;
 
 class InventarioController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $request->validate([
+            'xuxemon_id' => 'required|integer|exists:xuxemons,id',
+        ]);
+
+        $xuxemonId = $request->input('xuxemon_id');
+        $items     = Inventario::with(['xuxemon', 'xuxa'])
+                        ->where('xuxemon_id', $xuxemonId)
+                        ->get();
+        $slotsUtilizados = Inventario::slotsUtilizados($xuxemonId);
+
+        return response()->json([
+            'xuxemon_id' => $xuxemonId,
+            'slots_utilizados' => $slotsUtilizados,
+            'max_slots'  => Inventario::MAX_SLOTS,
+            'free_slots' => Inventario::MAX_SLOTS - $slotsUtilizados,
+            'items'      => $items,
+        ]);
     }
 
     /**
