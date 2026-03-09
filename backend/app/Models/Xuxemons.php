@@ -31,4 +31,7 @@ class Xuxemons extends Model
             'imagen' => 'string',
         ];
     }
+
+
+    
 }

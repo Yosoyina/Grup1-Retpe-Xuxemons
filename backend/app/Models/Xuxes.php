@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Inventario;
 
 class Xuxes extends Model
 {
@@ -15,7 +16,6 @@ class Xuxes extends Model
 
     protected $fillable = [
         'nombre_xuxes',
-        'tipo_xuxe',
         'descripcio',
         'imagen',
     ];
@@ -24,9 +24,14 @@ class Xuxes extends Model
     {
         return [
             'nombre_xuxes' => 'string',
-            'tipo_xuxe' => 'string',
             'descripcio' => 'string',
             'imagen' => 'string',
         ];
+    }
+
+    // Relació: una Xuxa pot estar en molts inventaris
+    public function inventario()
+    {
+        return $this->hasMany(Inventario::class, 'xuxe_id');
     }
 }

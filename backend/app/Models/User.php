@@ -59,6 +59,16 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }   
+    }
+    
+    /*
+    * Un usuario puede tener muchos Xuxemons.
+    */
+    public function xuxemons()
+    {
+        return $this->belongsToMany(Xuxemons::class, 'user_xuxemon', 'user_id', 'xuxemon_id')
+                    ->withTimestamps();
+    }
+    
 
 }
