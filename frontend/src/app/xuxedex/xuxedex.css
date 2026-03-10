@@ -4,17 +4,17 @@
   --yellow: #f3c313;
   --yellow-soft: #ffe27c;
   --blue: #223c95;
-  --panel: rgba(218, 224, 236, 0.86);
-  --panel-strong: rgba(233, 237, 245, 0.94);
+  --panel: rgba(220, 226, 238, 0.88);
+  --panel-strong: rgba(237, 241, 248, 0.96);
   --text: #20222c;
-  --shadow: 0 20px 36px rgba(18, 28, 72, 0.16);
+  --shadow: 0 22px 40px rgba(18, 28, 72, 0.16);
 
   display: block;
   min-height: 100dvh;
   position: relative;
   font-family: 'Fredoka', system-ui, sans-serif;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)),
+    linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
     url('/Fondo-Principal.png') center / cover no-repeat;
 }
 
@@ -23,7 +23,7 @@
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.22), transparent 18%),
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.22), transparent 18%),
     radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.18), transparent 16%);
   pointer-events: none;
 }
@@ -35,9 +35,9 @@
 }
 
 .xuxedex-header {
-  width: min(1300px, 96vw);
+  width: min(1460px, 96vw);
   margin: 0 auto;
-  padding: 12px 0 6px;
+  padding: 12px 0 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,106 +46,115 @@
 .xuxedex-header h1 {
   margin: 0;
   color: #ffd61f;
-  font-size: clamp(3.4rem, 5vw, 5.5rem);
+  font-size: clamp(3.8rem, 5.6vw, 6.2rem);
   line-height: 0.9;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 800;
-  -webkit-text-stroke: 7px var(--blue);
+  -webkit-text-stroke: 8px var(--blue);
   paint-order: stroke fill;
   text-shadow:
-    0 4px 0 rgba(34, 60, 149, 0.28),
-    0 12px 22px rgba(0, 0, 0, 0.14);
+    0 5px 0 rgba(34, 60, 149, 0.28),
+    0 14px 24px rgba(0, 0, 0, 0.14);
 }
 
 .header-nav {
   position: absolute;
-  top: 12px;
+  top: 8px;
   right: 0;
   display: inline-flex;
   gap: 8px;
-  padding: 10px 14px;
+  padding: 12px 16px;
   border: 4px solid var(--yellow);
   border-radius: 999px;
-  background: rgba(233, 237, 245, 0.94);
+  background: rgba(233, 237, 245, 0.96);
   box-shadow: var(--shadow);
 }
 
 .header-nav span {
-  width: 42px;
-  height: 32px;
+  width: 48px;
+  height: 36px;
   display: grid;
   place-items: center;
   border: 3px solid #2a2a2a;
   border-radius: 12px;
   background: #ef6d7a;
   color: #233c95;
-  font-size: 1.45rem;
+  font-size: 1.55rem;
   font-weight: 800;
   line-height: 1;
 }
 
 .container {
-  width: min(1300px, 96vw);
+  width: min(1460px, 96vw);
   min-height: calc(100dvh - 110px);
   margin: 0 auto;
-  padding: 4px 0 110px;
+  padding: 6px 0 112px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(420px, 480px);
+  grid-template-columns: minmax(0, 1.35fr) minmax(470px, 0.9fr);
   grid-template-areas:
     'left right'
     'pagination pagination';
-  gap: 18px;
+  gap: 22px;
   align-items: start;
 }
 
 .panel {
   background: var(--panel);
   border: 4px solid var(--yellow);
-  border-radius: 34px;
+  border-radius: 36px;
   box-shadow: var(--shadow);
-  backdrop-filter: blur(7px);
+  backdrop-filter: blur(8px);
 }
 
 .panel-esquerra {
   grid-area: left;
-  padding: 16px;
+  padding: 20px;
 }
 
 .panel-dreta {
   grid-area: right;
-  padding: 16px;
+  padding: 20px;
 }
 
 .filtros {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .tipus-filtros {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .mides {
   flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .filter-button,
 .size-button {
   border: 4px solid var(--yellow);
   background: #f8f8f8;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   font-family: inherit;
   font-weight: 700;
   color: var(--text);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.filter-button:hover,
+.size-button:hover,
+.filter-button.activo,
+.size-button.activo {
+  background: #fff6cf;
+  transform: translateY(-1px);
 }
 
 .filter-button {
-  width: 58px;
-  height: 58px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   padding: 0;
   position: relative;
@@ -161,65 +170,48 @@
 .filter-todos .filter-icon::before {
   content: 'Todos';
   color: var(--blue);
-  font-size: 0.82rem;
+  font-size: 0.86rem;
 }
 
 .type-agua .filter-icon::before,
 .card-badge.type-agua::before {
   content: '💧';
-  font-size: 1.55rem;
+  font-size: 1.7rem;
 }
 
 .type-tierra .filter-icon::before,
 .card-badge.type-tierra::before {
   content: '🌍';
-  font-size: 1.45rem;
+  font-size: 1.6rem;
 }
 
 .type-aire .filter-icon::before,
 .card-badge.type-aire::before {
   content: '🌀';
-  font-size: 1.55rem;
-}
-
-.filter-button.activo,
-.size-button.activo {
-  background: #fff6cf;
+  font-size: 1.7rem;
 }
 
 .size-button {
-  min-width: 96px;
-  height: 42px;
-  padding: 0 16px;
+  min-width: 104px;
+  height: 46px;
+  padding: 0 18px;
   border-radius: 999px;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .mida-tots {
   color: var(--blue);
 }
 
-.mida-petit {
-  --size-accent: #5db0ff;
-}
-
-.mida-mitja {
-  --size-accent: #63c56e;
-}
-
-.mida-gran {
-  --size-accent: #ff9d57;
-}
-
 .mini-grid,
 .big-grid {
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 .mini-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .big-grid {
@@ -227,12 +219,12 @@
 }
 
 .xuxemon-card {
-  min-height: 220px;
-  padding: 18px 14px 58px;
+  min-height: 270px;
+  padding: 22px 16px 70px;
   position: relative;
   overflow: hidden;
   border: 3px solid var(--yellow);
-  border-radius: 26px;
+  border-radius: 28px;
   background: var(--panel-strong);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68);
 }
@@ -244,7 +236,7 @@ button.xuxemon-card {
 .xuxemon-card.selected {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.68),
-    0 0 0 3px rgba(255, 226, 124, 0.22);
+    0 0 0 4px rgba(255, 226, 124, 0.28);
 }
 
 .xuxemon-card.mida-petit {
@@ -267,10 +259,10 @@ button.xuxemon-card {
 
 .card-badge {
   position: absolute;
-  top: -7px;
-  left: -7px;
-  width: 36px;
-  height: 36px;
+  top: -8px;
+  left: -8px;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
   border: 3px solid var(--yellow);
@@ -280,7 +272,7 @@ button.xuxemon-card {
 
 .lock-badge::before {
   content: '?';
-  font-size: 1.55rem;
+  font-size: 1.65rem;
   font-weight: 800;
   color: var(--text);
 }
@@ -288,9 +280,9 @@ button.xuxemon-card {
 .xuxemon-card img,
 .placeholder-img {
   display: block;
-  width: clamp(110px, 58%, 150px);
-  height: 110px;
-  margin: 10px auto 8px;
+  width: clamp(140px, 60%, 180px);
+  height: 140px;
+  margin: 16px auto 10px;
   object-fit: contain;
 }
 
@@ -298,7 +290,7 @@ button.xuxemon-card {
   display: grid;
   place-items: center;
   color: var(--blue);
-  font-size: 3rem;
+  font-size: 3.4rem;
   font-weight: 800;
 }
 
@@ -306,17 +298,17 @@ button.xuxemon-card {
 .bloqueig-text {
   position: absolute;
   left: 50%;
-  bottom: 10px;
+  bottom: 12px;
   transform: translateX(-50%);
-  min-width: 120px;
+  min-width: 138px;
   margin: 0;
-  padding: 7px 14px;
+  padding: 8px 16px;
   border: 3px solid var(--yellow);
   border-radius: 999px;
   background: #fafafa;
   text-align: center;
   color: #171717;
-  font-size: 0.94rem;
+  font-size: 1rem;
   line-height: 1;
 }
 
@@ -325,8 +317,8 @@ button.xuxemon-card {
   margin: 0;
   text-align: center;
   color: var(--text);
-  font-size: 0.94rem;
-  line-height: 1.12;
+  font-size: 1rem;
+  line-height: 1.14;
 }
 
 .mida {
@@ -339,8 +331,8 @@ button.xuxemon-card {
 }
 
 .bloqueig-icona {
-  width: 92px;
-  height: 92px;
+  width: 116px;
+  height: 116px;
   position: relative;
 }
 
@@ -353,48 +345,48 @@ button.xuxemon-card {
 }
 
 .bloqueig-icona::before {
-  top: 8px;
-  width: 52px;
-  height: 42px;
-  border: 8px solid #4a4a4a;
+  top: 12px;
+  width: 62px;
+  height: 50px;
+  border: 9px solid #4a4a4a;
   border-bottom: 0;
-  border-radius: 26px 26px 0 0;
+  border-radius: 30px 30px 0 0;
 }
 
 .bloqueig-icona::after {
-  top: 36px;
-  width: 72px;
-  height: 54px;
+  top: 44px;
+  width: 84px;
+  height: 62px;
   border: 6px solid #4a4a4a;
-  border-radius: 10px;
+  border-radius: 12px;
   background:
-    radial-gradient(circle at 50% 56%, #4a4a4a 0 7px, transparent 8px),
+    radial-gradient(circle at 50% 56%, #4a4a4a 0 8px, transparent 9px),
     linear-gradient(#4a4a4a, #4a4a4a) center 64% / 6px 18px no-repeat,
     #d4d4d4;
 }
 
 .detalle {
-  min-height: 168px;
-  padding: 16px 18px;
+  min-height: 214px;
+  padding: 18px 22px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 18px;
   border: 3px solid var(--yellow);
-  border-radius: 26px;
-  background: rgba(248, 249, 252, 0.96);
+  border-radius: 28px;
+  background: rgba(248, 249, 252, 0.97);
 }
 
 .detalle.mida-petit {
-  box-shadow: inset 6px 0 0 rgba(93, 176, 255, 0.55);
+  box-shadow: inset 7px 0 0 rgba(93, 176, 255, 0.55);
 }
 
 .detalle.mida-mitja {
-  box-shadow: inset 6px 0 0 rgba(99, 197, 110, 0.55);
+  box-shadow: inset 7px 0 0 rgba(99, 197, 110, 0.55);
 }
 
 .detalle.mida-gran {
-  box-shadow: inset 6px 0 0 rgba(255, 157, 87, 0.55);
+  box-shadow: inset 7px 0 0 rgba(255, 157, 87, 0.55);
 }
 
 .detalle-texto {
@@ -402,19 +394,19 @@ button.xuxemon-card {
 }
 
 .detalle h2 {
-  margin: 0 0 10px;
-  padding-bottom: 6px;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
   border-bottom: 4px solid #111;
   color: #111;
-  font-size: clamp(1.8rem, 3vw, 2.45rem);
+  font-size: clamp(2.1rem, 3vw, 2.8rem);
   line-height: 1;
 }
 
 .detalle p {
-  margin: 3px 0;
+  margin: 5px 0;
   color: #171717;
-  font-size: 1rem;
-  line-height: 1.16;
+  font-size: 1.08rem;
+  line-height: 1.18;
 }
 
 .nivel {
@@ -424,8 +416,8 @@ button.xuxemon-card {
 
 .detalle img,
 .placeholder-gran {
-  width: clamp(116px, 20vw, 160px);
-  height: clamp(116px, 20vw, 160px);
+  width: clamp(150px, 24%, 210px);
+  height: clamp(150px, 24%, 210px);
   margin: 0;
   object-fit: contain;
 }
@@ -435,24 +427,24 @@ button.xuxemon-card {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  padding-bottom: 4px;
+  gap: 12px;
+  padding-top: 4px;
 }
 
 .paginacion button,
 .paginacion span {
-  min-width: 140px;
-  min-height: 46px;
-  padding: 0 18px;
+  min-width: 154px;
+  min-height: 50px;
+  padding: 0 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: 3px solid var(--yellow);
   border-radius: 999px;
-  background: rgba(248, 249, 252, 0.94);
+  background: rgba(248, 249, 252, 0.95);
   color: #2a2d39;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.08);
 }
@@ -473,23 +465,23 @@ button.xuxemon-card {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-width: 170px;
-  height: 58px;
+  min-width: 178px;
+  height: 60px;
   padding: 0 22px;
   border: 4px solid #151515;
   border-radius: 999px;
   background: #eb7a67;
   color: #111;
   font-family: inherit;
-  font-size: 1.08rem;
+  font-size: 1.1rem;
   font-weight: 700;
   box-shadow: 0 12px 18px rgba(0, 0, 0, 0.18);
   cursor: pointer;
 }
 
 .sortir-icon {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
   border: 3px solid #111;
@@ -501,32 +493,45 @@ button.xuxemon-card {
 .missatge-buit {
   grid-column: 1 / -1;
   margin: 0;
-  padding: 22px;
+  padding: 28px;
   border: 4px solid var(--yellow);
-  border-radius: 24px;
-  background: rgba(248, 249, 252, 0.94);
+  border-radius: 26px;
+  background: rgba(248, 249, 252, 0.95);
   color: var(--text);
   text-align: center;
+  font-size: 1.08rem;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1280px) {
   .container,
   .xuxedex-header {
     width: 97vw;
   }
 
   .container {
+    grid-template-columns: minmax(0, 1.2fr) minmax(410px, 0.92fr);
+  }
+}
+
+@media (max-width: 1080px) {
+  .container {
     grid-template-columns: 1fr;
     grid-template-areas:
       'left'
       'right'
       'pagination';
+    min-height: auto;
   }
 
+  .panel-esquerra,
   .panel-dreta {
-    max-width: 760px;
+    max-width: 980px;
     width: 100%;
     justify-self: center;
+  }
+
+  .big-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -534,10 +539,22 @@ button.xuxemon-card {
   .xuxedex-header {
     flex-direction: column;
     gap: 12px;
+    padding-top: 10px;
+  }
+
+  .xuxedex-header h1 {
+    font-size: clamp(3rem, 12vw, 4.6rem);
+    -webkit-text-stroke: 6px var(--blue);
   }
 
   .header-nav {
     position: static;
+  }
+
+  .panel-esquerra,
+  .panel-dreta {
+    padding: 14px;
+    border-radius: 26px;
   }
 
   .mini-grid,
@@ -545,35 +562,33 @@ button.xuxemon-card {
     grid-template-columns: 1fr;
   }
 
+  .xuxemon-card {
+    min-height: 246px;
+  }
+
   .detalle {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    min-height: auto;
   }
 
   .detalle h2 {
-    font-size: 1.9rem;
+    font-size: 2rem;
   }
 
   .paginacion {
     flex-wrap: wrap;
   }
+
+  .sortir-btn {
+    min-width: 164px;
+  }
 }
 
 @media (max-width: 560px) {
-  .xuxedex-header h1 {
-    font-size: clamp(2.7rem, 12vw, 4rem);
-    -webkit-text-stroke: 5px var(--blue);
-  }
-
   .container {
     padding-bottom: 96px;
-  }
-
-  .panel-esquerra,
-  .panel-dreta {
-    padding: 12px;
-    border-radius: 24px;
   }
 
   .filtros {
@@ -581,18 +596,41 @@ button.xuxemon-card {
   }
 
   .filter-button {
-    width: 52px;
-    height: 52px;
+    width: 54px;
+    height: 54px;
   }
 
   .size-button {
-    min-width: 84px;
-    height: 38px;
-    font-size: 0.88rem;
+    min-width: 86px;
+    height: 40px;
+    font-size: 0.9rem;
+    padding: 0 14px;
   }
 
   .xuxemon-card {
-    min-height: 206px;
+    min-height: 228px;
+    padding: 18px 12px 66px;
+  }
+
+  .xuxemon-card img,
+  .placeholder-img {
+    width: 132px;
+    height: 118px;
+  }
+
+  .detalle {
+    padding: 16px;
+  }
+
+  .detalle p {
+    font-size: 1rem;
+  }
+
+  .paginacion button,
+  .paginacion span {
+    min-width: 134px;
+    min-height: 46px;
+    font-size: 0.94rem;
   }
 
   .sortir-btn {
@@ -600,5 +638,6 @@ button.xuxemon-card {
     bottom: 12px;
     min-width: 150px;
     height: 54px;
+    font-size: 1rem;
   }
 }
