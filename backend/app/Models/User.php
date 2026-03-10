@@ -55,10 +55,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
-    
+
     public function getJWTCustomClaims()
     {
         return [];
-    }   
+    }
+
+    // Un usuari té molts xuxemons
+    public function xuxemons()
+    {
+        return $this->hasMany(Xuxemons::class);
+    }
 
 }
