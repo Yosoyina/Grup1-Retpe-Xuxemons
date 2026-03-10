@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('inventario', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('xuxemon_id')->constrained('xuxemons')->onDelete('cascade');
+            $table->foreignId('xuxe_id')->constrained('xuxes')->onDelete('cascade');
+            $table->integer('cantidad')->default(1);
             $table->timestamps();
         });
     }
