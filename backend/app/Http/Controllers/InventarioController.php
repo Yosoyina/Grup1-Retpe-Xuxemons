@@ -84,8 +84,11 @@ class InventarioController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        $item = Inventario::findOrFail($id);
+        $item->delete();
+
+        return response()->json(['mensaje' => 'Item eliminado del inventario']);
     }
 }
