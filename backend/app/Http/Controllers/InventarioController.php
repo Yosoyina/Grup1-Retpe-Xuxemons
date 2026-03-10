@@ -75,4 +75,13 @@ class InventarioController extends Controller
 
         return response()->json(['mensaje' => 'Item eliminado del inventario']);
     }
+
+    public function listadosItems()
+    {
+        return response()->json([
+            'xuxemons' => Xuxemons::all(['id', 'nombre_xuxemon', 'tipo_elemento', 'tamano']),
+            'xuxes'    => Xuxa::all(['id', 'nombre']),
+        ]);
+    }
+
 }
