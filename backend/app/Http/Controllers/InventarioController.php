@@ -18,17 +18,15 @@ class InventarioController extends Controller
         ]);
 
         $xuxemonId = $request->input('xuxemon_id');
-        $items     = Inventario::with(['xuxemon', 'xuxa'])
-                        ->where('xuxemon_id', $xuxemonId)
-                        ->get();
+        $items = Inventario::with(['xuxemon', 'xuxa']) ->where('xuxemon_id', $xuxemonId) ->get();
         $slotsUtilizados = Inventario::slotsUtilizados($xuxemonId);
 
         return response()->json([
             'xuxemon_id' => $xuxemonId,
             'slots_utilizados' => $slotsUtilizados,
-            'max_slots'  => Inventario::MAX_SLOTS,
+            'max_slots' => Inventario::MAX_SLOTS,
             'free_slots' => Inventario::MAX_SLOTS - $slotsUtilizados,
-            'items'      => $items,
+            'items' => $items,
         ]);
     }
 
@@ -51,9 +49,11 @@ class InventarioController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
+        $item = Inventory::with(['xuxemon', 'xuxa'])->findOrFail($id);
+
+        return response()->json($item);
     }
 
     /**
