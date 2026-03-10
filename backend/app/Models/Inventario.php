@@ -22,4 +22,29 @@ class Inventario extends Model
         'quantity',
     ];
 
+    // Relaciones de Xuxemon y Xuxes
+    public function xuxemon()
+    {
+        return $this->belongsTo(Xuxemons::class, 'xuxemon_id');
+    }
+
+    public function xuxa()
+    {
+        return $this->belongsTo(Xuxa::class, 'xuxa_id');
+    }
+
+    // Espacios que ocupa aquest item
+    public function slotsUsed(): int
+    {
+        return (int) ceil($this->quantity / self::MAX_STACK);
+    }
+
+    // Espais totals usats per un xuxemon
+    public static function usedSlots(int $xuxemonId): int
+    {
+        return self::where('xuxemon_id', $xuxemonId)
+            ->get()
+            ->sum(fn($item) => $item->slotsUsed());
+    }
+
 }
