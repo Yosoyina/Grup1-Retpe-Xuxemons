@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Inventario;
 
-class Xuxemons extends Model
+class Xuxes extends Model
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $table = 'xuxemons';
+    protected $table = 'xuxes';
 
     protected $fillable = [
-        'nombre_xuxemon',
-        'tipo_elemento',
-        'tamano',
+        'nombre_xuxes',
         'descripcio',
         'imagen',
     ];
@@ -24,18 +23,15 @@ class Xuxemons extends Model
     protected function casts(): array
     {
         return [
-            'nombre_xuxemon' => 'string',
-            'tipo_elemento' => 'string',
-            'tamano' => 'string',
+            'nombre_xuxes' => 'string',
             'descripcio' => 'string',
             'imagen' => 'string',
         ];
     }
 
-    // Un xuxemon pertany a un usuari
-    public function user()
+    // Relació: una Xuxa pot estar en molts inventaris
+    public function inventario()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Inventario::class, 'xuxe_id');
     }
-
 }

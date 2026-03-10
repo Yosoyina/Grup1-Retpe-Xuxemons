@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inventario', function (Blueprint $table) {
+        Schema::create('xuxes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('xuxemon_id')->constrained('xuxemons')->onDelete('cascade');
-            $table->foreignId('xuxe_id')->constrained('xuxes')->onDelete('cascade');
-            $table->integer('cantidad')->default(1);
+            $table->string('nombre_xuxes');
+            $table->string('descripcio')->nullable();
+            $table->string('imagen')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inventario');
+        Schema::dropIfExists('xuxes');
     }
 };

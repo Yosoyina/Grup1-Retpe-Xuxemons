@@ -58,6 +58,7 @@ class XuxemonsController extends Controller
         return response()->json($xuxemons, 200);
     }
 
+
     /** GET /api/xuxemons */
 
     // Retorna tots els xuxemons del catàleg, amb filtres opcionals per tipus i mida
@@ -74,6 +75,7 @@ class XuxemonsController extends Controller
     /** POST /api/xuxemons */
 
     // Crea un nou xuxemon al catàleg, només per a administradors
+
     public function store(Request $request)
     {
         $xuxemon = Xuxemons::create($request->validate([
@@ -86,6 +88,7 @@ class XuxemonsController extends Controller
 
         return response()->json($xuxemon, 201);
     }
+
 
     /** GET /api/xuxemons/{id} */
 
@@ -119,5 +122,6 @@ class XuxemonsController extends Controller
     {
         Xuxemons::findOrFail($id)->delete();
         return response()->json(['message' => 'Xuxemon eliminat correctament'], 200);
+
     }
 }

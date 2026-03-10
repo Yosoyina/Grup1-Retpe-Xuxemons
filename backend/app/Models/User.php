@@ -61,6 +61,7 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+
     // Un usuari té molts xuxemons
     public function xuxemons()
     {
