@@ -18,7 +18,7 @@ class InventarioController extends Controller
         ]);
 
         $xuxemonId = $request->input('xuxemon_id');
-        $items = Inventario::with(['xuxemon', 'xuxa']) ->where('xuxemon_id', $xuxemonId) ->get();
+        $items = Inventario::with(['xuxemon', 'xuxe']) ->where('xuxemon_id', $xuxemonId) ->get();
         $slotsUtilizados = Inventario::slotsUtilizados($xuxemonId);
 
         return response()->json([
@@ -69,7 +69,16 @@ class InventarioController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $item = Inventario::findOrFail($id);
+
+        $request->validate(['cantidad' => 'required|integer|min:1|max:' . Inventario::MAX_STACK]);
+
+        $item->update($reqquest->only(['cantidad']));
+
+        return response()->json([
+            'mensaje' => 'Cantidad de Xuxes Actualizada',
+            'item' => $item->load('xuxe'),
+        ]);
     }
 
     /**
