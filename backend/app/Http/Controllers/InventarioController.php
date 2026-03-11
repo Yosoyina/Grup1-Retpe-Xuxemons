@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Inventario;
-use Illuminate\Support\Facades\DB;
+use App\Models\Xuxemons;
+use App\Models\Xuxes;
 
 class InventarioController extends Controller
 {
@@ -93,7 +94,7 @@ class InventarioController extends Controller
      */
     public function show(int $id)
     {
-        $item = Inventory::with(['xuxemon', 'xuxa'])->findOrFail($id);
+        $item = Inventario::with(['xuxemon', 'xuxa'])->findOrFail($id);
 
         return response()->json($item);
     }
@@ -107,7 +108,7 @@ class InventarioController extends Controller
 
         $request->validate(['cantidad' => 'required|integer|min:1|max:' . Inventario::MAX_STACK]);
 
-        $item->update($reqquest->only(['cantidad']));
+        $item->update($request->only(['cantidad']));
 
         return response()->json([
             'mensaje' => 'Cantidad de Xuxes Actualizada',
@@ -130,7 +131,7 @@ class InventarioController extends Controller
     {
         return response()->json([
             'xuxemons' => Xuxemons::all(['id', 'nombre_xuxemon', 'tipo_elemento', 'tamano']),
-            'xuxes'    => Xuxa::all(['id', 'nombre']),
+            'xuxes'    => Xuxes::all(['id', 'nombre']),
         ]);
     }
 
