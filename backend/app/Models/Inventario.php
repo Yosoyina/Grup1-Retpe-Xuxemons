@@ -18,7 +18,7 @@ class Inventario extends Model
 
     protected $fillable = [
         'xuxemon_id',
-        'xuxa_id',
+        'xuxe_id',
         'quantity',
     ];
 
@@ -30,7 +30,7 @@ class Inventario extends Model
 
     public function xuxa()
     {
-        return $this->belongsTo(Xuxa::class, 'xuxa_id');
+        return $this->belongsTo(Xuxa::class, 'xuxe_id');
     }
 
     // Espacios que ocupa aquest item
