@@ -18,6 +18,7 @@ class Xuxes extends Model
         'nombre_xuxes',
         'descripcio',
         'imagen',
+        'apilable',
     ];
 
     protected function casts(): array
@@ -26,6 +27,7 @@ class Xuxes extends Model
             'nombre_xuxes' => 'string',
             'descripcio' => 'string',
             'imagen' => 'string',
+            'apilable' => 'boolean',
         ];
     }
 

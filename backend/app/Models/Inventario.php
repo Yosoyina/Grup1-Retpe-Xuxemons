@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Xuxemons;
+use App\Models\User;
 use App\Models\Xuxes;
 
 class Inventario extends Model
@@ -19,15 +19,15 @@ class Inventario extends Model
     const MAX_SLOTS = 20;  // Total de espacios disponibles que hay en la mochila
 
     protected $fillable = [
-        'xuxemon_id',
+        'user_id',
         'xuxe_id',
-        'quantity',
+        'cantidad',
     ];
 
     // Relaciones de Xuxemon y Xuxes
     public function xuxemon()
     {
-        return $this->belongsTo(Xuxemons::class, 'xuxemon_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function xuxa()
@@ -37,17 +37,10 @@ class Inventario extends Model
     }
 
     // Espacios que ocupa aquest item
-    public function slotsUsed(): int
-    {
-        return (int) ceil($this->quantity / self::MAX_STACK);
-    }
 
-    // Espais totals usats per un xuxemon
-    public static function usedSlots(int $xuxemonId): int
+    public static function slotsUtilizados(int $userId): int
     {
-        return self::where('xuxemon_id', $xuxemonId)
-            ->get()
-            ->sum(fn($item) => $item->slotsUsed());
+        return self::where('user_id', $userId)->count();
     }
 
 }
