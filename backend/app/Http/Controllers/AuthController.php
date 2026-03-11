@@ -14,9 +14,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'nombre'   => 'required|string|max:25',
+            'nombre' => 'required|string|max:25',
             'apellidos' => 'required|string|max:25',
-            'email'    => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
         ], [
             'email.unique' => 'Aquest correu ja està registrat.',
@@ -30,13 +30,13 @@ class AuthController extends Controller
         } while (User::where('id_jugador', $id_jugador)->exists());
 
         $user = User::create([
-            'nombre'    => $request->nombre,
+            'nombre' => $request->nombre,
             'apellidos' => $request->apellidos,
             'id_jugador' => $id_jugador,
-            'email'     => $request->email,
-            'password'  => Hash::make($request->password),
-            'role'      => $role,
-            'avatar'    => 'avatarpordefecto.png',
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $role,
+            'avatar' => 'avatarpordefecto.png',
         ]);
 
         // Per cada tipus: agafar exactament 6 xuxemons aleatoris del catàleg
@@ -52,11 +52,11 @@ class AuthController extends Controller
 
             foreach ($sis as $index => $xuxemon) {
                 DB::table('xuxedex')->insert([
-                    'id_usuario'     => $user->id,
-                    'id_xuxemon'     => $xuxemon->id,
+                    'id_usuario' => $user->id,
+                    'id_xuxemon' => $xuxemon->id,
                     'esta_capturado' => $index < $numDesbloquejats,
-                    'created_at'     => now(),
-                    'updated_at'     => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
         }
@@ -64,9 +64,9 @@ class AuthController extends Controller
         $token = Auth::guard('api')->login($user);
 
         return response()->json([
-            'message'    => 'Usuari registrat correctament',
-            'user'       => $user,
-            'token'      => $token,
+            'message' => 'Usuari registrat correctament',
+            'user' => $user,
+            'token' => $token,
             'token_type' => 'bearer',
         ], 201);
     }
@@ -75,7 +75,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'id_jugador' => 'required|string',
-            'password'   => 'required|string',
+            'password' => 'required|string',
         ]);
 
         $user = User::where('id_jugador', $request->id_jugador)->first();
@@ -84,12 +84,16 @@ class AuthController extends Controller
             return response()->json(['message' => 'Credencials incorrectes'], 401);
         }
 
+        if (!$user->actiu) {
+            return response()->json(['message' => 'Aquest compte ha estat inhabilitat'], 403);
+        }
+
         $token = Auth::guard('api')->login($user);
 
         return response()->json([
-            'message'    => 'Login correcte',
-            'user'       => $user,
-            'token'      => $token,
+            'message' => 'Login correcte',
+            'user' => $user,
+            'token' => $token,
             'token_type' => 'bearer',
         ]);
     }

@@ -69,11 +69,13 @@ class UserController extends Controller
     {
         $user = Auth::guard('api')->user();
 
+        $user->actiu = false;
+        $user->save();
+
         Auth::guard('api')->logout();
-        $user->delete();
 
         return response()->json([
-            'message' => 'Usuari eliminat correctament',
+            'message' => 'Compte inhabilitat correctament',
         ]);
     }
 
