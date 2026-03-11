@@ -11,19 +11,15 @@
 
       <!-- foto de perfil -->
       <div class="cercle-avatar">
-        <img [src]="'/' + usuari.avatar"[alt]="usuari.nombre" class="avatar-img">
+        <img [src]="'/' + usuari.avatar" [alt]="usuari.nombre" class="avatar-img">
       </div>
 
       <div class="id-jugador">
-<span #playerId>{{ usuari.id_jugador }}</span>
-      <button
-        type="button"
-        class="btn-copiar"
-        (click)="copiarId(playerId.textContent!)"
-        aria-label="Copiar ID">
-        {{ copiado ? '✔️' : '📋' }}
-      </button>
-     </div>
+        <span #playerId>{{ usuari.id_jugador }}</span>
+        <button type="button" class="btn-copiar" (click)="copiarId(playerId.textContent!)" aria-label="Copiar ID">
+          {{ copiado ? '✔️' : '📋' }}
+        </button>
+      </div>
 
       <!-- boto canviar avatar -->
       <button class="btn-avatar" (click)="mostrarSeleccioAvatar = !mostrarSeleccioAvatar">
@@ -32,19 +28,19 @@
 
       <!-- seleccio d'avatars -->
       @if (mostrarSeleccioAvatar) {
-        <div class="grid-avatars">
-          @for (avatar of avatars; track avatar) {
-            <img [src]="'/' + avatar" [alt]="avatar" class="avatar-opcio" (click)="seleccionarAvatar(avatar)">
-          }
-        </div>
+      <div class="grid-avatars">
+        @for (avatar of avatars; track avatar) {
+        <img [src]="'/' + avatar" [alt]="avatar" class="avatar-opcio" (click)="seleccionarAvatar(avatar)">
+        }
+      </div>
       }
 
       <!-- missatges -->
       @if (successMessage) {
-        <span class="msg-exit">{{ successMessage }}</span>
+      <span class="msg-exit">{{ successMessage }}</span>
       }
       @if (errorMessage) {
-        <span class="msg-error">{{ errorMessage }}</span>
+      <span class="msg-error">{{ errorMessage }}</span>
       }
 
       <!-- boto dona-se de baixa -->
@@ -104,16 +100,17 @@
 
 <!-- dialeg confirmacio eliminar -->
 @if (mostrarConfirmacio) {
-  <div class="modal-overlay">
-    <div class="modal">
-      <p>Segur que vols eliminar el compte?</p>
-      <p>Aquesta acció no es pot desfer.</p>
-      <div class="modal-botons">
-        <button class="btn-baixa" (click)="confirmarEliminar()">Sí, eliminar</button>
-        <button (click)="mostrarConfirmacio = false">Cancel·lar</button>
-      </div>
+<div class="modal-overlay">
+  <div class="modal modal-perill">
+    <div class="modal-icona">⚠️</div>
+    <h3 class="modal-titol">Inhabilitar compte</h3>
+    <p class="modal-text">Estàs a punt d'inhabilitar el teu compte.</p>
+    <p class="modal-subtext">Podràs contactar amb un administrador per reactivar-la.</p>
+    <div class="modal-botons">
+      <button class="btn-confirmar-baixa" (click)="confirmarEliminar()">🗑️ Sí, inhabilitar</button>
+      <button class="btn-cancelar" (click)="mostrarConfirmacio = false">✕ Cancel·lar</button>
     </div>
   </div>
+</div>
 }
-
 }
