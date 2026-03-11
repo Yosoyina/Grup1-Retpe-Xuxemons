@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Inventario;
+use App\Models\Xuxes;
 
 class InventarioSeeder extends Seeder
 {
@@ -32,7 +33,7 @@ class InventarioSeeder extends Seeder
         ];
 
         foreach ($xuxes as $data) {
-            Xuxa::create($data);
+            Xuxes::create($data);
         }
     }
 }
