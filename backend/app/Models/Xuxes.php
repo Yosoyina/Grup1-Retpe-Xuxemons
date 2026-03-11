@@ -16,7 +16,7 @@ class Xuxes extends Model
 
     protected $fillable = [
         'nombre_xuxes',
-        'descripcion',
+        'descripcio',
         'imagen',
     ];
 

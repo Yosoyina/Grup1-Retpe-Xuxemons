@@ -17,17 +17,17 @@ class InventarioSeeder extends Seeder
         $xuxes = [
             [
                 'nombre_xuxes' => 'Xuxa de Foc',
-                'descripcion' => 'Una xuxa ardent que escalfa la motxilla.',
+                'descripcio' => 'Una xuxa ardent que escalfa la motxilla.',
                 'imagen' => null,
             ],
             [
                 'nombre_xuxes' => "Xuxa d'Aigua",
-                'descripcion' => 'Una xuxa fresca i refrescant.',
+                'descripcio' => 'Una xuxa fresca i refrescant.',
                 'imagen' => null,
             ],
             [
                 'nombre_xuxes' => 'Xuxa de Terra',
-                'descripcion' => 'Una xuxa sòlida com una roca.',
+                'descripcio' => 'Una xuxa sòlida com una roca.',
                 'imagen' => null,
             ],
         ];
