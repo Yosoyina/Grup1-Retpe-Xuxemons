@@ -78,7 +78,12 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('id_jugador', $request->id_jugador)->first();
+        // $user = User::where('id_jugador', $request->id_jugador)->first();
+
+        // Permet login amb id_jugador (#Marc1234) o amb email
+        $user = User::where('id_jugador', $request->id_jugador)
+            ->orWhere('email', $request->id_jugador)
+            ->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Credencials incorrectes'], 401);
