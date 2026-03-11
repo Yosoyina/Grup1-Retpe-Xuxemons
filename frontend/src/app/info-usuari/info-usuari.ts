@@ -92,8 +92,14 @@ export class InfoUsuari {
         this.errorMessage = '';
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.errorMessage = 'Error en actualitzar el perfil.';
+      error: (err: any) => {
+        if (err.error?.errors) {
+          this.errorMessage = Object.values(err.error.errors).flat()[0] as string;
+        } else if (err.error?.message) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Error en actualitzar el perfil.';
+        }
         this.cdr.detectChanges();
       }
     });
@@ -119,15 +125,15 @@ export class InfoUsuari {
 
   copiado = false;
 
-copiarId(texto: string) {
-  if (!texto) return;
+  copiarId(texto: string) {
+    if (!texto) return;
 
-  navigator.clipboard.writeText(texto).then(() => {
-    this.copiado = true;
+    navigator.clipboard.writeText(texto).then(() => {
+      this.copiado = true;
 
-    setTimeout(() => {
-      this.copiado = false;
-    }, 1200);
-  });
-}
+      setTimeout(() => {
+        this.copiado = false;
+      }, 1200);
+    });
+  }
 } 

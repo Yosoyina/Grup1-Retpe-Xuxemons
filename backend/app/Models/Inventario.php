@@ -33,6 +33,7 @@ class Inventario extends Model
     public function xuxa()
     {
         return $this->belongsTo(Xuxes::class, 'xuxe_id');
+
     }
 
     // Espacios que ocupa aquest item

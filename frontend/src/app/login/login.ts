@@ -33,8 +33,8 @@ export class LoginComponent {
   onSubmit() {
     if (this.isLoading) return;
 
-    this.submitted = true;                 // 👈 ahora sí
-    this.loginForm.markAllAsTouched();     // opcional, pero útil
+    this.submitted = true;
+    this.loginForm.markAllAsTouched();
 
     if (this.loginForm.invalid) return;
 
