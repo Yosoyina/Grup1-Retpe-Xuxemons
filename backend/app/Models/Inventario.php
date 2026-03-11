@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Xuxemons;
+use App\Models\Xuxes;
 
 class Inventario extends Model
 {
@@ -30,7 +32,8 @@ class Inventario extends Model
 
     public function xuxa()
     {
-        return $this->belongsTo(Xuxa::class, 'xuxe_id');
+        return $this->belongsTo(Xuxes::class, 'xuxe_id');
+
     }
 
     // Espacios que ocupa aquest item
