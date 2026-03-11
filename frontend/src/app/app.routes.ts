@@ -6,6 +6,7 @@ import { InfoUsuari } from './info-usuari/info-usuari';
 import { authGuard } from './guards/auth-guard';
 import { noAuthGuard } from './guards/no-auth-guard';
 import { Xuxedex } from './xuxedex/xuxedex';
+import { Admin } from './admin/admin';
 
 export const routes: Routes = [
   {
@@ -48,5 +49,11 @@ export const routes: Routes = [
     component: Xuxedex, 
     canActivate: [authGuard] 
   },
+
+  {
+    path: 'admin',
+    title: 'Admin',
+    component: Admin,
+  }
 
 ];
