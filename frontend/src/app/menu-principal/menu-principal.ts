@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-menu-principal',
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './menu-principal.html',
   styleUrl: './menu-principal.css',
 })
