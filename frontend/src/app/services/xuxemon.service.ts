@@ -20,6 +20,7 @@ export interface Xuxemon {
 export class XuxemonService {
   xuxemons$ = new BehaviorSubject<Xuxemon[]>([]);
   private apiUrl = 'http://localhost:8000/api/xuxedex';
+  private adminUrl = 'http://localhost:8000/api/admin/xuxedex';
 
   constructor(private http: HttpClient) { }
 
@@ -51,5 +52,17 @@ export class XuxemonService {
 
   getMides(): string[] {
     return ['Tots', 'Petit', 'Mitja', 'Gran'];
+  }
+
+  // Obtenir els xuxemons d'un usuari específic (per a admin)
+  getAdminXuxedex(userId: number): Observable<Xuxemon[]> {
+    return this.http.get<Xuxemon[]>(`${this.adminUrl}?user_id=${userId}`).pipe(
+      catchError(() => of([]))
+    );
+  }
+
+  // Afegir un xuxemon aleatori a un usuari (per a admin)
+  addRandomXuxemonToUser(userId: number): Observable<any> {
+    return this.http.post(`${this.adminUrl}`, { user_id: userId });
   }
 }
