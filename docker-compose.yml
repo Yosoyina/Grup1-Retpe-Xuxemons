@@ -41,6 +41,7 @@ services:
     command: >
       sh -c "
         php artisan config:clear &&
+        php artisan jwt:secret --force &&
         php artisan migrate --force &&
         php artisan db:seed --force &&
         apache2-foreground
