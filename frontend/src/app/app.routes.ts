@@ -3,6 +3,7 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login';
 import { MenuPrincipal } from './menu-principal/menu-principal';
 import { InfoUsuari } from './info-usuari/info-usuari';
+import { Inventario } from './inventario/inventario';
 import { authGuard } from './guards/auth-guard';
 import { noAuthGuard } from './guards/no-auth-guard';
 import { Xuxedex } from './xuxedex/xuxedex';
@@ -47,6 +48,13 @@ export const routes: Routes = [
     path: 'xuxedex', 
     title: 'Xuxedex', 
     component: Xuxedex, 
+    canActivate: [authGuard] 
+  },
+
+  { 
+    path: 'inventario', 
+    title: 'Inventario', 
+    component: Inventario, 
     canActivate: [authGuard] 
   },
 
