@@ -1,6 +1,6 @@
 ﻿<!-- menu-principal.component.html -->
 <div class="menu-general-container">
-<h1 class="titulo-general">MENÚ PRINCIPAL</h1>
+  <h1 class="titulo-general">MENÚ PRINCIPAL</h1>
 
   <div class="menu-grid-container">
     <div class="menu-grid">
@@ -46,12 +46,14 @@
 
   <!-- SORTIR -->
   <div class="menu-footer">
+    <!-- ADMIN (solo visible si es admin) -->
+    <button *ngIf="authService.isAdmin()" class="btn-admin" routerLink="/admin">
+      <img src="/Admin.png" alt="Admin" />
+      <span>ADMIN</span>
+    </button>
+
     <button class="btn-sortir" (click)="logout()">
       <img src="/Sortir.png" alt="Salida" />
       <span>SORTIR</span>
     </button>
   </div>
-</div>
-
-
-

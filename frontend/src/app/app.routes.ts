@@ -7,6 +7,7 @@ import { authGuard } from './guards/auth-guard';
 import { noAuthGuard } from './guards/no-auth-guard';
 import { Xuxedex } from './xuxedex/xuxedex';
 import { Admin } from './admin/admin';
+import { adminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
   {
@@ -43,17 +44,18 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
-  { 
-    path: 'xuxedex', 
-    title: 'Xuxedex', 
-    component: Xuxedex, 
-    canActivate: [authGuard] 
+  {
+    path: 'xuxedex',
+    title: 'Xuxedex',
+    component: Xuxedex,
+    canActivate: [authGuard]
   },
 
   {
     path: 'admin',
     title: 'Admin',
     component: Admin,
+    canActivate: [adminGuard]
   }
 
 ];

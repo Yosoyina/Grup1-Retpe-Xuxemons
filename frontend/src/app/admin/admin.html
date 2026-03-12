@@ -1,1 +1,60 @@
-<p>admin works!</p>
+<div class="admin-container">
+  <h1>Panel Admin - Gestionar Xuxemons</h1>
+
+  <div class="selector-usuarios">
+    <label for="usuarios">Selecciona un usuario:</label>
+    <select 
+      id="usuarios" 
+      [(ngModel)]="usuarioSeleccionado" 
+      (change)="cargarXuxemonsUsuario()"
+      class="select-usuarios"
+    >
+      <option [value]="null">-- Selecciona un usuario --</option>
+      <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+        {{ usuario.nombre }} {{ usuario.apellidos }}
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="mensajeExito" class="mensaje exito">
+    ✓ {{ mensajeExito }}
+  </div>
+  <div *ngIf="mensajeError" class="mensaje error">
+    ✗ {{ mensajeError }}
+  </div>
+
+  <div *ngIf="usuarioSeleccionado" class="seccion-xuxemons">
+    <h2>Xuxemons de {{ getNombreUsuario(usuarioSeleccionado) }}</h2>
+
+    <div *ngIf="cargando" class="cargando">
+      Cargando...
+    </div>
+
+    <div *ngIf="!cargando && xuxemons.length > 0" class="lista-xuxemons">
+      <div *ngFor="let xuxemon of xuxemons" class="card-xuxemon">
+        <div class="imagen-contenedor">
+          <img *ngIf="xuxemon.imagen" [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
+          <div *ngIf="!xuxemon.imagen" class="imagen-placeholder">Sin imagen</div>
+        </div>
+        <div class="info-xuxemon">
+          <h3>{{ xuxemon.nombre_xuxemon }}</h3>
+          <p><strong>Tipo:</strong> {{ xuxemon.tipo_elemento }}</p>
+          <p><strong>Tamaño:</strong> {{ xuxemon.tamano }}</p>
+          <p><strong>Descripción:</strong> {{ xuxemon.descripcio }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!cargando && xuxemons.length === 0" class="sin-xuxemons">
+      <p>Este usuario aún no tiene Xuxemons</p>
+    </div>
+
+    <button 
+      (click)="agregarXuxemonAleatorio()" 
+      [disabled]="cargando"
+      class="btn-agregar"
+    >
+      {{ cargando ? 'Agregando...' : '🎮 Agregar Xuxemon Aleatorio' }}
+    </button>
+  </div>
+</div>
