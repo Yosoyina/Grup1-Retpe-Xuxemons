@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Inventario;
 use App\Models\Xuxemons;
@@ -14,16 +15,12 @@ class InventarioController extends Controller
      */
     public function index(Request $request)
     {
-        $request->validate([
-            'xuxemon_id' => 'required|integer|exists:xuxemons,id',
-        ]);
-
-        $xuxemonId = $request->input('xuxemon_id');
-        $items = Inventario::with(['xuxemon', 'xuxe']) ->where('xuxemon_id', $xuxemonId) ->get();
-        $slotsUtilizados = Inventario::slotsUtilizados($xuxemonId);
+        $userId = Auth::guard('api')->user()->id;
+        $items = Inventario::with('xuxe')->where('user_id', $userId)->get();
+        $slotsUtilizados = Inventario::slotsUtilizados($userId);
 
         return response()->json([
-            'xuxemon_id' => $xuxemonId,
+            'user_id' => $userId,
             'slots_utilizados' => $slotsUtilizados,
             'max_slots' => Inventario::MAX_SLOTS,
             'free_slots' => Inventario::MAX_SLOTS - $slotsUtilizados,
@@ -102,11 +99,12 @@ class InventarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id)
     {
-        $item = Inventario::findOrFail($id);
+        $item = Inventario::with('xuxe')->findOrFail($id);
+        $maxCantidad = $item->xuxe->apilable ? Inventario::MAX_STACK : 1;
 
-        $request->validate(['cantidad' => 'required|integer|min:1|max:' . Inventario::MAX_STACK]);
+        $request->validate(['cantidad' => 'required|integer|min:1|max:' . $maxCantidad]);
 
         $item->update($request->only(['cantidad']));
 
@@ -121,9 +119,7 @@ class InventarioController extends Controller
      */
     public function destroy(int $id)
     {
-        $item = Inventario::findOrFail($id);
-        $item->delete();
-
+        Inventario::findOrFail($id)->delete();
         return response()->json(['mensaje' => 'Item eliminado del inventario']);
     }
 
@@ -131,7 +127,7 @@ class InventarioController extends Controller
     {
         return response()->json([
             'xuxemons' => Xuxemons::all(['id', 'nombre_xuxemon', 'tipo_elemento', 'tamano']),
-            'xuxes'    => Xuxes::all(['id', 'nombre']),
+            'xuxes' => Xuxes::all(['id', 'nombre_xuxes', 'apilable']),
         ]);
     }
 
