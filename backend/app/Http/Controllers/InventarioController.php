@@ -106,8 +106,14 @@ class InventarioController extends Controller
      */
     public function show(int $id)
     {
-        $item = Inventario::with(['xuxemon', 'xuxa'])->findOrFail($id);
-
+        $user = Auth::guard('api')->user();
+        $item = Inventario::with('xuxe')->findOrFail($id);
+ 
+        // Un usuari normal només pot veure els seus propis items
+        if ($user->role !== 'admin' && $item->user_id !== $user->id) {
+            return response()->json(['message' => 'No autoritzat'], 403);
+        }
+ 
         return response()->json($item);
     }
 
