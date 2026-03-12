@@ -34,54 +34,69 @@ class InventarioController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'xuxemon_id' => 'required|integer|exists:xuxemons,id',
-            'xuxe_id'    => 'required|integer|exists:xuxas,id',
-            'cantidad'    => 'required|integer|min:1|',
+            'user_id' => 'required|integer|exists:users,id',
+            'xuxe_id' => 'required|integer|exists:xuxes,id',
+            'cantidad' => 'required|integer|min:1',
         ]);
-
-        $xuxemonId = $request->input('xuxemon_id');
-        $xuxaId = $request->input('xuxe_id');
+ 
+        $userId = $request->input('user_id');
+        $xuxeId = $request->input('xuxe_id');
         $cantidad = $request->input('cantidad');
-        $descartado = 0;
+ 
+        $xuxe = Xuxes::findOrFail($xuxeId);
+ 
+        if ($xuxe->apilable) {
+            // ── APILABLE (Xuxes) 
 
-        //Llenamos los stacks existentes de la misma Xuxe
-
-        $itemsExistentes = Inventario::where('xuxemon_id', $xuxemonId)
-            ->where('xuxe_id', $xuxaId)
-            ->where('cantidad', '<', Inventario::MAX_STACK)
-            ->get();
-
-        foreach ($itemsExistentes as $item) {
-            if($cantidad <= 0) continue;
-            $espacioDisponible = Inventario::MAX_STACK - $item->cantidad;
-            $agregar = min($cantidad, $espacioDisponible);
-            $item->cantidad += $agregar;
-            $item->save();
-            $cantidad -= $agregar;
+            //Llenamos los stacks existentes del mismo tipo que no estén llenos
+            $itemsExistents = Inventario::where('user_id', $userId)
+                ->where('xuxe_id', $xuxeId)
+                ->where('cantidad', '<', Inventario::MAX_STACK)
+                ->get();
+ 
+            foreach ($itemsExistents as $item) {
+                if ($cantidad <= 0) break;
+                $espai = Inventario::MAX_STACK - $item->cantidad;
+                $agregar = min($cantidad, $espai);
+                $item->cantidad += $agregar;
+                $item->save();
+                $cantidad -= $agregar;
+            }
+ 
+            // En este apartado creeamos nuevos slots si todavia quedan cadtidades por agregar y hay espacio en el inventario
+            while ($cantidad > 0 && Inventario::slotsUtilizados($userId) < Inventario::MAX_SLOTS) {
+                $agregar = min($cantidad, Inventario::MAX_STACK);
+                Inventario::create([
+                    'user_id' => $userId,
+                    'xuxe_id' => $xuxeId,
+                    'cantidad' => $agregar,
+                ]);
+                $cantidad -= $agregar;
+            }
+ 
+        } else {
+            // ── NO APILABLE (Vacunas)
+ 
+            while ($cantidad > 0 && Inventario::slotsUtilizados($userId) < Inventario::MAX_SLOTS) {
+                Inventario::create([
+                    'user_id' => $userId,
+                    'xuxe_id' => $xuxeId,
+                    'cantidad' => 1,
+                ]);
+                $cantidad--;
+            }
         }
-
-        //Creamos nuevos stacks si aún queda cantidad por agregar
-
-        while($cantidad > 0 && Inventario::slotsUtilizados($xuxemonId) < Inventario::MAX_SLOTS) {
-            $agregar = min($cantidad, Inventario::MAX_STACK);
-            Inventario::create([
-                'xuxemon_id' => $xuxemonId,
-                'xuxe_id' => $xuxaId,
-                'cantidad' => $agregar,
-            ]);
-            $cantidad -= $agregar;
-        }
-
-        $descartado = $cantidad; // Si aún queda cantidad, es porque se ha descartado por falta de espacio
-
+ 
+        $descartado = $cantidad;
+ 
         $mensaje = $descartado > 0
-            ? "Inventario lleno. Se han agregado algunos items, pero se han descartado $descartado por falta de espacio."
-            : "Items agregados al inventario exitosamente.";
-
+            ? "Inventari ple. S'han descartat {$descartado} unitats per manca d'espai."
+            : "Items afegits a l'inventari correctament.";
+ 
         return response()->json([
             'mensaje' => $mensaje,
             'descartado' => $descartado,
-            'slots_utilizados' => Inventario::slotsUtilizados($xuxemonId), 
+            'slots_utilizados' => Inventario::slotsUtilizados($userId),
             'max_slots' => Inventario::MAX_SLOTS,
         ], 201);
     }
