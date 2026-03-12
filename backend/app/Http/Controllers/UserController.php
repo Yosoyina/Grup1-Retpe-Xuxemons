@@ -79,4 +79,14 @@ class UserController extends Controller
         ]);
     }
 
+    // ── LIST USERS (ADMIN) ────────────────────────────────
+
+    public function listUsers()
+    {
+        $users = \App\Models\User::where('actiu', true)
+            ->select('id', 'nombre', 'apellidos', 'email', 'id_jugador', 'role')
+            ->get();
+
+        return response()->json($users, 200);
+    }
 }

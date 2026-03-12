@@ -35,6 +35,9 @@ Route::middleware('auth:api')->group(function () {
     // ── RUTES ADMIN ───────────────────────────────────────
     Route::middleware('admin')->prefix('admin')->group(function () {
  
+        // ── USUARIOS ───────────────────────────────────────
+        Route::get('/usuarios', [UserController::class, 'listUsers']);
+
         // ── POKEDEX DE XUXEMONS ADMIN ───────────────────────────────────
         Route::get('/xuxedex', [XuxemonsController::class, 'getAdminXuxedex']);
         Route::post('/xuxedex', [XuxemonsController::class, 'addXuxemonToUser']);
