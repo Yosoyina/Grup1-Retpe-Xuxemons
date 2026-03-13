@@ -14,15 +14,7 @@ class Xuxedex extends Model
     protected $fillable = [
         'id_usuario',
         'id_xuxemon',
-        'esta_capturado',
     ];
- 
-    protected function casts(): array
-    {
-        return [
-            'esta_capturado' => 'boolean',
-        ];
-    }
  
     // Relació amb el xuxemon
     public function xuxemon()
