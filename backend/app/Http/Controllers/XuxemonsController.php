@@ -163,7 +163,6 @@ class XuxemonsController extends Controller
                 'xuxemons.tamano',
                 'xuxemons.descripcio',
                 'xuxemons.imagen',
-                'xuxedex.esta_capturado'
             )
             ->get();
 
