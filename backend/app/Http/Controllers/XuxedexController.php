@@ -30,9 +30,19 @@ class XuxedexController extends Controller
     /*
      * En este apartado el admin añade un xuxemon aleatoriamnente a un jugador.
      */
-    public function update(Request $request, string $id)
+    public function xuxemonAleatorio(string $user_id)
     {
-        
+        $xuxemon = Xuxemons::inRandomOrder()->firstOrFail();
+ 
+        $entrada = Xuxedex::create([
+            'id_usuario' => $user_id,
+            'id_xuxemon' => $xuxemon->id,
+        ]);
+ 
+        return response()->json([
+            'message' => 'Xuxemon aleatori afegit correctament.',
+            'entrada' => $entrada->load('xuxemon'),
+        ], 201);
     }
 
     /**
