@@ -1,19 +1,7 @@
 <div class="admin-container">
-  <h1>Panel Admin - Gestionar Xuxemons</h1>
-
-  <div class="selector-usuarios">
-    <label for="usuarios">Selecciona un usuario:</label>
-    <select 
-      id="usuarios" 
-      [(ngModel)]="usuarioSeleccionado" 
-      (change)="cargarXuxemonsUsuario()"
-      class="select-usuarios"
-    >
-      <option [value]="null">-- Selecciona un usuario --</option>
-      <option *ngFor="let usuario of usuarios" [value]="usuario.id">
-        {{ usuario.nombre }} {{ usuario.apellidos }}
-      </option>
-    </select>
+  <div class="cabecera">
+    <h1 class="titulo">Usuaris</h1>
+    <button class="btn-salir" (click)="salir()">✕ Sortir</button>
   </div>
 
   <div *ngIf="mensajeExito" class="mensaje exito">
@@ -23,38 +11,143 @@
     ✗ {{ mensajeError }}
   </div>
 
-  <div *ngIf="usuarioSeleccionado" class="seccion-xuxemons">
-    <h2>Xuxemons de {{ getNombreUsuario(usuarioSeleccionado) }}</h2>
+  <div *ngIf="cargandoUsuarios" class="cargando">Cargando usuarios...</div>
 
-    <div *ngIf="cargando" class="cargando">
-      Cargando...
-    </div>
-
-    <div *ngIf="!cargando && xuxemons.length > 0" class="lista-xuxemons">
-      <div *ngFor="let xuxemon of xuxemons" class="card-xuxemon">
-        <div class="imagen-contenedor">
-          <img *ngIf="xuxemon.imagen" [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
-          <div *ngIf="!xuxemon.imagen" class="imagen-placeholder">Sin imagen</div>
+  <div *ngIf="!cargandoUsuarios && usuarios.length > 0" class="lista-usuarios">
+    <div *ngFor="let usuario of usuarios" class="usuario-card">
+      <div class="usuario-info">
+        <div class="avatar">{{ getIniciales(usuario.nombre, usuario.apellidos) }}</div>
+        <div class="datos">
+          <h2>{{ usuario.nombre }} {{ usuario.apellidos }} - #{{ usuario.id_jugador || usuario.id }}</h2>
+          <span class="estado" [class.inactivo]="!usuario.actiu">
+            {{ usuario.actiu ? 'Actiu' : 'Inactiu' }}
+          </span>
         </div>
-        <div class="info-xuxemon">
-          <h3>{{ xuxemon.nombre_xuxemon }}</h3>
-          <p><strong>Tipo:</strong> {{ xuxemon.tipo_elemento }}</p>
-          <p><strong>Tamaño:</strong> {{ xuxemon.tamano }}</p>
-          <p><strong>Descripción:</strong> {{ xuxemon.descripcio }}</p>
+      </div>
+
+      <div class="acciones">
+        <button
+          class="btn-xuxemon"
+          (click)="agregarXuxemonAleatorio(usuario.id)"
+          [disabled]="agregandoParaUsuarioId === usuario.id"
+        >
+          {{ agregandoParaUsuarioId === usuario.id ? 'Asignando...' : 'Dar Xuxemon Aleatorio' }}
+        </button>
+
+        <button
+          class="btn-ver"
+          (click)="cargarXuxemonsUsuario(usuario.id)"
+        >
+          Ver Xuxemons
+        </button>
+
+        <button
+          class="btn-toggle"
+          [class.btn-habilitar]="!usuario.actiu"
+          [class.btn-deshabilitar]="usuario.actiu"
+          (click)="pedirConfirmacionToggle(usuario)"
+        >
+          {{ usuario.actiu ? 'Deshabilitar compte' : 'Habilitar compte' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!cargandoUsuarios && usuarios.length === 0" class="sin-xuxemons">
+    <p>No hay usuarios activos para mostrar.</p>
+  </div>
+
+  <!-- MODAL CONFIRMACIÓ TOGGLE -->
+  <div *ngIf="usuarioAConfirmar" class="overlay" (click)="cancelarConfirmacion()">
+    <div class="modal modal-confirm" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ usuarioAConfirmar!.actiu ? 'Deshabilitar compte' : 'Habilitar compte' }}</h2>
+        <button class="btn-cerrar" (click)="cancelarConfirmacion()">✕</button>
+      </div>
+      <div class="confirm-body">
+        <p>
+          Segur que vols
+          <strong>{{ usuarioAConfirmar!.actiu ? 'deshabilitar' : 'habilitar' }}</strong>
+          l'usuari <strong>{{ usuarioAConfirmar!.nombre }} {{ usuarioAConfirmar!.apellidos }}</strong>?
+        </p>
+        <div class="confirm-accions">
+          <button class="btn-cancel" (click)="cancelarConfirmacion()">Cancel·lar</button>
+          <button
+            [class]="usuarioAConfirmar!.actiu ? 'btn-deshabilitar confirm-btn' : 'btn-habilitar confirm-btn'"
+            (click)="confirmarToggle()"
+          >
+            {{ usuarioAConfirmar!.actiu ? 'Sí, deshabilitar' : 'Sí, habilitar' }}
+          </button>
         </div>
       </div>
     </div>
+  </div>
 
-    <div *ngIf="!cargando && xuxemons.length === 0" class="sin-xuxemons">
-      <p>Este usuario aún no tiene Xuxemons</p>
+  <!-- MODAL XUXEMONS -->
+  <div *ngIf="modalAbierto" class="overlay" (click)="cerrarModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <h2>Xuxemons de {{ getNombreUsuario(usuarioSeleccionado!) }}</h2>
+        <button class="btn-cerrar" (click)="cerrarModal()">✕</button>
+      </div>
+
+      <div *ngIf="cargandoXuxemons" class="cargando">Cargando...</div>
+
+      <div *ngIf="!cargandoXuxemons" class="modal-body">
+
+        <div class="tipo-seccion tipo-aigua">
+          <h3>💧 Aigua</h3>
+          <p *ngIf="xuxemonsAgua.length === 0" class="sin-tipo">Cap xuxemon d'Aigua</p>
+          <div class="lista-tipo">
+            <div *ngFor="let x of xuxemonsAgua" class="card-xuxemon">
+              <div class="imagen-contenedor">
+                <img *ngIf="x.imagen" [src]="x.imagen" [alt]="x.nombre_xuxemon">
+                <div *ngIf="!x.imagen" class="imagen-placeholder">?</div>
+              </div>
+              <div class="info-xuxemon">
+                <h4>{{ x.nombre_xuxemon }}</h4>
+                <p>{{ x.tamano }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tipo-seccion tipo-aire">
+          <h3>💨 Aire</h3>
+          <p *ngIf="xuxemonsAire.length === 0" class="sin-tipo">Cap xuxemon d'Aire</p>
+          <div class="lista-tipo">
+            <div *ngFor="let x of xuxemonsAire" class="card-xuxemon">
+              <div class="imagen-contenedor">
+                <img *ngIf="x.imagen" [src]="x.imagen" [alt]="x.nombre_xuxemon">
+                <div *ngIf="!x.imagen" class="imagen-placeholder">?</div>
+              </div>
+              <div class="info-xuxemon">
+                <h4>{{ x.nombre_xuxemon }}</h4>
+                <p>{{ x.tamano }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tipo-seccion tipo-terra">
+          <h3>🌿 Terra</h3>
+          <p *ngIf="xuxemonsTerra.length === 0" class="sin-tipo">Cap xuxemon de Terra</p>
+          <div class="lista-tipo">
+            <div *ngFor="let x of xuxemonsTerra" class="card-xuxemon">
+              <div class="imagen-contenedor">
+                <img *ngIf="x.imagen" [src]="x.imagen" [alt]="x.nombre_xuxemon">
+                <div *ngIf="!x.imagen" class="imagen-placeholder">?</div>
+              </div>
+              <div class="info-xuxemon">
+                <h4>{{ x.nombre_xuxemon }}</h4>
+                <p>{{ x.tamano }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-
-    <button 
-      (click)="agregarXuxemonAleatorio()" 
-      [disabled]="cargando"
-      class="btn-agregar"
-    >
-      {{ cargando ? 'Agregando...' : '🎮 Agregar Xuxemon Aleatorio' }}
-    </button>
   </div>
 </div>
