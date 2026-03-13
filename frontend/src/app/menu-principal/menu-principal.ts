@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-menu-principal',
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './menu-principal.html',
   styleUrl: './menu-principal.css',
 })
@@ -12,7 +13,7 @@ export class MenuPrincipal {
 
   carregant = true;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(public authService: AuthService, private router: Router) {
     // verificar que el backend esta disponible i el token es valid
     this.authService.getPerfil().subscribe({
       next: () => {

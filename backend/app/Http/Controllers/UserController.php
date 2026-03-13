@@ -79,4 +79,27 @@ class UserController extends Controller
         ]);
     }
 
+    // ── LIST USERS (ADMIN) ────────────────────────────────
+
+    public function listUsers()
+    {
+        $users = \App\Models\User::select('id', 'nombre', 'apellidos', 'email', 'id_jugador', 'role', 'actiu')
+            ->get();
+
+        return response()->json($users, 200);
+    }
+
+    // ── TOGGLE ACTIU (ADMIN) ──────────────────────────────
+
+    public function toggleActiu($id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+        $user->actiu = !$user->actiu;
+        $user->save();
+
+        return response()->json([
+            'message' => $user->actiu ? 'Usuari habilitat correctament' : 'Usuari deshabilitat correctament',
+            'actiu'   => $user->actiu,
+        ], 200);
+    }
 }

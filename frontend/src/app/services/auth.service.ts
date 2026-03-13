@@ -75,4 +75,10 @@ export class AuthService {
     return !!localStorage.getItem('token');
   }
 
+  // Comprobacion de si el usuario es administrador
+  isAdmin(): boolean {
+    const usuario = this.usuariActual.getValue();
+    return usuario && usuario.role === 'admin';
+  }
+
 }

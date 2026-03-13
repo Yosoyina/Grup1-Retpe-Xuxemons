@@ -124,6 +124,7 @@ class XuxemonsController extends Controller
 
     }
 
+
     // Evoluciones Xuxemons
 
     public function Evoluciones(string $id)
@@ -141,4 +142,74 @@ class XuxemonsController extends Controller
         ], 200);
     }
 
+    /** GET /admin/xuxedex */
+    
+    // Retorna els xuxemons d'un usuari específic (per a administradors)
+    public function getAdminXuxedex(Request $request)
+    {
+        $userId = $request->query('user_id');
+        
+        if (!$userId) {
+            return response()->json(['error' => 'user_id requerido'], 400);
+        }
+
+        $xuxemons = DB::table('xuxedex')
+            ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')
+            ->where('xuxedex.id_usuario', $userId)
+            ->select(
+                'xuxemons.id',
+                'xuxemons.nombre_xuxemon',
+                'xuxemons.tipo_elemento',
+                'xuxemons.tamano',
+                'xuxemons.descripcio',
+                'xuxemons.imagen',
+                'xuxedex.esta_capturado'
+            )
+            ->get();
+
+        return response()->json($xuxemons, 200);
+    }
+
+    /** POST /admin/xuxedex */
+
+    // Afegeix un xuxemon aleatori a un usuari (per a administradors)
+    public function addXuxemonToUser(Request $request)
+    {
+        $userId = $request->input('user_id');
+        
+        if (!$userId) {
+            return response()->json(['error' => 'user_id requerido'], 400);
+        }
+
+        // Obtenir un xuxemon aleatori de la taula xuxemons
+        $randomXuxemon = Xuxemons::inRandomOrder()->first();
+        
+        if (!$randomXuxemon) {
+            return response()->json(['error' => 'No hay xuxemons disponibles'], 404);
+        }
+
+        // Comprobar si el usuario ya tiene este xuxemon
+        $exists = DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->where('id_xuxemon', $randomXuxemon->id)
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['error' => 'El usuario ya tiene este xuxemon'], 400);
+        }
+
+        // Insertar en xuxedex
+        DB::table('xuxedex')->insert([
+            'id_usuario' => $userId,
+            'id_xuxemon' => $randomXuxemon->id,
+            'esta_capturado' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json([
+            'message' => 'Xuxemon agregado correctamente',
+            'xuxemon' => $randomXuxemon
+        ], 201);
+    }
 }
