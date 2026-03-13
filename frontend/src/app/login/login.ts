@@ -16,7 +16,7 @@ export class LoginComponent {
   isLoading = false;
   successMessage = '';
 
-  // 👇 CLAVE: solo mostramos errores de required después de intentar enviar
+  // CLAVE: solo mostramos errores de required después de intentar enviar
   submitted = false;
 
   loginForm = new FormGroup({
@@ -56,7 +56,7 @@ export class LoginComponent {
     });
   }
 
-  // ✅ ahora NO depende de touched (click), depende de submitted (login)
+  // ahora NO depende de touched (click), depende de submitted (login)
   isFieldInvalid(field: 'id_jugador' | 'password'): boolean {
     const control = this.loginForm.get(field);
     return !!(control && control.invalid && this.submitted);
