@@ -124,4 +124,22 @@ class XuxemonsController extends Controller
         return response()->json(['message' => 'Xuxemon eliminat correctament'], 200);
 
     }
+
+    // Evoluciones Xuxemons
+
+    public function Evoluciones(string $id)
+    {
+        $xuxemon = Xuxemons::findOrFail($id);
+ 
+        $cadena = Xuxemons::where('tipo_elemento', $xuxemon->tipo_elemento)
+            ->where('evolucion_xuxemon', $xuxemon->evolucion_xuxemon)
+            ->orderByRaw("FIELD(tamano, 'Petit', 'Mitja', 'Gran')")
+            ->get(['id', 'nombre_xuxemon', 'tamano', 'imagen']);
+ 
+        return response()->json([
+            'cadena_evolutiva' => $cadena,
+            'total_etapes'     => $cadena->count(),
+        ], 200);
+    }
+
 }

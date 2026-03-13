@@ -19,6 +19,7 @@ class Xuxemons extends Model
         'tamano',
         'descripcio',
         'imagen',
+        'evolucion_xuxemon',
     ];
 
     protected function casts(): array
@@ -29,6 +30,7 @@ class Xuxemons extends Model
             'tamano' => 'string',
             'descripcio' => 'string',
             'imagen' => 'string',
+            'evolucion_xuxemon' => 'string',
         ];
     }
 
@@ -36,6 +38,13 @@ class Xuxemons extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    
+    // Xuxemons de la mateixa línia evolutiva
+    public function liniaEvolutiva()
+    {
+        return $this->hasMany(Xuxemons::class, 'evolucion_xuxemon', 'evolucion_xuxemon');
     }
 
 }
