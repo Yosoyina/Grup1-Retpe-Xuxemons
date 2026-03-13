@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Xuxedex;
+use App\Models\Xuxemons;
+use Illuminate\Support\Facades\DB;
 
 class XuxedexController extends Controller
 {
@@ -45,11 +48,19 @@ class XuxedexController extends Controller
         ], 201);
     }
 
-    /**
-     * Remove the specified resource from storage.
+    /*
+     *  En este apartado el admin elimina un xuxemon del xuxedex de un jugador.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        
+        $entrada = Xuxedex::where('id', $id)
+            ->where('id_usuario', $request->user()->id)
+            ->firstOrFail();
+ 
+        $entrada->delete();
+ 
+        return response()->json([
+            'message' => 'Xuxemon eliminat del xuxedex.',
+        ], 200);
     }
 }
