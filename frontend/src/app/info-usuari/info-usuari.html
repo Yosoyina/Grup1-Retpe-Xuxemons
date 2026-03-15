@@ -23,6 +23,7 @@
 
       <!-- boto canviar avatar -->
       <button class="btn-avatar" (click)="mostrarSeleccioAvatar = !mostrarSeleccioAvatar">
+        <img src="/AvatarBoto.png" alt="" class="btn-icon">
         Canviar avatar
       </button>
 
@@ -45,6 +46,7 @@
 
       <!-- boto dona-se de baixa -->
       <button class="btn-baixa" (click)="mostrarConfirmacio = true">
+        <img src="/DonarBaixa.png" alt="" class="btn-icon">
         Dona-se de Baixa
       </button>
 
@@ -61,30 +63,64 @@
             <div class="camp">
               <label>Nom</label>
               <input type="text" formControlName="nombre">
+              @if (editForm.get('nombre')?.invalid && editForm.get('nombre')?.touched) {
+              <span class="error-camp">
+                @if (editForm.get('nombre')?.errors?.['required']) { El nom és obligatori. }
+                @if (editForm.get('nombre')?.errors?.['maxlength']) { Màxim 25 caràcters. }
+              </span>
+              }
             </div>
             <div class="camp">
               <label>Cognom</label>
               <input type="text" formControlName="apellidos">
+              @if (editForm.get('apellidos')?.invalid && editForm.get('apellidos')?.touched) {
+              <span class="error-camp">
+                @if (editForm.get('apellidos')?.errors?.['required']) { El cognom és obligatori. }
+                @if (editForm.get('apellidos')?.errors?.['maxlength']) { Màxim 25 caràcters. }
+              </span>
+              }
             </div>
           </div>
 
           <div class="camp">
             <label>Correu Electrònic</label>
             <input type="email" formControlName="email">
+            @if (editForm.get('email')?.invalid && editForm.get('email')?.touched) {
+            <span class="error-camp">
+              @if (editForm.get('email')?.errors?.['required']) { El correu és obligatori. }
+              @if (editForm.get('email')?.errors?.['email']) { Format de correu no vàlid. }
+            </span>
+            }
           </div>
 
           <div class="camp">
             <label>Nova Contrasenya</label>
             <input type="password" formControlName="password" placeholder="Deixa buit per no canviar">
+            @if (editForm.get('password')?.invalid && editForm.get('password')?.touched) {
+            <span class="error-camp">
+              @if (editForm.get('password')?.errors?.['minlength']) { Mínim 6 caràcters. }
+            </span>
+            }
           </div>
 
           <div class="camp">
             <label>Confirmar Contrasenya</label>
             <input type="password" formControlName="password_confirmation" placeholder="Repeteix la contrasenya">
+            @if (editForm.get('password_confirmation')?.invalid && editForm.get('password_confirmation')?.touched) {
+            <span class="error-camp">
+              @if (editForm.get('password_confirmation')?.errors?.['minlength']) { Mínim 6 caràcters. }
+            </span>
+            }
+            @if (editForm.errors?.['passwordMismatch'] && editForm.get('password_confirmation')?.touched) {
+            <span class="error-camp">Les contrasenyes no coincideixen.</span>
+            }
           </div>
 
           <div class="boto-guardar-container">
-            <button type="submit" class="btn-guardar">Guardar</button>
+            <button type="submit" class="btn-guardar">
+              <img src="/IconaGuardar.png" alt="" class="btn-icon">
+              Guardar
+            </button>
           </div>
 
         </form>
@@ -94,7 +130,10 @@
   </div>
 
   <!-- boto sortir baix a la dreta -->
-  <button class="btn-sortir" (click)="tornarAlMenu()">SORTIR</button>
+  <button class="btn-sortir" (click)="tornarAlMenu()">
+    <img src="/Sortir.png" alt="" class="btn-icon">
+    SORTIR
+  </button>
 
 </div>
 
@@ -110,6 +149,22 @@
       <button class="btn-confirmar-baixa" (click)="confirmarEliminar()">🗑️ Sí, inhabilitar</button>
       <button class="btn-cancelar" (click)="mostrarConfirmacio = false">✕ Cancel·lar</button>
     </div>
+  </div>
+</div>
+}
+
+<!-- modal dades actualitzades -->
+@if (mostrarModalActualitzat) {
+<div class="modal-overlay" (click)="mostrarModalActualitzat = false">
+  <div class="modal modal-exit" (click)="$event.stopPropagation()">
+    <div class="modal-exit-avatar">
+      <img [src]="'/' + usuari.avatar" [alt]="usuari.nombre" class="modal-avatar-img">
+    </div>
+    <div class="modal-icona"></div>
+    <h3 class="modal-titol modal-titol-exit">Perfil actualitzat!</h3>
+    <div class="modal-dades">
+    </div>
+    <button class="btn-cancelar btn-tancar-modal" (click)="mostrarModalActualitzat = false">✕ Tancar</button>
   </div>
 </div>
 }
