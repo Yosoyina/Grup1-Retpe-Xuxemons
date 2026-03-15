@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { XuxemonService, Xuxemon } from '../services/xuxemon.service';
+import { XuxemonService, Xuxemon, EtapaEvoluciones } from '../services/xuxemon.service';
 
 @Component({
   selector: 'app-xuxedex',
@@ -18,6 +18,10 @@ export class Xuxedex implements OnDestroy {
   filtroMida = 'Tots';
   xuxemonSeleccionado: Xuxemon | null = null;
   xuxemons$: BehaviorSubject<Xuxemon[]>;
+  cadenaEvolucio: EtapaEvoluciones[] = [];
+  mostrarEvolucion = false;
+  cargarEvolucion = false;
+  errorEvolucion: string | null = null;
 
   private xuxemonsSub: Subscription;
 
@@ -42,6 +46,7 @@ export class Xuxedex implements OnDestroy {
     this.filtroMida = 'Tots';
     this.paginaActual = 0;
     this.xuxemonSeleccionado = null;
+    this.cerrarEvolucion();
     this.xuxemonService.xuxemons$.next([]);
     this.xuxemonService.carregarXuxemons(tipo);
   }
@@ -96,6 +101,7 @@ export class Xuxedex implements OnDestroy {
   seleccionar(xuxemon: Xuxemon): void {
     if (!xuxemon.bloquejat) {
       this.xuxemonSeleccionado = xuxemon;
+      this.cerrarEvolucion();
     }
   }
 
@@ -146,5 +152,37 @@ export class Xuxedex implements OnDestroy {
     }
 
     this.xuxemonSeleccionado = visibles.find((xuxemon) => !xuxemon.bloquejat) ?? null;
+  }
+
+  // Metodos de Evoluciones de los Xuxemons
+
+  verCadenaEvolucion(): void {
+    if (!this.xuxemonSeleccionado) return;
+
+    this.cargarEvolucion = true;
+    this.mostrarEvolucion = true;
+    this.errorEvolucion = null;
+    this.cadenaEvolucio = [];
+
+    this.xuxemonService.getEvoluciones(Number(this.xuxemonSeleccionado.id)).subscribe({
+      next: (res) => {
+        this.cadenaEvolucio = res.cadena_evolutiva;
+        this.cargarEvolucion = false;
+      },
+      error: () => {
+        this.errorEvolucion = 'No s\'ha pogut carregar la cadena evolutiva.';
+        this.cargarEvolucion = false;
+      },
+    });
+  }
+
+  cerrarEvolucion(): void {
+    this.mostrarEvolucion = false;
+    this.cadenaEvolucio = [];
+    this.errorEvolucion = null;
+  }
+
+  PosicionActual(etapa: EtapaEvoluciones): boolean {
+    return etapa.tamano === this.xuxemonSeleccionado?.tamano;
   }
 }

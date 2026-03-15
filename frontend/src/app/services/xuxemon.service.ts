@@ -74,7 +74,7 @@ export class XuxemonService {
     return this.http.post(`${this.adminUrl}`, { user_id: userId });
   }
 
-  getEvolucions(id: number): Observable<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }> {
+  getEvoluciones(id: number): Observable<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }> {
     return this.http.get<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }>(`http://localhost:8000/api/xuxemons/${id}/evolucions`);
   }
 }
