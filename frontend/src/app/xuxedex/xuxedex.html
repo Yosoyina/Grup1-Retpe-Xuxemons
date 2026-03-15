@@ -143,6 +143,48 @@
     }
   }
 
+<<<<<<< Updated upstream
+=======
+  <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"(click)="veureCadenaEvolucio()">
+  @if (mostrantEvolucio) {
+    <div class="evolucio-overlay" (click)="tancarEvolucio()">
+      <div class="evolucio-modal" (click)="$event.stopPropagation()">
+
+        <button type="button" class="evolucio-tancar" (click)="tancarEvolucio()">✕</button>
+        <h2>Cadena Evolutiva</h2>
+
+        @if (carregantEvolucio) {
+          <p class="evolucio-carregant">Carregant...</p>
+        } @else if (errorEvolucio) {
+          <p class="evolucio-error">{{ errorEvolucio }}</p>
+        } @else {
+          <div class="evolucio-cadena">
+            @for (etapa of cadenaEvolucio; track etapa.id; let last = $last) {
+              <div class="evolucio-etapa" [class.actual]="esPosicioActual(etapa)">
+                @if (etapa.imagen) {
+                  <img [src]="etapa.imagen" [alt]="etapa.nombre_xuxemon">
+                } @else {
+                  <div class="placeholder-img">{{ etapa.nombre_xuxemon.charAt(0) }}</div>
+                }
+                <p class="etapa-nom">{{ etapa.nombre_xuxemon }}</p>
+                <p class="etapa-mida">{{ etapa.tamano }}</p>
+                @if (esPosicioActual(etapa)) {
+                  <span class="etapa-badge">Actual</span>
+                }
+              </div>
+              @if (!last) {
+                <span class="evolucio-fletxa"></span>
+              }
+            }
+          </div>
+        }
+
+      </div>
+    </div>
+  }
+  </button>
+
+>>>>>>> Stashed changes
   <button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menú principal">
     <span class="sortir-icon" aria-hidden="true">&#9711;</span>
     <span>SORTIR</span>
