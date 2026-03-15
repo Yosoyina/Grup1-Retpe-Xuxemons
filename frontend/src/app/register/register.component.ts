@@ -31,18 +31,19 @@ export class RegisterComponent {
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     password_confirmation: new FormControl('', Validators.required)
 
-  }, { validators: this.contrasenjesIgualsValidator });
+  }, { validators: this.contrasenyesIgualsValidator });
 
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) { }
 
-  contrasenjesIgualsValidator(form: AbstractControl): ValidationErrors | null {
+  contrasenyesIgualsValidator(form: AbstractControl): ValidationErrors | null {
     const password = form.get('password')?.value;
     const confirm = form.get('password_confirmation')?.value;
-    return password === confirm ? null : { contrasenjesDiferents: true };
+    return password === confirm ? null : { contrasenyesDiferents: true };
   }
 
   onSubmit() {
     this.submitted = true;
+    this.registerForm.markAllAsTouched();
     if (this.registerForm.invalid) return;
 
     this.isLoading = true;

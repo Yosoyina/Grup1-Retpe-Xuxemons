@@ -67,7 +67,7 @@
     <!-- aquest error esta a registerForm.errors i no a cap camp concret -->
     @if (
     registerForm.errors?.['contrasenjesDiferents'] &&
-    registerForm.get('password_confirmation')?.touched
+    submitted
     ) {
     <span style="color: red;">
         Les contrasenyes no coincideixen
@@ -114,7 +114,7 @@
       Copiat!
     </span>
 
-    <button class="btn-login" (click)="anarAlLogin()">
+    <button type="button" class="btn-login" (click)="anarAlLogin()">
       Anar al Login
     </button>
 
