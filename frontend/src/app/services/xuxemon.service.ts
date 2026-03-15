@@ -3,6 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map, of } from 'rxjs';
 
+export interface EtapaEvoluciones {
+  id: number;
+  nombre_xuxemon: string;
+  tamano: string;
+  imagen: string | null;
+}
+
+
 export interface Xuxemon {
   id: number | string;
   nombre_xuxemon: string;
@@ -64,5 +72,9 @@ export class XuxemonService {
   // Afegir un xuxemon aleatori a un usuari (per a admin)
   addRandomXuxemonToUser(userId: number): Observable<any> {
     return this.http.post(`${this.adminUrl}`, { user_id: userId });
+  }
+
+  getEvoluciones(id: number): Observable<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }> {
+    return this.http.get<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }>(`http://localhost:8000/api/xuxemons/${id}/evolucions`);
   }
 }

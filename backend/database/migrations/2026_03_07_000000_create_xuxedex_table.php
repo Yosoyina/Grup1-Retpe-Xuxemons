@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_usuario')->constrained('users')->onDelete('cascade');
             $table->foreignId('id_xuxemon')->constrained('xuxemons')->onDelete('cascade');
+            $table->boolean('esta_capturado')->default(true);
             $table->timestamps();
             
             // Una única entrada per usuari-xuxemon

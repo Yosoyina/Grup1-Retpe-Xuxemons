@@ -52,6 +52,11 @@ export const routes: Routes = [
         component: InfoUsuari,
       },
       {
+        path: 'inventario',
+        title: 'Inventario',
+        component: Inventario,
+      },
+      {
         path: 'admin',
         title: 'Admin',
         component: Admin,
