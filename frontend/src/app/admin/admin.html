@@ -1,60 +1,82 @@
-<div class="admin-container">
-  <div class="cabecera">
-    <h1 class="titulo">Usuaris</h1>
-    <button class="btn-salir" (click)="salir()">✕ Sortir</button>
-  </div>
+<div class="admin-wrapper">
+  <h1 class="admin-titulo">PANEL ADMINISTRADOR</h1>
 
-  <div *ngIf="mensajeExito" class="mensaje exito">
-    ✓ {{ mensajeExito }}
-  </div>
-  <div *ngIf="mensajeError" class="mensaje error">
-    ✗ {{ mensajeError }}
-  </div>
+  <div *ngIf="mensajeExito" class="mensaje exito">✓ {{ mensajeExito }}</div>
+  <div *ngIf="mensajeError" class="mensaje error">✗ {{ mensajeError }}</div>
 
-  <div *ngIf="cargandoUsuarios" class="cargando">Cargando usuarios...</div>
+  <div class="seccions-grid">
 
-  <div *ngIf="!cargandoUsuarios && usuarios.length > 0" class="lista-usuarios">
-    <div *ngFor="let usuario of usuarios" class="usuario-card">
-      <div class="usuario-info">
-        <div class="avatar">{{ getIniciales(usuario.nombre, usuario.apellidos) }}</div>
-        <div class="datos">
-          <h2>{{ usuario.nombre }} {{ usuario.apellidos }} - #{{ usuario.id_jugador || usuario.id }}</h2>
-          <span class="estado" [class.inactivo]="!usuario.actiu">
-            {{ usuario.actiu ? 'Actiu' : 'Inactiu' }}
-          </span>
+    <!-- ── SECCIÓ XUXEMONS ───────────────────────────── -->
+    <div class="seccio">
+      <div class="seccio-header">
+        <span class="seccio-icon">🐾</span>
+        <h2>Gestió de Xuxemons</h2>
+      </div>
+
+      <div class="seccio-body">
+        <div *ngIf="cargandoUsuarios" class="cargando">Carregant usuaris...</div>
+
+        <div *ngIf="!cargandoUsuarios && usuarios.length > 0" class="lista-usuarios">
+          <div *ngFor="let usuario of usuarios" class="usuario-card">
+            <div class="usuario-info">
+              <div class="avatar">{{ getIniciales(usuario.nombre, usuario.apellidos) }}</div>
+              <div class="datos">
+                <h3>{{ usuario.nombre }} {{ usuario.apellidos }}</h3>
+                <span class="id-jugador">#{{ usuario.id_jugador || usuario.id }}</span>
+                <span class="estado" [class.inactivo]="!usuario.actiu">
+                  {{ usuario.actiu ? 'Actiu' : 'Inactiu' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="acciones">
+              <button
+                class="btn-xuxemon"
+                (click)="agregarXuxemonAleatorio(usuario.id)"
+                [disabled]="agregandoParaUsuarioId === usuario.id"
+              >
+                {{ agregandoParaUsuarioId === usuario.id ? 'Assignant...' : 'Donar Xuxemon' }}
+              </button>
+              <button class="btn-ver" (click)="cargarXuxemonsUsuario(usuario.id)">
+                Veure Xuxemons
+              </button>
+              <button
+                class="btn-toggle"
+                [class.btn-habilitar]="!usuario.actiu"
+                [class.btn-deshabilitar]="usuario.actiu"
+                (click)="pedirConfirmacionToggle(usuario)"
+              >
+                {{ usuario.actiu ? 'Deshabilitar' : 'Habilitar' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!cargandoUsuarios && usuarios.length === 0" class="sin-xuxemons">
+          <p>No hi ha usuaris per mostrar.</p>
         </div>
       </div>
+    </div>
 
-      <div class="acciones">
-        <button
-          class="btn-xuxemon"
-          (click)="agregarXuxemonAleatorio(usuario.id)"
-          [disabled]="agregandoParaUsuarioId === usuario.id"
-        >
-          {{ agregandoParaUsuarioId === usuario.id ? 'Asignando...' : 'Dar Xuxemon Aleatorio' }}
-        </button>
-
-        <button
-          class="btn-ver"
-          (click)="cargarXuxemonsUsuario(usuario.id)"
-        >
-          Ver Xuxemons
-        </button>
-
-        <button
-          class="btn-toggle"
-          [class.btn-habilitar]="!usuario.actiu"
-          [class.btn-deshabilitar]="usuario.actiu"
-          (click)="pedirConfirmacionToggle(usuario)"
-        >
-          {{ usuario.actiu ? 'Deshabilitar compte' : 'Habilitar compte' }}
-        </button>
+    <!-- ── SECCIÓ INVENTARI (pendent) ───────────────── -->
+    <div class="seccio seccio-disabled">
+      <div class="seccio-header">
+        <span class="seccio-icon">🎒</span>
+        <h2>Gestió d'Inventari</h2>
+      </div>
+      <div class="seccio-body seccio-wip">
+        <span class="wip-icon">🚧</span>
+        <p>Secció en construcció</p>
+        <small>Pròximament disponible</small>
       </div>
     </div>
+
   </div>
 
-  <div *ngIf="!cargandoUsuarios && usuarios.length === 0" class="sin-xuxemons">
-    <p>No hay usuarios activos para mostrar.</p>
+  <div class="admin-footer">
+    <button class="btn-salir" (click)="salir()">
+      <span>⬅</span> Tornar al Menú
+    </button>
   </div>
 
   <!-- MODAL CONFIRMACIÓ TOGGLE -->

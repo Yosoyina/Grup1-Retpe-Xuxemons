@@ -197,11 +197,57 @@
   width: min(860px, 92vw);
   display: flex;
   justify-content: center;
+  gap: 14px;
+}
+
+.btn-admin {
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 14px 34px;
+
+  border-radius: 999px;
+
+  background: #4a6cf7;
+  border: 3px solid rgba(0, 0, 0, .88);
+
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: .06em;
+  font-family: inherit;
+  font-size: 16px;
+
+  box-shadow:
+    0 16px 28px rgba(0, 0, 0, .28),
+    inset 0 2px 0 rgba(255, 255, 255, .25);
+
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+
+.btn-admin:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 34px rgba(0, 0, 0, .30),
+    inset 0 2px 0 rgba(255, 255, 255, .28);
+  filter: saturate(1.06);
+}
+
+.btn-admin:active {
+  transform: translateY(0) scale(.99);
+}
+
+.btn-admin img {
+  width: 24px;
+  height: 24px;
+  display: block;
 }
 
 .btn-sortir {
-  border: none;
-  cursor: pointer;
 
   display: flex;
   align-items: center;
