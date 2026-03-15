@@ -31,6 +31,7 @@ class XuxemonsController extends Controller
                 'xuxemons.tamano',
                 'xuxemons.descripcio',
                 'xuxemons.imagen',
+                'xuxedex.esta_capturado',
             );
 
         // Aplica filtres si l'usuari els ha enviat
