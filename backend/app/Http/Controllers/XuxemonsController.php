@@ -31,7 +31,6 @@ class XuxemonsController extends Controller
                 'xuxemons.tamano',
                 'xuxemons.descripcio',
                 'xuxemons.imagen',
-                'xuxedex.esta_capturado'
             );
 
         // Aplica filtres si l'usuari els ha enviat
@@ -125,6 +124,24 @@ class XuxemonsController extends Controller
 
     }
 
+
+    // Evoluciones Xuxemons
+
+    public function Evoluciones(string $id)
+    {
+        $xuxemon = Xuxemons::findOrFail($id);
+ 
+        $cadena = Xuxemons::where('tipo_elemento', $xuxemon->tipo_elemento)
+            ->where('evolucion_xuxemon', $xuxemon->evolucion_xuxemon)
+            ->orderByRaw("FIELD(tamano, 'Petit', 'Mitja', 'Gran')")
+            ->get(['id', 'nombre_xuxemon', 'tamano', 'imagen']);
+ 
+        return response()->json([
+            'cadena_evolutiva' => $cadena,
+            'total_etapes'     => $cadena->count(),
+        ], 200);
+    }
+
     /** GET /admin/xuxedex */
     
     // Retorna els xuxemons d'un usuari específic (per a administradors)
@@ -146,7 +163,6 @@ class XuxemonsController extends Controller
                 'xuxemons.tamano',
                 'xuxemons.descripcio',
                 'xuxemons.imagen',
-                'xuxedex.esta_capturado'
             )
             ->get();
 
