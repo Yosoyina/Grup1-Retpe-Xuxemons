@@ -16,13 +16,13 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
 
+  // Rutas públicas (solo accesibles si NO estás autenticado)
   {
     path: 'registrar',
     title: 'Registrar',
     component: RegisterComponent,
     canActivate: [noAuthGuard]
   },
-
   {
     path: 'login',
     title: 'Login',
@@ -30,32 +30,33 @@ export const routes: Routes = [
     canActivate: [noAuthGuard]
   },
 
+  // Rutas protegidas: el authGuard se aplica una sola vez al padre
   {
-    path: 'menu-principal',
-    title: 'Menu Principal',
-    component: MenuPrincipal,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'info-usuari',
-    title: 'Info Usuari',
-    component: InfoUsuari,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'xuxedex',
-    title: 'Xuxedex',
-    component: Xuxedex,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'admin',
-    title: 'Admin',
-    component: Admin,
-    canActivate: [adminGuard]
+    path: '',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'menu-principal',
+        title: 'Menu Principal',
+        component: MenuPrincipal,
+      },
+      {
+        path: 'xuxedex',
+        title: 'Xuxedex',
+        component: Xuxedex,
+      },
+      {
+        path: 'info-usuari',
+        title: 'Info Usuari',
+        component: InfoUsuari,
+      },
+      {
+        path: 'admin',
+        title: 'Admin',
+        component: Admin,
+        canActivate: [adminGuard]
+      }
+    ]
   }
 
 ];
