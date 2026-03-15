@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -15,15 +15,16 @@ export class InfoUsuari {
   usuari: any = null;
   errorMessage = '';
   successMessage = '';
-  mostrarFormEdicio = false;
   mostrarConfirmacio = false;
   mostrarSeleccioAvatar = false;
+  mostrarModalActualitzat = false;
 
   // llista de avatars disponibles
   avatars = [
+    'avatarpordefecto.png',
     'Futsin.png',
     'Piturrin.png',
-    'avatarpordefecto.png',
+    'Moxilla.png',
   ];
 
   editForm = new FormGroup({
@@ -32,7 +33,16 @@ export class InfoUsuari {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.minLength(6)]),
     password_confirmation: new FormControl('', [Validators.minLength(6)]),
-  });
+  }, { validators: InfoUsuari.passwordsCoincideixen });
+
+  static passwordsCoincideixen(form: AbstractControl): ValidationErrors | null {
+    const pw = form.get('password')?.value;
+    const conf = form.get('password_confirmation')?.value;
+    if (pw && conf && pw !== conf) {
+      return { passwordMismatch: true };
+    }
+    return null;
+  }
 
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {
     // carreguem les dades de l'usuari al crear el component
@@ -87,8 +97,7 @@ export class InfoUsuari {
     this.authService.updatePerfil(dades).subscribe({
       next: (response: any) => {
         this.usuari = response.user;
-        this.mostrarFormEdicio = false;
-        this.successMessage = 'Perfil actualitzat correctament!';
+        this.mostrarModalActualitzat = true;
         this.errorMessage = '';
         this.cdr.detectChanges();
       },
