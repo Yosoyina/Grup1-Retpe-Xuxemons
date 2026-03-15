@@ -24,7 +24,6 @@ export class InfoUsuari {
     'avatarpordefecto.png',
     'Futsin.png',
     'Piturrin.png',
-    'Moxilla.png',
   ];
 
   editForm = new FormGroup({
