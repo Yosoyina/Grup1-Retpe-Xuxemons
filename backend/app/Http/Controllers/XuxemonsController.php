@@ -157,6 +157,7 @@ class XuxemonsController extends Controller
         $xuxemons = DB::table('xuxedex')
             ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')
             ->where('xuxedex.id_usuario', $userId)
+            ->where('xuxedex.esta_capturado', true)
             ->select(
                 'xuxemons.id',
                 'xuxemons.nombre_xuxemon',
@@ -181,35 +182,44 @@ class XuxemonsController extends Controller
             return response()->json(['error' => 'user_id requerido'], 400);
         }
 
-        // Obtenir un xuxemon aleatori de la taula xuxemons
-        $randomXuxemon = Xuxemons::inRandomOrder()->first();
-        
-        if (!$randomXuxemon) {
-            return response()->json(['error' => 'No hay xuxemons disponibles'], 404);
-        }
-
-        // Comprobar si el usuario ya tiene este xuxemon
-        $exists = DB::table('xuxedex')
+        $blockedEntry = DB::table('xuxedex')
+            ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')
             ->where('id_usuario', $userId)
-            ->where('id_xuxemon', $randomXuxemon->id)
-            ->exists();
+            ->where('esta_capturado', false)
+            ->inRandomOrder()
+            ->select(
+                'xuxedex.id_xuxemon',
+                'xuxemons.id',
+                'xuxemons.nombre_xuxemon',
+                'xuxemons.tipo_elemento',
+                'xuxemons.tamano',
+                'xuxemons.descripcio',
+                'xuxemons.imagen'
+            )
+            ->first();
 
-        if ($exists) {
-            return response()->json(['error' => 'El usuario ya tiene este xuxemon'], 400);
+        if (!$blockedEntry) {
+            return response()->json(['error' => 'El usuario ya tiene todos sus Xuxemons desbloqueados'], 400);
         }
 
-        // Insertar en xuxedex
-        DB::table('xuxedex')->insert([
-            'id_usuario' => $userId,
-            'id_xuxemon' => $randomXuxemon->id,
-            'esta_capturado' => true,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->where('id_xuxemon', $blockedEntry->id_xuxemon)
+            ->update([
+                'esta_capturado' => true,
+                'updated_at' => now(),
+            ]);
 
         return response()->json([
             'message' => 'Xuxemon agregado correctamente',
-            'xuxemon' => $randomXuxemon
+            'xuxemon' => [
+                'id' => $blockedEntry->id,
+                'nombre_xuxemon' => $blockedEntry->nombre_xuxemon,
+                'tipo_elemento' => $blockedEntry->tipo_elemento,
+                'tamano' => $blockedEntry->tamano,
+                'descripcio' => $blockedEntry->descripcio,
+                'imagen' => $blockedEntry->imagen,
+            ]
         ], 201);
     }
 }
