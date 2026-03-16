@@ -53,14 +53,27 @@ export class InventarioService {
  
     if (xux.apilable) {
       const existing = current.find(
-        s => s.apilable && !s.empty && s.xuxemon?.id === xux.id && s.quantitat < MAX_STACK
+        s => s.apilable && !s.empty && s.xuxemon?.id === xux.id
       );
-      if (existing) { existing.quantitat++; this._slots$.next(current); return true; }
+      if (existing) {
+        if (existing.quantitat < MAX_STACK) {
+          existing.quantitat++;
+          this._slots$.next(current);
+          return true;
+        }
+        // Ya hay el máximo apilado para este tipo.
+        return false;
+      }
  
       const empty = current.find(s => s.apilable && s.empty);
       if (!empty) return false;
       empty.empty = false; empty.xuxemon = { ...xux }; empty.quantitat = 1;
     } else {
+      const already = current.find(
+        s => !s.apilable && !s.empty && s.xuxemon?.id === xux.id
+      );
+      if (already) return false;
+ 
       const empty = current.find(s => !s.apilable && s.empty);
       if (!empty) return false;
       empty.empty = false; empty.xuxemon = { ...xux }; empty.quantitat = 1;
