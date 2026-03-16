@@ -14,13 +14,14 @@
   --shadow-md: 0 14px 28px rgba(18, 30, 75, 0.16);
   --radius-panel: 40px;
   --radius-card: 32px;
-  --card-height: clamp(312px, 21vw, 360px);
-  --card-image: clamp(176px, 12vw, 220px);
+  --card-height: clamp(220px, 27vh, 300px);
+  --card-image: clamp(120px, 15vh, 170px);
 
   display: block;
   min-height: 100dvh;
   position: relative;
-  overflow-x: clip;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: 'Fredoka', system-ui, sans-serif;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.12)),
@@ -50,6 +51,12 @@
     radial-gradient(circle at 88% 82%, rgba(132, 228, 255, 0.16), transparent 18%);
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .xuxedex-header,
 .container {
   position: relative;
@@ -57,9 +64,10 @@
 }
 
 .xuxedex-header {
-  width: min(1640px, 96vw);
+  width: min(1640px, calc(100vw - 32px));
+  max-width: 100%;
   margin: 0 auto;
-  padding: 12px 0 8px;
+  padding: 8px 0 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,6 +99,7 @@
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(242, 245, 252, 0.98), rgba(223, 232, 247, 0.96));
   box-shadow: var(--shadow-lg);
+  max-width: 100%;
 }
 
 .header-nav span {
@@ -108,21 +117,39 @@
 }
 
 .container {
-  width: min(1640px, 96vw);
-  min-height: calc(100dvh - 118px);
+  width: min(1640px, calc(100vw - 32px));
+  max-width: 100%;
+  height: calc(100dvh - 118px);
   margin: 0 auto;
-  padding: 10px 0 132px;
+  padding: 8px 0 88px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-areas:
     'left right'
     'pagination pagination';
-  gap: 28px;
-  align-items: start;
+  gap: 20px;
+  align-items: stretch;
+  overflow-x: hidden;
+}
+
+.panel,
+.panel-esquerra,
+.panel-dreta,
+.mini-grid,
+.big-grid,
+.detalle,
+.detalle-texto,
+.detalle-visual {
+  min-width: 0;
 }
 
 .panel {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.06)),
     var(--panel);
@@ -143,16 +170,20 @@
 
 .panel-esquerra {
   grid-area: left;
-  padding: 22px;
+  padding: 20px;
+  gap: 18px;
+  min-height: 0;
 }
 
 .panel-dreta {
   grid-area: right;
-  padding: 22px;
+  padding: 20px;
+  gap: 18px;
+  min-height: 0;
 }
 
 .panel-toolbar {
-  margin-bottom: 22px;
+  margin-bottom: 18px;
   padding: 12px;
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.18);
@@ -167,11 +198,11 @@
 }
 
 .tipus-filtros {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .mides {
-  margin-bottom: 22px;
+  margin-bottom: 16px;
 }
 
 .filter-button,
@@ -205,6 +236,7 @@
   border-radius: 50%;
   padding: 0;
   position: relative;
+  flex: 0 0 auto;
 }
 
 .filter-icon {
@@ -244,6 +276,7 @@
   padding: 0 20px;
   border-radius: 999px;
   font-size: 1rem;
+  flex: 0 0 auto;
 }
 
 .mida-tots {
@@ -254,20 +287,37 @@
 .big-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  grid-auto-rows: var(--card-height);
+  gap: 16px;
+  align-items: stretch;
 }
 
 .mini-grid {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  grid-auto-rows: var(--card-height);
+}
+
+.big-grid {
+  grid-auto-rows: var(--card-height);
+}
+
+.panel-esquerra .mini-grid,
+.panel-dreta .big-grid {
+  width: 100%;
+}
+
+.panel-dreta .big-grid {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: unset;
+  align-content: start;
 }
 
 .xuxemon-card {
-  box-sizing: border-box;
   width: 100%;
   min-height: 0;
   height: 100%;
-  padding: 20px 18px 76px;
+  padding: 16px 14px 64px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -285,6 +335,7 @@
     transform 0.2s ease,
     box-shadow 0.2s ease,
     border-color 0.2s ease;
+  overflow: hidden;
 }
 
 button.xuxemon-card {
@@ -333,6 +384,7 @@ button.xuxemon-card:hover,
   border-radius: 50%;
   background: linear-gradient(180deg, #ffffff, #eef4ff);
   box-shadow: 0 10px 16px rgba(18, 30, 75, 0.14);
+  z-index: 2;
 }
 
 .lock-badge::before {
@@ -347,9 +399,10 @@ button.xuxemon-card:hover,
   display: block;
   width: min(100%, var(--card-image));
   height: var(--card-image);
-  margin: 12px auto 10px;
+  margin: 8px auto 8px;
   object-fit: contain;
   filter: drop-shadow(0 12px 18px rgba(42, 59, 128, 0.18));
+  max-width: 100%;
 }
 
 .placeholder-img {
@@ -364,7 +417,7 @@ button.xuxemon-card:hover,
 .bloqueig-text {
   position: absolute;
   left: 50%;
-  bottom: 14px;
+  bottom: 12px;
   transform: translateX(-50%);
   min-width: 144px;
   max-width: calc(100% - 28px);
@@ -378,6 +431,9 @@ button.xuxemon-card:hover,
   font-size: 1rem;
   line-height: 1;
   box-shadow: 0 8px 14px rgba(18, 30, 75, 0.12);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tipus,
@@ -386,8 +442,10 @@ button.xuxemon-card:hover,
 }
 
 .bloquejat {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   background:
@@ -431,11 +489,11 @@ button.xuxemon-card:hover,
 
 .detalle {
   position: relative;
-  min-height: 290px;
-  padding: 24px;
+  min-height: 180px;
+  padding: 16px;
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(220px, 0.72fr);
-  gap: 22px;
+  grid-template-columns: minmax(0, 1.3fr) minmax(180px, 0.72fr);
+  gap: 14px;
   border: 3px solid var(--yellow);
   border-radius: 34px;
   background:
@@ -444,6 +502,7 @@ button.xuxemon-card:hover,
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.75),
     0 16px 28px rgba(18, 30, 75, 0.12);
+  overflow: hidden;
 }
 
 .detalle::after {
@@ -479,22 +538,27 @@ button.xuxemon-card:hover,
   z-index: 1;
 }
 
+.panel-esquerra > .detalle,
+.panel-esquerra > .detalle-buit {
+  margin-top: auto;
+}
+
 .detalle-texto {
-  min-width: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-content: start;
-  gap: 18px;
+  gap: 12px;
 }
 
 .detalle h2 {
   margin: 0;
-  padding-bottom: 10px;
+  padding-bottom: 6px;
   border-bottom: 4px solid #111;
   color: #111;
-  font-size: clamp(2.3rem, 3vw, 3rem);
+  font-size: clamp(1.7rem, 2vw, 2.3rem);
   line-height: 0.95;
   grid-column: 1 / -1;
+  overflow-wrap: anywhere;
 }
 
 .nivel {
@@ -506,14 +570,15 @@ button.xuxemon-card:hover,
 .detalle-texto > p {
   min-width: 0;
   margin: 0;
-  padding: 14px 16px;
+  padding: 10px 12px;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(32, 63, 152, 0.1);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
   color: #171717;
-  font-size: 1.08rem;
+  font-size: 0.92rem;
   line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .detalle-texto > p:nth-of-type(3) {
@@ -523,7 +588,7 @@ button.xuxemon-card:hover,
 
 .detalle-texto > p:last-child {
   grid-column: 1 / -1;
-  padding: 16px 18px;
+  padding: 12px 14px;
   border-radius: 24px;
   line-height: 1.4;
 }
@@ -536,7 +601,7 @@ button.xuxemon-card:hover,
 .detalle-visual {
   display: grid;
   place-items: center;
-  padding: 12px;
+  padding: 8px;
   border-radius: 28px;
   background:
     radial-gradient(circle at top, rgba(255, 255, 255, 0.7), transparent 48%),
@@ -545,11 +610,12 @@ button.xuxemon-card:hover,
 
 .detalle img,
 .placeholder-gran {
-  width: min(100%, 260px);
-  height: min(100%, 260px);
+  width: min(100%, 170px);
+  height: min(100%, 170px);
   margin: 0;
   object-fit: contain;
   filter: drop-shadow(0 14px 22px rgba(42, 59, 128, 0.2));
+  max-width: 100%;
 }
 
 .paginacion {
@@ -559,7 +625,8 @@ button.xuxemon-card:hover,
   align-items: center;
   flex-wrap: wrap;
   gap: 14px;
-  padding-top: 4px;
+  padding-top: 2px;
+  min-width: 0;
 }
 
 .paginacion button,
@@ -591,21 +658,21 @@ button.xuxemon-card:hover,
 
 .sortir-btn {
   position: fixed;
-  right: 22px;
-  bottom: 18px;
-  z-index: 2;
+  right: 18px;
+  bottom: 14px;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-width: 188px;
-  height: 64px;
-  padding: 0 24px;
+  min-width: 170px;
+  height: 58px;
+  padding: 0 22px;
   border: 4px solid #151515;
   border-radius: 999px;
   background: linear-gradient(180deg, #f58f77, #eb725d);
   color: #111;
   font-family: inherit;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   box-shadow: 0 14px 22px rgba(0, 0, 0, 0.2);
   cursor: pointer;
@@ -638,19 +705,390 @@ button.xuxemon-card:hover,
 @media (max-width: 1440px) {
   .container,
   .xuxedex-header {
-    width: 97vw;
+    width: min(1640px, calc(100vw - 24px));
+  }
+}
+
+@media (max-height: 980px) and (min-width: 1181px) {
+  :host {
+    --card-height: clamp(200px, 23vh, 255px);
+    --card-image: clamp(110px, 13vh, 150px);
+  }
+
+  .xuxedex-header h1 {
+    font-size: clamp(3.1rem, 4.4vw, 4.8rem);
+    -webkit-text-stroke: 7px var(--blue-deep);
+  }
+
+  .container {
+    height: calc(100dvh - 108px);
+    gap: 18px;
+    padding-bottom: 80px;
+  }
+
+  .panel-esquerra,
+  .panel-dreta {
+    padding: 14px;
+  }
+
+  .filter-button {
+    width: 58px;
+    height: 58px;
+  }
+
+  .size-button {
+    min-width: 96px;
+    height: 40px;
+    font-size: 0.94rem;
+  }
+
+  .tipus-filtros {
+    margin-bottom: 10px;
+  }
+
+  .mides,
+  .mini-grid {
+    margin-bottom: 12px;
+  }
+
+  .panel-dreta .big-grid {
+    flex: none;
+    height: auto;
+    grid-template-rows: none;
+    grid-auto-rows: var(--card-height);
+  }
+
+  .xuxemon-card {
+    padding: 14px 14px 56px;
+  }
+
+  .xuxemon-card h3,
+  .bloqueig-text {
+    bottom: 10px;
+    min-width: 124px;
+    padding: 8px 14px;
+    font-size: 0.92rem;
+  }
+
+  .bloqueig-icona {
+    width: 104px;
+    height: 104px;
+  }
+
+  .bloqueig-icona::before {
+    top: 12px;
+    width: 54px;
+    height: 42px;
+    border-width: 8px;
+  }
+
+  .bloqueig-icona::after {
+    top: 40px;
+    width: 76px;
+    height: 56px;
+  }
+
+  .detalle {
+    min-height: 156px;
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .detalle h2 {
+    font-size: clamp(1.5rem, 1.8vw, 1.9rem);
+    padding-bottom: 6px;
+  }
+
+  .detalle-texto {
+    gap: 10px;
+  }
+
+  .detalle-texto > p {
+    padding: 9px 11px;
+    font-size: 0.84rem;
+    line-height: 1.25;
+  }
+
+  .detalle-texto > p:last-child {
+    padding: 10px 12px;
+  }
+
+  .detalle img,
+  .placeholder-gran {
+    width: min(100%, 138px);
+    height: min(100%, 138px);
+  }
+}
+
+@media (max-height: 900px) and (min-width: 1181px) {
+  :host {
+    --card-height: clamp(172px, 20vh, 220px);
+    --card-image: clamp(92px, 11vh, 120px);
+  }
+
+  .xuxedex-header {
+    padding: 4px 0;
+  }
+
+  .xuxedex-header h1 {
+    font-size: clamp(2.7rem, 3.8vw, 4.1rem);
+    -webkit-text-stroke: 6px var(--blue-deep);
+    line-height: 0.82;
+  }
+
+  .container {
+    gap: 14px;
+    padding-top: 4px;
+    padding-bottom: 72px;
+  }
+
+  .panel-esquerra,
+  .panel-dreta {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 30px;
+  }
+
+  .tipus-filtros {
+    margin-bottom: 8px;
+  }
+
+  .mides,
+  .mini-grid {
+    margin-bottom: 10px;
+  }
+
+  .filtros {
+    gap: 10px;
+  }
+
+  .filter-button {
+    width: 52px;
+    height: 52px;
+    border-width: 3px;
+  }
+
+  .filter-todos .filter-icon::before {
+    font-size: 0.8rem;
+  }
+
+  .size-button {
+    min-width: 84px;
+    height: 36px;
+    padding: 0 12px;
+    border-width: 3px;
+    font-size: 0.88rem;
+  }
+
+  .mini-grid,
+  .big-grid {
+    gap: 10px;
+  }
+
+  .xuxemon-card {
+    padding: 10px 12px 46px;
+    border-radius: 26px;
+  }
+
+  .card-badge {
+    top: -8px;
+    left: -8px;
+    width: 38px;
+    height: 38px;
+    border-width: 2px;
+  }
+
+  .type-agua .filter-icon::before,
+  .card-badge.type-agua::before,
+  .type-tierra .filter-icon::before,
+  .card-badge.type-tierra::before,
+  .type-aire .filter-icon::before,
+  .card-badge.type-aire::before {
+    font-size: 1.55rem;
+  }
+
+  .lock-badge::before {
+    font-size: 1.4rem;
+  }
+
+  .xuxemon-card img,
+  .placeholder-img {
+    margin: 4px auto 6px;
+  }
+
+  .xuxemon-card h3,
+  .bloqueig-text {
+    bottom: 8px;
+    min-width: 108px;
+    padding: 7px 12px;
+    border-width: 2px;
+    font-size: 0.84rem;
+  }
+
+  .bloqueig-icona {
+    width: 82px;
+    height: 82px;
+  }
+
+  .bloqueig-icona::before {
+    top: 10px;
+    width: 42px;
+    height: 30px;
+    border-width: 7px;
+  }
+
+  .bloqueig-icona::after {
+    top: 30px;
+    width: 60px;
+    height: 44px;
+    border-width: 5px;
+  }
+
+  .detalle {
+    min-height: 122px;
+    padding: 10px;
+    gap: 8px;
+    border-radius: 26px;
+  }
+
+  .detalle::after {
+    inset: 8px;
+    border-radius: 18px;
+  }
+
+  .detalle h2 {
+    font-size: clamp(1.2rem, 1.5vw, 1.55rem);
+    padding-bottom: 4px;
+    border-bottom-width: 3px;
+  }
+
+  .detalle-texto {
+    gap: 6px;
+  }
+
+  .detalle-texto > p {
+    padding: 7px 9px;
+    border-radius: 16px;
+    font-size: 0.74rem;
+    line-height: 1.2;
+  }
+
+  .detalle-texto > p:last-child {
+    padding: 8px 9px;
+  }
+
+  .detalle img,
+  .placeholder-gran {
+    width: min(100%, 102px);
+    height: min(100%, 102px);
+  }
+}
+
+@media (max-height: 820px) and (min-width: 1181px) {
+  :host {
+    --card-height: 156px;
+    --card-image: 76px;
+  }
+
+  .container {
+    gap: 12px;
+    padding-bottom: 66px;
+  }
+
+  .panel-esquerra,
+  .panel-dreta {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .filtros {
+    gap: 8px;
+  }
+
+  .filter-button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .size-button {
+    min-width: 76px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+
+  .mini-grid,
+  .big-grid {
+    gap: 8px;
+  }
+
+  .xuxemon-card {
+    padding: 8px 10px 40px;
+  }
+
+  .xuxemon-card h3,
+  .bloqueig-text {
+    min-width: 96px;
+    padding: 6px 10px;
+    font-size: 0.76rem;
+  }
+
+  .bloqueig-icona {
+    width: 66px;
+    height: 66px;
+  }
+
+  .bloqueig-icona::before {
+    width: 34px;
+    height: 24px;
+  }
+
+  .bloqueig-icona::after {
+    width: 50px;
+    height: 36px;
+  }
+
+  .detalle {
+    min-height: 108px;
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .detalle h2 {
+    font-size: 1.1rem;
+  }
+
+  .detalle-texto {
+    gap: 5px;
+  }
+
+  .detalle-texto > p {
+    padding: 6px 8px;
+    font-size: 0.7rem;
+  }
+
+  .detalle img,
+  .placeholder-gran {
+    width: 88px;
+    height: 88px;
   }
 }
 
 @media (max-width: 1180px) {
   .container {
+    width: min(1640px, calc(100vw - 24px));
+    height: auto;
+    min-height: auto;
     grid-template-columns: 1fr;
     grid-template-areas:
       'left'
       'right'
       'pagination';
     gap: 22px;
-    min-height: auto;
+    padding-bottom: 110px;
+  }
+
+  .panel {
+    height: auto;
   }
 
   .panel-esquerra,
@@ -662,11 +1100,21 @@ button.xuxemon-card:hover,
 
   .big-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-auto-rows: clamp(280px, 23vw, 320px);
+    grid-template-rows: none;
+    grid-auto-rows: clamp(260px, 24vw, 320px);
+    height: auto;
   }
 }
 
 @media (max-width: 900px) {
+  .xuxedex-header {
+    width: min(1640px, calc(100vw - 20px));
+  }
+
+  .container {
+    width: min(1640px, calc(100vw - 20px));
+  }
+
   .xuxedex-header h1 {
     font-size: clamp(3.6rem, 10vw, 5.4rem);
     -webkit-text-stroke: 8px var(--blue-deep);
@@ -675,7 +1123,9 @@ button.xuxemon-card:hover,
   .mini-grid,
   .big-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
     grid-auto-rows: 300px;
+    height: auto;
   }
 
   .detalle {
@@ -684,7 +1134,7 @@ button.xuxemon-card:hover,
   }
 
   .detalle-visual {
-    min-height: 220px;
+    min-height: 200px;
   }
 
   .detalle-grid {
@@ -700,6 +1150,11 @@ button.xuxemon-card:hover,
   .xuxedex-header {
     flex-direction: column;
     gap: 12px;
+    width: min(1640px, calc(100vw - 16px));
+  }
+
+  .container {
+    width: min(1640px, calc(100vw - 16px));
   }
 
   .header-nav {
@@ -729,7 +1184,8 @@ button.xuxemon-card:hover,
 
   .mini-grid,
   .big-grid {
-    grid-auto-rows: 296px;
+    grid-template-rows: none;
+    grid-auto-rows: 280px;
   }
 
   .detalle {
@@ -742,14 +1198,18 @@ button.xuxemon-card:hover,
   }
 
   .detalle h2 {
-    font-size: 2.1rem;
+    font-size: 2rem;
   }
 }
 
 @media (max-width: 520px) {
+  .xuxedex-header {
+    width: min(1640px, calc(100vw - 12px));
+  }
+
   .container {
-    width: 98vw;
-    padding-bottom: 106px;
+    width: min(1640px, calc(100vw - 12px));
+    padding-bottom: 120px;
   }
 
   .xuxedex-header h1 {
@@ -780,7 +1240,8 @@ button.xuxemon-card:hover,
 
   .mini-grid,
   .big-grid {
-    grid-auto-rows: 268px;
+    grid-template-rows: none;
+    grid-auto-rows: 260px;
   }
 
   .xuxemon-card {
