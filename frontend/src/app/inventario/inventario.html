@@ -1,16 +1,5 @@
 <div class="motxilla-wrapper">
 
-  <!-- Stars -->
-  <div class="stars-layer" aria-hidden="true">
-    @for (star of starsArray; track $index) {
-      <span class="star"
-            [style.left.%]="star.x"
-            [style.top.%]="star.y"
-            [style.animation-delay.s]="star.delay">
-      </span>
-    }
-  </div>
-
   <!-- Header -->
   <header class="inv-header">
     <span class="bag-icon"></span>
