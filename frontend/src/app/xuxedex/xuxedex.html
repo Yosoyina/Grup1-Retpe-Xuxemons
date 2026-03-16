@@ -146,17 +146,17 @@
   <!-- Arreglar este apartado -->
   
   <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"(click)="verCadenaEvolucion()">
-  @if (mostrantEvolucio) {
+  @if (mostrarEvolucion) {
     <div class="evolucio-overlay" (click)="cerrarEvolucion()">
       <div class="evolucio-modal" (click)="$event.stopPropagation()">
 
         <button type="button" class="evolucio-tancar" (click)="cerrarEvolucion()">✕</button>
         <h2>Cadena Evolutiva</h2>
 
-        @if (carregantEvolucio) {
+        @if (cargarEvolucion) {
           <p class="evolucio-carregant">Carregant...</p>
-        } @else if (errorEvolucio) {
-          <p class="evolucio-error">{{ errorEvolucio }}</p>
+        } @else if (errorEvolucion) {
+          <p class="evolucio-error">{{ errorEvolucion }}</p>
         } @else {
           <div class="evolucio-cadena">
             @for (etapa of cadenaEvolucio; track etapa.id; let last = $last) {
