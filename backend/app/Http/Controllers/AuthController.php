@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Xuxemons;
+use App\Services\XuxedexService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
+    public function __construct(private XuxedexService $xuxedexService)
+    {
+    }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -39,27 +42,7 @@ class AuthController extends Controller
             'avatar' => 'avatarpordefecto.png',
         ]);
 
-        // Per cada tipus: agafar exactament 6 xuxemons aleatoris del catàleg
-        // i assignar-los tots al jugador: alguns capturats, la resta bloquejats
-        foreach (['Aigua', 'Terra', 'Aire'] as $tipus) {
-            $sis = Xuxemons::where('tipo_elemento', $tipus)
-                ->inRandomOrder()
-                ->limit(6)
-                ->get();
-
-            // Nombre aleatori de desbloquejats: entre 1 i 5 (mai 0 ni tots 6)
-            $numDesbloquejats = rand(1, min(5, $sis->count() - 1));
-
-            foreach ($sis as $index => $xuxemon) {
-                DB::table('xuxedex')->insert([
-                    'id_usuario' => $user->id,
-                    'id_xuxemon' => $xuxemon->id,
-                    'esta_capturado' => $index < $numDesbloquejats,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        }
+        $this->xuxedexService->ensureStarterXuxedex($user->id);
 
         $token = Auth::guard('api')->login($user);
 

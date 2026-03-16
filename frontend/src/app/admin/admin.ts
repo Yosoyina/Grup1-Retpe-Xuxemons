@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { XuxemonService, Xuxemon } from '../services/xuxemon.service';
+import { finalize } from 'rxjs';
 
 interface UsuarioAdmin {
   id: number;
@@ -12,11 +14,18 @@ interface UsuarioAdmin {
   id_jugador: string | null;
   role: string;
   actiu: boolean;
+  avatar: string | null;
+}
+
+interface XuxeItem {
+  id: number;
+  nombre_xuxes: string;
+  apilable: boolean;
 }
 
 @Component({
   selector: 'app-admin',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
 })
@@ -32,6 +41,14 @@ export class Admin implements OnInit {
   modalAbierto = false;
   usuarioAConfirmar: UsuarioAdmin | null = null;
   private apiUrl = 'http://localhost:8000/api/admin';
+
+  // Inventari
+  xuxesDisponibles: XuxeItem[] = [];
+  modalInventariAbierto = false;
+  usuarioInventariId: number | null = null;
+  xuxeSeleccionadaId: number | null = null;
+  cantidadAAfegir = 1;
+  afegindoXuxes = false;
 
   // Getters para filtrar xuxemons por tipo
   get xuxemonsAgua(): Xuxemon[] {
@@ -59,6 +76,7 @@ export class Admin implements OnInit {
   // Al cargar el componente, obtenemos la lista de usuarios
   ngOnInit(): void {
     this.cargarUsuarios();
+    this.cargarXuxesDisponibles();
   }
 
   // Al cargar el componente, obtenemos la lista de usuarios
@@ -89,13 +107,15 @@ export class Admin implements OnInit {
   }
 
   // Al hacer click en "Ver Xuxemons", cargamos los xuxemons del usuario seleccionado
-  cargarXuxemonsUsuario(userId: number): void {
+  cargarXuxemonsUsuario(userId: number, preserveMessages = false): void {
     this.usuarioSeleccionado = userId;
     this.modalAbierto = true;
     this.xuxemons = [];
     this.cargandoXuxemons = true;
-    this.mensajeExito = '';
-    this.mensajeError = '';
+    if (!preserveMessages) {
+      this.mensajeExito = '';
+      this.mensajeError = '';
+    }
 
     this.xuxemonService.getAdminXuxedex(userId).subscribe({
       next: (response) => {
@@ -121,13 +141,21 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    this.xuxemonService.addRandomXuxemonToUser(userId).subscribe({
+    this.xuxemonService.addRandomXuxemonToUser(userId)
+      .pipe(
+        finalize(() => {
+          this.agregandoParaUsuarioId = null;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
       next: (response) => {
         this.mensajeExito = `¡${response.xuxemon.nombre_xuxemon} agregado correctamente!`;
+        this.mensajeError = '';
         if (this.usuarioSeleccionado === userId) {
-          this.cargarXuxemonsUsuario(userId);
+          this.cargarXuxemonsUsuario(userId, true);
         }
-        this.agregandoParaUsuarioId = null;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error agregando xuxemon', err);
@@ -136,7 +164,8 @@ export class Admin implements OnInit {
         } else {
           this.mensajeError = 'Error al agregar Xuxemon';
         }
-        this.agregandoParaUsuarioId = null;
+        this.mensajeExito = '';
+        this.cdr.detectChanges();
       }
     });
   }
@@ -198,5 +227,60 @@ export class Admin implements OnInit {
   // Función para salir del panel de administración y volver al menú principal
   salir(): void {
     this.router.navigate(['/menu-principal']);
+  }
+
+  // ── INVENTARI ──────────────────────────────────────────────────────────────
+
+  cargarXuxesDisponibles(): void {
+    this.http.get<{ xuxemons: any[]; xuxes: XuxeItem[] }>(`${this.apiUrl}/inventario/items`).subscribe({
+      next: (res) => {
+        this.xuxesDisponibles = res.xuxes;
+        this.xuxeSeleccionadaId = res.xuxes[0]?.id ?? null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error carregant Xuxes disponibles', err),
+    });
+  }
+
+  obrirModalInventari(userId: number): void {
+    this.usuarioInventariId = userId;
+    this.modalInventariAbierto = true;
+    this.xuxeSeleccionadaId = this.xuxesDisponibles[0]?.id ?? null;
+    this.cantidadAAfegir = 1;
+    this.mensajeExito = '';
+    this.mensajeError = '';
+  }
+
+  tancarModalInventari(): void {
+    this.modalInventariAbierto = false;
+    this.usuarioInventariId = null;
+  }
+
+  afegirXuxes(): void {
+    if (!this.usuarioInventariId || !this.xuxeSeleccionadaId || this.cantidadAAfegir < 1) return;
+    this.afegindoXuxes = true;
+
+    this.http.post<{ mensaje: string; descartado: number; slots_utilizados: number; max_slots: number }>(
+      `${this.apiUrl}/inventario`,
+      { user_id: this.usuarioInventariId, xuxe_id: this.xuxeSeleccionadaId, cantidad: this.cantidadAAfegir }
+    ).pipe(finalize(() => { this.afegindoXuxes = false; this.cdr.detectChanges(); }))
+    .subscribe({
+      next: (res) => {
+        if (res.descartado > 0) {
+          this.mensajeError = res.mensaje;
+          this.mensajeExito = '';
+        } else {
+          this.mensajeExito = res.mensaje;
+          this.mensajeError = '';
+        }
+        this.cantidadAAfegir = 1;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.mensajeError = err.error?.message ?? 'Error afegint Xuxes';
+        this.mensajeExito = '';
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
