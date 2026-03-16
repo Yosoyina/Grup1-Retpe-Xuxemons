@@ -143,9 +143,11 @@
     }
   }
 
-  <!-- Arreglar este apartado -->
+  <!-- Boton de Evolucion de Xuxemons -->
   
-  <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"(click)="verCadenaEvolucion()">
+  @if (xuxemonSeleccionado) {
+    <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)" (click)="verCadenaEvolucion()"></button>
+  }
   @if (mostrarEvolucion) {
     <div class="evolucio-overlay" (click)="cerrarEvolucion()">
       <div class="evolucio-modal" (click)="$event.stopPropagation()">
@@ -182,7 +184,6 @@
       </div>
     </div>
   }
-  </button>
 
   <button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menú principal">
     <span class="sortir-icon" aria-hidden="true">&#9711;</span>
