@@ -83,7 +83,7 @@ class UserController extends Controller
 
     public function listUsers()
     {
-        $users = \App\Models\User::select('id', 'nombre', 'apellidos', 'email', 'id_jugador', 'role', 'actiu')
+        $users = \App\Models\User::select('id', 'nombre', 'apellidos', 'email', 'id_jugador', 'role', 'actiu', 'avatar')
             ->get();
 
         return response()->json($users, 200);
