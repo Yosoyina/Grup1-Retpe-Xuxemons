@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { XuxemonService, Xuxemon } from '../services/xuxemon.service';
+import { finalize } from 'rxjs';
 
 interface UsuarioAdmin {
   id: number;
@@ -89,13 +90,15 @@ export class Admin implements OnInit {
   }
 
   // Al hacer click en "Ver Xuxemons", cargamos los xuxemons del usuario seleccionado
-  cargarXuxemonsUsuario(userId: number): void {
+  cargarXuxemonsUsuario(userId: number, preserveMessages = false): void {
     this.usuarioSeleccionado = userId;
     this.modalAbierto = true;
     this.xuxemons = [];
     this.cargandoXuxemons = true;
-    this.mensajeExito = '';
-    this.mensajeError = '';
+    if (!preserveMessages) {
+      this.mensajeExito = '';
+      this.mensajeError = '';
+    }
 
     this.xuxemonService.getAdminXuxedex(userId).subscribe({
       next: (response) => {
@@ -121,13 +124,21 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    this.xuxemonService.addRandomXuxemonToUser(userId).subscribe({
+    this.xuxemonService.addRandomXuxemonToUser(userId)
+      .pipe(
+        finalize(() => {
+          this.agregandoParaUsuarioId = null;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
       next: (response) => {
         this.mensajeExito = `¡${response.xuxemon.nombre_xuxemon} agregado correctamente!`;
+        this.mensajeError = '';
         if (this.usuarioSeleccionado === userId) {
-          this.cargarXuxemonsUsuario(userId);
+          this.cargarXuxemonsUsuario(userId, true);
         }
-        this.agregandoParaUsuarioId = null;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error agregando xuxemon', err);
@@ -136,7 +147,8 @@ export class Admin implements OnInit {
         } else {
           this.mensajeError = 'Error al agregar Xuxemon';
         }
-        this.agregandoParaUsuarioId = null;
+        this.mensajeExito = '';
+        this.cdr.detectChanges();
       }
     });
   }

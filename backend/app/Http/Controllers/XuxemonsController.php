@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Xuxemons;
+use App\Services\XuxedexService;
 use Illuminate\Support\Facades\DB;
 
 class XuxemonsController extends Controller
 {
+    public function __construct(private XuxedexService $xuxedexService)
+    {
+    }
+
     /**
      * GET /api/xuxedex
      * GET /api/xuxedex?tipo=Aigua
@@ -154,6 +159,8 @@ class XuxemonsController extends Controller
             return response()->json(['error' => 'user_id requerido'], 400);
         }
 
+        $this->xuxedexService->ensureStarterXuxedex((int) $userId);
+
         $xuxemons = DB::table('xuxedex')
             ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')
             ->where('xuxedex.id_usuario', $userId)
@@ -181,6 +188,8 @@ class XuxemonsController extends Controller
         if (!$userId) {
             return response()->json(['error' => 'user_id requerido'], 400);
         }
+
+        $this->xuxedexService->ensureStarterXuxedex((int) $userId);
 
         $blockedEntry = DB::table('xuxedex')
             ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')

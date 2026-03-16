@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Services\XuxedexService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -50,6 +51,13 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
             'actiu' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (self $user): void {
+            app(XuxedexService::class)->ensureStarterXuxedex($user->id);
+        });
     }
 
     public function getJWTIdentifier()
