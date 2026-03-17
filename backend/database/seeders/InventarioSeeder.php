@@ -30,6 +30,11 @@ class InventarioSeeder extends Seeder
                 'descripcio' => 'Una xuxa sòlida com una roca.',
                 'imagen' => null,
             ],
+            [
+                'nombre_xuxes' => 'Xuxa EV',
+                'descripcio' => 'Xuxe para evolucionar els teus xuxemons.',
+                'imagen' => null,
+            ],
         ];
 
         foreach ($xuxes as $data) {

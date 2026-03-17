@@ -66,6 +66,9 @@
         <p><strong>Grandaria:</strong> {{ xuxemonSeleccionado.tamano }}</p>
         <p><strong>Nivell:</strong> <span class="nivel">{{ getNivell(xuxemonSeleccionado.tamano) }}</span></p>
         <p><strong>Descripcio:</strong> {{ xuxemonSeleccionado.descripcio }}</p>
+
+        <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
+          (click)="verCadenaEvolucion()">Evolució</button>
       </div>
 
       @if (xuxemonSeleccionado.imagen) {
@@ -125,12 +128,6 @@
   }
   }
 
-  <!-- Boton de Evolucion de Xuxemons -->
-
-  @if (xuxemonSeleccionado) {
-  <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
-    (click)="verCadenaEvolucion()"></button>
-  }
   @if (mostrarEvolucion) {
   <div class="evolucio-overlay" (click)="cerrarEvolucion()">
     <div class="evolucio-modal" (click)="$event.stopPropagation()">

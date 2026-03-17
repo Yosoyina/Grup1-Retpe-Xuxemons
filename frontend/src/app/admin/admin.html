@@ -224,8 +224,7 @@
               <div class="imagen-contenedor">
                 @if (x.imagen) {
                 <img [src]="x.imagen" [alt]="x.nombre_xuxemon">
-                }
-                @if (!x.imagen) {
+                } @else {
                 <div class="imagen-placeholder">?</div>
                 }
               </div>
@@ -249,8 +248,7 @@
               <div class="imagen-contenedor">
                 @if (x.imagen) {
                 <img [src]="x.imagen" [alt]="x.nombre_xuxemon">
-                }
-                @if (!x.imagen) {
+                } @else {
                 <div class="imagen-placeholder">?</div>
                 }
               </div>
@@ -274,8 +272,7 @@
               <div class="imagen-contenedor">
                 @if (x.imagen) {
                 <img [src]="x.imagen" [alt]="x.nombre_xuxemon">
-                }
-                @if (!x.imagen) {
+                } @else {
                 <div class="imagen-placeholder">?</div>
                 }
               </div>

@@ -42,7 +42,7 @@ export class XuxemonService {
       // Converteix la ruta relativa de la imatge a URL completa
       const llistaAmbImatges = llista.map(x => ({
         ...x,
-        imagen: x.imagen ? `http://localhost:8000/${x.imagen}` : null
+        imagen: x.imagen && x.imagen !== 'null' && x.imagen.trim() !== '' ? `http://localhost:8000/${x.imagen}` : null
       }));
       this.xuxemons$.next(llistaAmbImatges);
     });

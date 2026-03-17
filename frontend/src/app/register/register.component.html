@@ -110,9 +110,11 @@
       </button>
     </div>
 
-    <span class="copy-feedback" *ngIf="copiat">
-      Copiat!
-    </span>
+    @if (copiat) {
+      <span class="copy-feedback">
+        Copiat!
+      </span>
+    }
 
     <button type="button" class="btn-login" (click)="anarAlLogin()">
       Anar al Login
