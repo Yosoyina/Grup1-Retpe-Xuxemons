@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('tamano', ['Petit', 'Mitja', 'Gran'])->default('Petit');
             $table->text('descripcio')->nullable();
             $table->string('imagen')->nullable();
-            $table->unsignedBigInteger('evolucion_xuxemon')->nullable();
+            $table->string('evolucion_xuxemon')->nullable();
             $table->timestamps();
         });
     }
