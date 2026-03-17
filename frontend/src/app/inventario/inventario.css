@@ -1,0 +1,521 @@
+/* ═══════════════════════════════════════════════════════════ */
+/* MOTXILLA - INVENTARIO PRINCIPAL                             */
+/* ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&display=swap');
+
+:root {
+  --yellow: #f5c400;
+  --blue: #203f98;
+  --blue-deep: #152761;
+  --panel: rgba(224, 233, 247, 0.82);
+  --panel-strong: rgba(244, 248, 255, 0.94);
+  --panel-border: rgba(255, 255, 255, 0.6);
+  --ink: #1b2237;
+  --muted: #5c647b;
+  --shadow-lg: 0 26px 54px rgba(9, 20, 60, 0.24);
+  --shadow-md: 0 14px 28px rgba(18, 30, 75, 0.16);
+  --radius-panel: 40px;
+  --radius-card: 32px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.motxilla-wrapper {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: clamp(18px, 4vh, 42px) 16px;
+
+  background-image: url('/Menu-Fondo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-family: 'Fredoka', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+.motxilla-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 55%),
+    linear-gradient(to bottom, rgba(10, 20, 60, .18), rgba(10, 20, 60, .06));
+  pointer-events: none;
+}
+
+/* ───────────────────────────────────────────────────────────
+   FONDO ANIMADO CON ESTRELLAS
+   ─────────────────────────────────────────────────────────── */
+
+.stars-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ───────────────────────────────────────────────────────────
+   HEADER
+   ─────────────────────────────────────────────────────────── */
+
+.inv-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.bag-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 248, 255, 0.95));
+  border: 4px solid var(--yellow);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.bag-icon::before {
+  content: '🎒';
+  font-size: 2.5rem;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.inv-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--yellow);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+  -webkit-text-stroke: 6px var(--blue-deep);
+  paint-order: stroke fill;
+  text-shadow:
+    0 7px 0 rgba(32, 63, 152, 0.28),
+    0 18px 28px rgba(8, 16, 52, 0.28);
+}
+
+/* ───────────────────────────────────────────────────────────
+   FILTROS
+   ─────────────────────────────────────────────────────────── */
+
+.filters-row {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-label {
+  font-weight: bold;
+  color: #fbbf24;
+  font-size: 1rem;
+}
+
+.pill {
+  padding: 0.55rem 1.1rem;
+  border: 3px solid var(--yellow);
+  background: rgba(255, 255, 255, 0.24);
+  color: var(--ink);
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.25s ease;
+  font-size: 0.95rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 18px rgba(9, 20, 60, 0.12);
+}
+
+.pill:hover {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--blue-deep);
+  transform: translateY(-2px);
+}
+
+.pill[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--blue-deep);
+  box-shadow: 0 14px 28px rgba(9, 20, 60, 0.22);
+  border-color: var(--yellow);
+}
+
+/* ───────────────────────────────────────────────────────────
+   ALERTA MOTXILLA PLENA
+   ─────────────────────────────────────────────────────────── */
+
+.alert-full {
+  background: rgba(239, 68, 68, 0.92);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 18px;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(9, 20, 60, 0.3);
+}
+
+/* ───────────────────────────────────────────────────────────
+   PANELES PRINCIPAL
+   ─────────────────────────────────────────────────────────── */
+
+.panels-row {
+  width: min(860px, 92vw);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  position: relative;
+  z-index: 2;
+  margin: 0 auto;
+}
+
+.panel {
+  position: relative;
+  background: rgba(255, 255, 255, .80);
+  border: 6px solid rgba(255, 214, 0, .95);
+  border-radius: 30px;
+  padding: 2rem;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, .26);
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border-radius: calc(var(--radius-panel) - 12px);
+  border: 1px solid var(--panel-border);
+  pointer-events: none;
+}
+
+.panel h2 {
+  text-align: center;
+  color: var(--blue);
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem 0;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* ───────────────────────────────────────────────────────────
+   GRID DE SLOTS
+   ─────────────────────────────────────────────────────────── */
+
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.slot {
+  position: relative;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(235, 243, 255, 0.85));
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  border-radius: 22px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(9, 20, 60, 0.12), 0 6px 18px rgba(9, 20, 60, 0.12);
+}
+
+.slot:hover:not(:disabled):not([aria-label="Slot buit"]) {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 28px rgba(9, 20, 60, 0.2), inset 0 2px 6px rgba(9, 20, 60, 0.12);
+  border-color: var(--yellow);
+}
+
+.slot--empty {
+  background: radial-gradient(circle at 20% 20%, rgba(251, 191, 36, 0.08), rgba(255, 255, 255, 0.15));
+  border: 2px dashed rgba(255, 255, 255, 0.6);
+}
+.slot--filled {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 3px solid #fbbf24;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ───────────────────────────────────────────────────────────
+   CONTENIDO SLOT (EMOJI, CANTIDAD, BADGES)
+   ─────────────────────────────────────────────────────────── */
+
+.slot-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 0.3rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.slot-count {
+  position: absolute;
+  bottom: 0.3rem;
+  right: 0.3rem;
+  background: #1e3a8a;
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 8px;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.slot-count--high {
+  background: #f59e0b;
+}
+
+.slot-count--max {
+  background: #ef4444;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.badge {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  color: white;
+}
+
+.badge--aigua {
+  background: #3b82f6;
+}
+
+.badge--terra {
+  background: #92400e;
+}
+
+.badge--aire {
+  background: #db2777;
+}
+
+/* ───────────────────────────────────────────────────────────
+   BOTÓN ELIMINAR ITEM
+   ─────────────────────────────────────────────────────────── */
+
+.btn-remove {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 26px;
+  height: 26px;
+  background: rgba(239, 68, 68, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 20;
+}
+
+.btn-remove:hover {
+  background: rgba(239, 68, 68, 1);
+  transform: scale(1.15);
+}
+
+.btn-remove::before {
+  content: '✕';
+}
+
+.slot--filled:hover .btn-remove,
+.slot:focus-within .btn-remove {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.btn-remove:hover {
+  background: #dc2626;
+  transform: scale(1.2);
+}
+
+/* ───────────────────────────────────────────────────────────
+   BOTONES ACCIÓN (APILABLES / NO APILABLES)
+   ─────────────────────────────────────────────────────────── */
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-action {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--blue-deep);
+  border: 4px solid var(--yellow);
+  border-radius: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-action:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-action:active {
+  transform: translateY(0);
+}
+
+/* ───────────────────────────────────────────────────────────
+   BOTÓN SORTIR
+   ─────────────────────────────────────────────────────────── */
+
+.sortir-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+  border: 4px solid var(--yellow);
+  color: var(--blue-deep);
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+}
+
+.sortir-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 28px rgba(9, 20, 60, 0.5);
+}
+
+.sortir-btn:active {
+  transform: scale(0.95);
+}
+
+.sortir-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.2rem;
+}
+
+/* ───────────────────────────────────────────────────────────
+   RESPONSIVE
+   ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 1200px) {
+  .panels-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .motxilla-wrapper {
+    padding: 1rem;
+  }
+
+  .inv-title {
+    font-size: 2rem;
+  }
+
+  .filters-row {
+    gap: 1.5rem;
+  }
+
+  .slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .panel {
+    padding: 1.5rem;
+  }
+
+  .sortir-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .inv-title {
+    font-size: 1.5rem;
+  }
+
+  .slots-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .panel {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}
