@@ -11,7 +11,7 @@
 
       <!-- foto de perfil -->
       <div class="cercle-avatar">
-        <img [src]="'/' + usuari.avatar" [alt]="usuari.nombre" class="avatar-img">
+        <img [src]="getAvatarSrc(usuari.avatar)" [alt]="usuari.nombre" class="avatar-img">
       </div>
 
       <div class="id-jugador">
@@ -31,7 +31,7 @@
       @if (mostrarSeleccioAvatar) {
       <div class="grid-avatars">
         @for (avatar of avatars; track avatar) {
-        <img [src]="'/' + avatar" [alt]="avatar" class="avatar-opcio" (click)="seleccionarAvatar(avatar)">
+        <img [src]="getAvatarSrc(avatar)" [alt]="avatar" class="avatar-opcio" (click)="seleccionarAvatar(avatar)">
         }
       </div>
       }
@@ -158,7 +158,7 @@
 <div class="modal-overlay" (click)="mostrarModalActualitzat = false">
   <div class="modal modal-exit" (click)="$event.stopPropagation()">
     <div class="modal-exit-avatar">
-      <img [src]="'/' + usuari.avatar" [alt]="usuari.nombre" class="modal-avatar-img">
+      <img [src]="getAvatarSrc(usuari.avatar)" [alt]="usuari.nombre" class="modal-avatar-img">
     </div>
     <div class="modal-icona"></div>
     <h3 class="modal-titol modal-titol-exit">Perfil actualitzat!</h3>

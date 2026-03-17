@@ -231,6 +231,7 @@ export class Admin implements OnInit {
 
   // ── INVENTARI ──────────────────────────────────────────────────────────────
 
+  // Carga la lista de Xuxes disponibles para agregar al inventario
   cargarXuxesDisponibles(): void {
     this.http.get<{ xuxemons: any[]; xuxes: XuxeItem[] }>(`${this.apiUrl}/inventario/items`).subscribe({
       next: (res) => {
@@ -242,6 +243,7 @@ export class Admin implements OnInit {
     });
   }
 
+  // Abre el modal de inventario para un usuario específico
   obrirModalInventari(userId: number): void {
     this.usuarioInventariId = userId;
     this.modalInventariAbierto = true;
@@ -251,11 +253,13 @@ export class Admin implements OnInit {
     this.mensajeError = '';
   }
 
+  // Cierra el modal de inventario y resetea las variables relacionadas
   tancarModalInventari(): void {
     this.modalInventariAbierto = false;
     this.usuarioInventariId = null;
   }
 
+  // Agrega Xuxes al inventario del usuario seleccionado
   afegirXuxes(): void {
     if (!this.usuarioInventariId || !this.xuxeSeleccionadaId || this.cantidadAAfegir < 1) return;
     this.afegindoXuxes = true;
