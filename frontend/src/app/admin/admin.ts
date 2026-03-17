@@ -149,25 +149,25 @@ export class Admin implements OnInit {
         })
       )
       .subscribe({
-      next: (response) => {
-        this.mensajeExito = `¡${response.xuxemon.nombre_xuxemon} agregado correctamente!`;
-        this.mensajeError = '';
-        if (this.usuarioSeleccionado === userId) {
-          this.cargarXuxemonsUsuario(userId, true);
+        next: (response) => {
+          this.mensajeExito = `¡${response.xuxemon.nombre_xuxemon} agregado correctamente!`;
+          this.mensajeError = '';
+          if (this.usuarioSeleccionado === userId) {
+            this.cargarXuxemonsUsuario(userId, true);
+          }
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error agregando xuxemon', err);
+          if (err.error?.error) {
+            this.mensajeError = err.error.error;
+          } else {
+            this.mensajeError = 'Error al agregar Xuxemon';
+          }
+          this.mensajeExito = '';
+          this.cdr.detectChanges();
         }
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error agregando xuxemon', err);
-        if (err.error?.error) {
-          this.mensajeError = err.error.error;
-        } else {
-          this.mensajeError = 'Error al agregar Xuxemon';
-        }
-        this.mensajeExito = '';
-        this.cdr.detectChanges();
-      }
-    });
+      });
   }
 
   // Cierra el modal de xuxemons
@@ -264,23 +264,23 @@ export class Admin implements OnInit {
       `${this.apiUrl}/inventario`,
       { user_id: this.usuarioInventariId, xuxe_id: this.xuxeSeleccionadaId, cantidad: this.cantidadAAfegir }
     ).pipe(finalize(() => { this.afegindoXuxes = false; this.cdr.detectChanges(); }))
-    .subscribe({
-      next: (res) => {
-        if (res.descartado > 0) {
-          this.mensajeError = res.mensaje;
+      .subscribe({
+        next: (res) => {
+          if (res.descartado > 0) {
+            this.mensajeError = res.mensaje;
+            this.mensajeExito = '';
+          } else {
+            this.mensajeExito = res.mensaje;
+            this.mensajeError = '';
+          }
+          this.cantidadAAfegir = 1;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.mensajeError = err.error?.message ?? 'Error afegint Xuxes';
           this.mensajeExito = '';
-        } else {
-          this.mensajeExito = res.mensaje;
-          this.mensajeError = '';
+          this.cdr.detectChanges();
         }
-        this.cantidadAAfegir = 1;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.mensajeError = err.error?.message ?? 'Error afegint Xuxes';
-        this.mensajeExito = '';
-        this.cdr.detectChanges();
-      }
-    });
+      });
   }
 }

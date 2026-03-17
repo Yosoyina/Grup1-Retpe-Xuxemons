@@ -2,15 +2,15 @@
   <h1 class="admin-titulo">PANEL ADMINISTRADOR</h1>
 
   @if (mensajeExito) {
-    <div class="mensaje exito">✓ {{ mensajeExito }}</div>
+  <div class="mensaje exito">✓ {{ mensajeExito }}</div>
   }
   @if (mensajeError) {
-    <div class="mensaje error">✗ {{ mensajeError }}</div>
+  <div class="mensaje error">✗ {{ mensajeError }}</div>
   }
 
   <div class="seccions-grid">
 
-    <!-- ── SECCIÓ XUXEMONS ───────────────────────────── -->
+    <!-- ── SECCIÓ USUARIS ──────────────────────────── -->
     <div class="seccio">
       <div class="seccio-header">
         <span class="seccio-icon">🐾</span>
@@ -19,61 +19,52 @@
 
       <div class="seccio-body">
         @if (cargandoUsuarios) {
-          <div class="cargando">Carregant usuaris...</div>
+        <div class="cargando">Carregant usuaris...</div>
         }
 
         @if (!cargandoUsuarios && usuarios.length > 0) {
-          <div class="lista-usuarios">
-            @for (usuario of usuarios; track usuario.id) {
-              <div class="usuario-card">
-                <div class="usuario-info">
-                  <div class="avatar">
-                    {{ getIniciales(usuario.nombre, usuario.apellidos) }}
-                    @if (usuario.avatar) {
-                      <img [src]="'/' + usuario.avatar"
-                           [alt]="usuario.nombre"
-                           class="avatar-img"
-                           (error)="$event.target['style'].display='none'">
-                    }
-                  </div>
-                  <div class="datos">
-                    <h3>{{ usuario.nombre }} {{ usuario.apellidos }}</h3>
-                    <span class="id-jugador">#{{ usuario.id_jugador || usuario.id }}</span>
-                    <span class="estado" [class.inactivo]="!usuario.actiu">
-                      {{ usuario.actiu ? 'Actiu' : 'Inactiu' }}
-                    </span>
-                  </div>
-                </div>
-
-                <div class="acciones">
-                  <button
-                    class="btn-xuxemon"
-                    (click)="agregarXuxemonAleatorio(usuario.id)"
-                    [disabled]="agregandoParaUsuarioId === usuario.id"
-                  >
-                    {{ agregandoParaUsuarioId === usuario.id ? 'Assignant...' : 'Donar Xuxemon' }}
-                  </button>
-                  <button class="btn-ver" (click)="cargarXuxemonsUsuario(usuario.id)">
-                    Veure Xuxemons
-                  </button>
-                  <button
-                    class="btn-toggle"
-                    [class.btn-habilitar]="!usuario.actiu"
-                    [class.btn-deshabilitar]="usuario.actiu"
-                    (click)="pedirConfirmacionToggle(usuario)"
-                  >
-                    {{ usuario.actiu ? 'Deshabilitar' : 'Habilitar' }}
-                  </button>
-                </div>
+        <div class="lista-usuarios">
+          @for (usuario of usuarios; track usuario.id) {
+          <div class="usuario-card">
+            <div class="usuario-info">
+              <div class="avatar">
+                {{ getIniciales(usuario.nombre, usuario.apellidos) }}
+                @if (usuario.avatar) {
+                <img [src]="'/' + usuario.avatar" [alt]="usuario.nombre" class="avatar-img"
+                  (error)="$event.target['style'].display='none'">
+                }
               </div>
-            }
+              <div class="datos">
+                <h3>{{ usuario.nombre }} {{ usuario.apellidos }}</h3>
+                <span class="id-jugador">#{{ usuario.id_jugador || usuario.id }}</span>
+                <span class="estado" [class.inactivo]="!usuario.actiu">
+                  {{ usuario.actiu ? 'Actiu' : 'Inactiu' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="acciones">
+              <button class="btn-xuxemon" (click)="agregarXuxemonAleatorio(usuario.id)"
+                [disabled]="agregandoParaUsuarioId === usuario.id">
+                {{ agregandoParaUsuarioId === usuario.id ? 'Assignant...' : 'Donar Xuxemon' }}
+              </button>
+              <button class="btn-ver" (click)="cargarXuxemonsUsuario(usuario.id)">
+                Veure Xuxemons
+              </button>
+              <button class="btn-toggle" [class.btn-habilitar]="!usuario.actiu" [class.btn-deshabilitar]="usuario.actiu"
+                (click)="pedirConfirmacionToggle(usuario)">
+                {{ usuario.actiu ? 'Deshabilitar' : 'Habilitar' }}
+              </button>
+            </div>
           </div>
+          }
+        </div>
         }
 
         @if (!cargandoUsuarios && usuarios.length === 0) {
-          <div class="sin-xuxemons">
-            <p>No hi ha usuaris per mostrar.</p>
-          </div>
+        <div class="sin-xuxemons">
+          <p>No hi ha usuaris per mostrar.</p>
+        </div>
         }
       </div>
     </div>
@@ -87,46 +78,44 @@
 
       <div class="seccio-body">
         @if (cargandoUsuarios) {
-          <div class="cargando">Carregant usuaris...</div>
+        <div class="cargando">Carregant usuaris...</div>
         }
 
         @if (!cargandoUsuarios && usuarios.length > 0) {
-          <div class="lista-usuarios">
-            @for (usuario of usuarios; track usuario.id) {
-              <div class="usuario-card">
-                <div class="usuario-info">
-                  <div class="avatar">
-                    {{ getIniciales(usuario.nombre, usuario.apellidos) }}
-                    @if (usuario.avatar) {
-                      <img [src]="'/' + usuario.avatar"
-                           [alt]="usuario.nombre"
-                           class="avatar-img"
-                           (error)="$event.target['style'].display='none'">
-                    }
-                  </div>
-                  <div class="datos">
-                    <h3>{{ usuario.nombre }} {{ usuario.apellidos }}</h3>
-                    <span class="id-jugador">#{{ usuario.id_jugador || usuario.id }}</span>
-                    <span class="estado" [class.inactivo]="!usuario.actiu">
-                      {{ usuario.actiu ? 'Actiu' : 'Inactiu' }}
-                    </span>
-                  </div>
-                </div>
-
-                <div class="acciones">
-                  <button class="btn-inventari" (click)="obrirModalInventari(usuario.id)">
-                    🎒 Afegir Xuxes
-                  </button>
-                </div>
+        <div class="lista-usuarios">
+          @for (usuario of usuarios; track usuario.id) {
+          <div class="usuario-card">
+            <div class="usuario-info">
+              <div class="avatar">
+                {{ getIniciales(usuario.nombre, usuario.apellidos) }}
+                @if (usuario.avatar) {
+                <img [src]="'/' + usuario.avatar" [alt]="usuario.nombre" class="avatar-img"
+                  (error)="$event.target['style'].display='none'">
+                }
               </div>
-            }
+              <div class="datos">
+                <h3>{{ usuario.nombre }} {{ usuario.apellidos }}</h3>
+                <span class="id-jugador">#{{ usuario.id_jugador || usuario.id }}</span>
+                <span class="estado" [class.inactivo]="!usuario.actiu">
+                  {{ usuario.actiu ? 'Actiu' : 'Inactiu' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="acciones">
+              <button class="btn-inventari" (click)="obrirModalInventari(usuario.id)">
+                🎒 Afegir Xuxes
+              </button>
+            </div>
           </div>
+          }
+        </div>
         }
 
         @if (!cargandoUsuarios && usuarios.length === 0) {
-          <div class="sin-xuxemons">
-            <p>No hi ha usuaris per mostrar.</p>
-          </div>
+        <div class="sin-xuxemons">
+          <p>No hi ha usuaris per mostrar.</p>
+        </div>
         }
       </div>
     </div>
@@ -141,172 +130,167 @@
 
   <!-- MODAL CONFIRMACIÓ TOGGLE -->
   @if (usuarioAConfirmar) {
-    <div class="overlay" (click)="cancelarConfirmacion()">
-      <div class="modal modal-confirm" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h2>{{ usuarioAConfirmar!.actiu ? 'Deshabilitar compte' : 'Habilitar compte' }}</h2>
-          <button class="btn-cerrar" (click)="cancelarConfirmacion()">✕</button>
-        </div>
-        <div class="confirm-body">
-          <p>
-            Segur que vols
-            <strong>{{ usuarioAConfirmar!.actiu ? 'deshabilitar' : 'habilitar' }}</strong>
-            l'usuari <strong>{{ usuarioAConfirmar!.nombre }} {{ usuarioAConfirmar!.apellidos }}</strong>?
-          </p>
-          <div class="confirm-accions">
-            <button class="btn-cancel" (click)="cancelarConfirmacion()">Cancel·lar</button>
-            <button
-              [class]="usuarioAConfirmar!.actiu ? 'btn-deshabilitar confirm-btn' : 'btn-habilitar confirm-btn'"
-              (click)="confirmarToggle()"
-            >
-              {{ usuarioAConfirmar!.actiu ? 'Sí, deshabilitar' : 'Sí, habilitar' }}
-            </button>
-          </div>
-        </div>
+  <div class="overlay" (click)="cancelarConfirmacion()">
+    <div class="modal modal-confirm" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ usuarioAConfirmar!.actiu ? 'Deshabilitar compte' : 'Habilitar compte' }}</h2>
+        <button class="btn-cerrar" (click)="cancelarConfirmacion()">✕</button>
       </div>
-    </div>
-  }
-
-  <!-- MODAL INVENTARI -->
-  @if (modalInventariAbierto) {
-    <div class="overlay" (click)="tancarModalInventari()">
-      <div class="modal modal-inventari" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h2>🎒 Afegir Xuxes a {{ getNombreUsuario(usuarioInventariId!) }}</h2>
-          <button class="btn-cerrar" (click)="tancarModalInventari()">✕</button>
-        </div>
-
-        <div class="inventari-form">
-          @if (mensajeExito) {
-            <div class="mensaje exito">✓ {{ mensajeExito }}</div>
-          }
-          @if (mensajeError) {
-            <div class="mensaje error">⚠ {{ mensajeError }}</div>
-          }
-
-          <label class="form-label">
-            <span>Tipus de Xuxa</span>
-            <select [(ngModel)]="xuxeSeleccionadaId" class="form-select">
-              @for (xuxa of xuxesDisponibles; track xuxa.id) {
-                <option [ngValue]="xuxa.id">
-                  {{ xuxa.nombre_xuxes }} {{ xuxa.apilable ? '(apilable)' : '(no apilable)' }}
-                </option>
-              }
-            </select>
-          </label>
-
-          <label class="form-label">
-            <span>Quantitat</span>
-            <input type="number" [(ngModel)]="cantidadAAfegir" min="1" max="99" class="form-input">
-          </label>
-
-          <button
-            class="btn-afegir"
-            (click)="afegirXuxes()"
-            [disabled]="afegindoXuxes || !xuxeSeleccionadaId || cantidadAAfegir < 1"
-          >
-            {{ afegindoXuxes ? 'Afegint...' : 'Afegir a la motxilla' }}
+      <div class="confirm-body">
+        <p>
+          Segur que vols
+          <strong>{{ usuarioAConfirmar!.actiu ? 'deshabilitar' : 'habilitar' }}</strong>
+          l'usuari <strong>{{ usuarioAConfirmar!.nombre }} {{ usuarioAConfirmar!.apellidos }}</strong>?
+        </p>
+        <div class="confirm-accions">
+          <button class="btn-cancel" (click)="cancelarConfirmacion()">Cancel·lar</button>
+          <button [class]="usuarioAConfirmar!.actiu ? 'btn-deshabilitar confirm-btn' : 'btn-habilitar confirm-btn'"
+            (click)="confirmarToggle()">
+            {{ usuarioAConfirmar!.actiu ? 'Sí, deshabilitar' : 'Sí, habilitar' }}
           </button>
         </div>
       </div>
     </div>
+  </div>
+  }
+
+  <!-- MODAL INVENTARI -->
+  @if (modalInventariAbierto) {
+  <div class="overlay" (click)="tancarModalInventari()">
+    <div class="modal modal-inventari" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>🎒 Afegir Xuxes a {{ getNombreUsuario(usuarioInventariId!) }}</h2>
+        <button class="btn-cerrar" (click)="tancarModalInventari()">✕</button>
+      </div>
+
+      <div class="inventari-form">
+        @if (mensajeExito) {
+        <div class="mensaje exito">✓ {{ mensajeExito }}</div>
+        }
+        @if (mensajeError) {
+        <div class="mensaje error">⚠ {{ mensajeError }}</div>
+        }
+
+        <label class="form-label">
+          <span>Tipus de Xuxa</span>
+          <select [(ngModel)]="xuxeSeleccionadaId" class="form-select">
+            @for (xuxa of xuxesDisponibles; track xuxa.id) {
+            <option [ngValue]="xuxa.id">
+              {{ xuxa.nombre_xuxes }} {{ xuxa.apilable ? '(apilable)' : '(no apilable)' }}
+            </option>
+            }
+          </select>
+        </label>
+
+        <label class="form-label">
+          <span>Quantitat</span>
+          <input type="number" [(ngModel)]="cantidadAAfegir" min="1" max="99" class="form-input">
+        </label>
+
+        <button class="btn-afegir" (click)="afegirXuxes()"
+          [disabled]="afegindoXuxes || !xuxeSeleccionadaId || cantidadAAfegir < 1">
+          {{ afegindoXuxes ? 'Afegint...' : 'Afegir a la motxilla' }}
+        </button>
+      </div>
+    </div>
+  </div>
   }
 
   <!-- MODAL XUXEMONS -->
   @if (modalAbierto) {
-    <div class="overlay" (click)="cerrarModal()">
-      <div class="modal" (click)="$event.stopPropagation()">
+  <div class="overlay" (click)="cerrarModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
 
-        <div class="modal-header">
-          <h2>Xuxemons de {{ getNombreUsuario(usuarioSeleccionado!) }}</h2>
-          <button class="btn-cerrar" (click)="cerrarModal()">✕</button>
+      <div class="modal-header">
+        <h2>Xuxemons de {{ getNombreUsuario(usuarioSeleccionado!) }}</h2>
+        <button class="btn-cerrar" (click)="cerrarModal()">✕</button>
+      </div>
+
+      @if (cargandoXuxemons) {
+      <div class="cargando">Cargando...</div>
+      }
+
+      @if (!cargandoXuxemons) {
+      <div class="modal-body">
+
+        <div class="tipo-seccion tipo-aigua">
+          <h3>💧 Aigua</h3>
+          @if (xuxemonsAgua.length === 0) {
+          <p class="sin-tipo">Cap xuxemon d'Aigua</p>
+          }
+          <div class="lista-tipo">
+            @for (x of xuxemonsAgua; track x.id) {
+            <div class="card-xuxemon">
+              <div class="imagen-contenedor">
+                @if (x.imagen) {
+                <img [src]="x.imagen" [alt]="x.nombre_xuxemon">
+                }
+                @if (!x.imagen) {
+                <div class="imagen-placeholder">?</div>
+                }
+              </div>
+              <div class="info-xuxemon">
+                <h4>{{ x.nombre_xuxemon }}</h4>
+                <p>{{ x.tamano }}</p>
+              </div>
+            </div>
+            }
+          </div>
         </div>
 
-        @if (cargandoXuxemons) {
-          <div class="cargando">Cargando...</div>
-        }
-
-        @if (!cargandoXuxemons) {
-          <div class="modal-body">
-
-            <div class="tipo-seccion tipo-aigua">
-              <h3>💧 Aigua</h3>
-              @if (xuxemonsAgua.length === 0) {
-                <p class="sin-tipo">Cap xuxemon d'Aigua</p>
-              }
-              <div class="lista-tipo">
-                @for (x of xuxemonsAgua; track x.id) {
-                  <div class="card-xuxemon">
-                    <div class="imagen-contenedor">
-                      @if (x.imagen) {
-                        <img [src]="x.imagen" [alt]="x.nombre_xuxemon">
-                      }
-                      @if (!x.imagen) {
-                        <div class="imagen-placeholder">?</div>
-                      }
-                    </div>
-                    <div class="info-xuxemon">
-                      <h4>{{ x.nombre_xuxemon }}</h4>
-                      <p>{{ x.tamano }}</p>
-                    </div>
-                  </div>
+        <div class="tipo-seccion tipo-aire">
+          <h3>💨 Aire</h3>
+          @if (xuxemonsAire.length === 0) {
+          <p class="sin-tipo">Cap xuxemon d'Aire</p>
+          }
+          <div class="lista-tipo">
+            @for (x of xuxemonsAire; track x.id) {
+            <div class="card-xuxemon">
+              <div class="imagen-contenedor">
+                @if (x.imagen) {
+                <img [src]="x.imagen" [alt]="x.nombre_xuxemon">
+                }
+                @if (!x.imagen) {
+                <div class="imagen-placeholder">?</div>
                 }
               </div>
-            </div>
-
-            <div class="tipo-seccion tipo-aire">
-              <h3>💨 Aire</h3>
-              @if (xuxemonsAire.length === 0) {
-                <p class="sin-tipo">Cap xuxemon d'Aire</p>
-              }
-              <div class="lista-tipo">
-                @for (x of xuxemonsAire; track x.id) {
-                  <div class="card-xuxemon">
-                    <div class="imagen-contenedor">
-                      @if (x.imagen) {
-                        <img [src]="x.imagen" [alt]="x.nombre_xuxemon">
-                      }
-                      @if (!x.imagen) {
-                        <div class="imagen-placeholder">?</div>
-                      }
-                    </div>
-                    <div class="info-xuxemon">
-                      <h4>{{ x.nombre_xuxemon }}</h4>
-                      <p>{{ x.tamano }}</p>
-                    </div>
-                  </div>
-                }
+              <div class="info-xuxemon">
+                <h4>{{ x.nombre_xuxemon }}</h4>
+                <p>{{ x.tamano }}</p>
               </div>
             </div>
-
-            <div class="tipo-seccion tipo-terra">
-              <h3>🌿 Terra</h3>
-              @if (xuxemonsTerra.length === 0) {
-                <p class="sin-tipo">Cap xuxemon de Terra</p>
-              }
-              <div class="lista-tipo">
-                @for (x of xuxemonsTerra; track x.id) {
-                  <div class="card-xuxemon">
-                    <div class="imagen-contenedor">
-                      @if (x.imagen) {
-                        <img [src]="x.imagen" [alt]="x.nombre_xuxemon">
-                      }
-                      @if (!x.imagen) {
-                        <div class="imagen-placeholder">?</div>
-                      }
-                    </div>
-                    <div class="info-xuxemon">
-                      <h4>{{ x.nombre_xuxemon }}</h4>
-                      <p>{{ x.tamano }}</p>
-                    </div>
-                  </div>
-                }
-              </div>
-            </div>
-
+            }
           </div>
-        }
+        </div>
+
+        <div class="tipo-seccion tipo-terra">
+          <h3>🌿 Terra</h3>
+          @if (xuxemonsTerra.length === 0) {
+          <p class="sin-tipo">Cap xuxemon de Terra</p>
+          }
+          <div class="lista-tipo">
+            @for (x of xuxemonsTerra; track x.id) {
+            <div class="card-xuxemon">
+              <div class="imagen-contenedor">
+                @if (x.imagen) {
+                <img [src]="x.imagen" [alt]="x.nombre_xuxemon">
+                }
+                @if (!x.imagen) {
+                <div class="imagen-placeholder">?</div>
+                }
+              </div>
+              <div class="info-xuxemon">
+                <h4>{{ x.nombre_xuxemon }}</h4>
+                <p>{{ x.tamano }}</p>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+
       </div>
+      }
     </div>
+  </div>
   }
 </div>
