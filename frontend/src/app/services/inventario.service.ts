@@ -9,7 +9,7 @@ export interface Xuxes {
   id: number;
   nom: string;
   emoji: string;
-  imatge: string;
+  imagen: string;
   tipus: Tipus;
   mida: Mida;
   apilable: boolean;

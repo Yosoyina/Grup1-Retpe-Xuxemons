@@ -28,7 +28,7 @@
                   [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad">
 
             <img class="slot-img"
-                 [src]="slot.xuxe?.imatge"
+                 [src]="slot.xuxe?.imagen"
                  [alt]="slot.xuxe?.nom"/>
 
             <!-- Apilament x1..x5 -->
@@ -75,7 +75,7 @@
                   [attr.aria-label]="slot.xuxe?.nom">
 
             <img class="slot-img"
-                 [src]="slot.xuxe?.imatge"
+                 [src]="slot.xuxe?.imagen"
                  [alt]="slot.xuxe?.nom" />
 
             <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">

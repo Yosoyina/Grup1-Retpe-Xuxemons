@@ -98,4 +98,9 @@ export class Inventario implements OnInit {
       'slot--stack-max': (slot.cantidad ?? 0) === 5,
     };
   }
+
+  getXuxeSrc(imagen: string | undefined): string {
+    if (!imagen) return '';
+    return '/Imatges/Xuxemons/' + imagen;
+  }
 }
