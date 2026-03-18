@@ -62,8 +62,8 @@ export class Inventario implements OnInit {
   }
 
   private passesFilter(s: Slot): boolean {
-    const okTipus = this.tipusFilter === 'Tots' || s.xuxemon?.tipus === this.tipusFilter;
-    const okMida = this.midaFilter === 'Tots' || s.xuxemon?.mida  === this.midaFilter;
+    const okTipus = this.tipusFilter === 'Tots' || s.xuxe?.tipus === this.tipusFilter;
+    const okMida = this.midaFilter === 'Tots' || s.xuxe?.mida  === this.midaFilter;
     return okTipus && okMida;
   }
 
@@ -95,13 +95,13 @@ export class Inventario implements OnInit {
       'slot': true,
       'slot--empty': slot.empty,
       'slot--filled': !slot.empty,
-      'slot--tipus-aigua': slot.xuxemon?.tipus === 'Aigua',
-      'slot--tipus-terra': slot.xuxemon?.tipus === 'Terra',
-      'slot--tipus-aire': slot.xuxemon?.tipus === 'Aire',
-      'slot--mida-petit': slot.xuxemon?.mida  === 'Petit',
-      'slot--mida-mitja': slot.xuxemon?.mida  === 'Mitjà',
-      'slot--mida-gran': slot.xuxemon?.mida  === 'Gran',
-      'slot--stack-max': (slot.quantitat ?? 0) === 5,
+      'slot--tipus-aigua': slot.xuxe?.tipus === 'Aigua',
+      'slot--tipus-terra': slot.xuxe?.tipus === 'Terra',
+      'slot--tipus-aire': slot.xuxe?.tipus === 'Aire',
+      'slot--mida-petit': slot.xuxe?.mida  === 'Petit',
+      'slot--mida-mitja': slot.xuxe?.mida  === 'Mitjà',
+      'slot--mida-gran': slot.xuxe?.mida  === 'Gran',
+      'slot--stack-max': (slot.cantidad ?? 0) === 5,
     };
   }
 
