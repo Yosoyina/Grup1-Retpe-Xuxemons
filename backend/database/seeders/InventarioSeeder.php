@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Inventario;
 use App\Models\Xuxes;
+use App\Models\User;
 
 class InventarioSeeder extends Seeder
 {

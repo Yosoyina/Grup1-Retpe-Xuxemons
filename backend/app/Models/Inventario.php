@@ -22,6 +22,7 @@ class Inventario extends Model
         'user_id',
         'xuxe_id',
         'cantidad',
+        'apilable',
     ];
 
     // Relaciones de Xuxemon y Xuxes
