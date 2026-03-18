@@ -18,15 +18,15 @@ export interface Slot {
   id: number;
   apilable: boolean;
   empty: boolean;
-  xuxemon?: Xuxes;
-  quantitat: number;
+  xuxe?: Xuxes;
+  cantidad: number;
 }
 
 // Estructura de los datos que devuelve el backend para cada item del inventario
 interface InventarioItemApi {
   id: number;
-  xuxemon: Xuxes;
-  quantitat: number;
+  xuxe: Xuxes;
+  cantidad: number;
   apilable: boolean;
 }
 
@@ -39,10 +39,10 @@ const NO_APILABLE_SLOTS = 10;
 function CreaciondeSlots(): Slot[] {
   const slots: Slot[] = [];
   for (let i = 0; i < APILABLE_SLOTS; i++) {
-    slots.push({ id: i, apilable: true, empty: true, quantitat: 0 });
+    slots.push({ id: i, apilable: true, empty: true, cantidad: 0 });
   }
   for (let i = 0; i < NO_APILABLE_SLOTS; i++) {
-    slots.push({ id: APILABLE_SLOTS + i, apilable: false, empty: true, quantitat: 0 });
+    slots.push({ id: APILABLE_SLOTS + i, apilable: false, empty: true, cantidad: 0 });
   }
   return slots;
 }
@@ -76,8 +76,8 @@ export class InventarioService {
               id: index,
               apilable: true,
               empty: false,
-              xuxemon: item.xuxemon,
-              quantitat: item.quantitat,
+              xuxe: item.xuxe,
+              cantidad: item.cantidad,
             };
           }
         });
@@ -89,8 +89,8 @@ export class InventarioService {
               id: APILABLE_SLOTS + index,
               apilable: false,
               empty: false,
-              xuxemon: item.xuxemon,
-              quantitat: 1,
+              xuxe: item.xuxe,
+              cantidad: 1,
             };
           }
         });
@@ -113,22 +113,22 @@ export class InventarioService {
     if (xux.apilable) {
       // Si ya existe una Xuxe del mismo tipo, apila una unidad más (máx. 5)
       const existing = current.find(
-        s => s.apilable && !s.empty && s.xuxemon?.id === xux.id && s.quantitat < MAX_STACK
+        s => s.apilable && !s.empty && s.xuxe?.id === xux.id && s.cantidad < MAX_STACK
       );
       if (existing) {
-        existing.quantitat++;
+        existing.cantidad++;
         this._slots$.next(current);
         return true;
       }
       // Si no existe, busca un slot apilable vacío
       const empty = current.find(s => s.apilable && s.empty);
       if (!empty) return false;
-      empty.empty = false; empty.xuxemon = { ...xux }; empty.quantitat = 1;
+      empty.empty = false; empty.xuxe = { ...xux }; empty.cantidad = 1;
     } else {
       // Las Xuxes no apilables ocupan siempre un slot individual
       const empty = current.find(s => !s.apilable && s.empty);
       if (!empty) return false;
-      empty.empty = false; empty.xuxemon = { ...xux }; empty.quantitat = 1;
+      empty.empty = false; empty.xuxe = { ...xux }; empty.cantidad = 1;
     }
 
     this._slots$.next(current);
@@ -142,17 +142,17 @@ export class InventarioService {
     if (!slot || slot.empty) return;
 
     // Si es apilable y queda más de 1, solo resta una unidad
-    if (slot.apilable && slot.quantitat > 1) {
-      slot.quantitat--;
+    if (slot.apilable && slot.cantidad > 1) {
+      slot.cantidad--;
     } else {
       // Si es la última unidad, vacía el slot
-      slot.empty = true; slot.xuxemon = undefined; slot.quantitat = 0;
+      slot.empty = true; slot.xuxe = undefined; slot.cantidad = 0;
     }
     this._slots$.next(current);
   }
 
   // ── En este método se crea una copia de los slots para no modificar el original ────
   private CopiarSlots(): Slot[] {
-    return this.slots.map(s => ({ ...s, xuxemon: s.xuxemon ? { ...s.xuxemon } : undefined }));
+    return this.slots.map(s => ({ ...s, xuxe: s.xuxe ? { ...s.xuxe } : undefined }));
   }
 }

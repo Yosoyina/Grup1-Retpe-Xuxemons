@@ -30,7 +30,7 @@ class Inventario extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function xuxa()
+    public function xuxe()
     {
         return $this->belongsTo(Xuxes::class, 'xuxe_id');
 
