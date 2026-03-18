@@ -54,22 +54,22 @@
           <button type="button"
                   [ngClass]="slotClasses(slot)"
                   (click)="onSlotClick(slot)"
-                  [attr.aria-label]="slot.xuxemon?.nom + ' x' + slot.quantitat">
+                  [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad">
 
-            <span class="slot-emoji">{{ slot.xuxemon?.emoji }}</span>
+            <span class="slot-emoji">{{ slot.xuxe?.emoji }}</span>
 
             <!-- Apilament x1..x5 -->
             <span class="slot-count"
                   [ngClass]="{
-                    'slot-count--max':  slot.quantitat === 5,
-                    'slot-count--high': slot.quantitat >= 3 && slot.quantitat < 5
+                    'slot-count--max':  slot.cantidad === 5,
+                    'slot-count--high': slot.cantidad >= 3 && slot.cantidad < 5
                   }">
-              x{{ slot.quantitat }}
+              x{{ slot.cantidad }}
             </span>
 
             <!-- Badge tipus -->
-            <span class="badge" [ngClass]="'badge--' + slot.xuxemon?.tipus?.toLowerCase()">
-              {{ slot.xuxemon?.tipus }}
+            <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
+              {{ slot.xuxe?.tipus }}
             </span>
 
             <button class="btn-remove" (click)="removeOne(slot, $event)" aria-label="Eliminar un"></button>
@@ -99,12 +99,12 @@
           <button type="button"
                   [ngClass]="slotClasses(slot)"
                   (click)="onSlotClick(slot)"
-                  [attr.aria-label]="slot.xuxemon?.nom">
+                  [attr.aria-label]="slot.xuxe?.nom">
 
-            <span class="slot-emoji">{{ slot.xuxemon?.emoji }}</span>
+            <span class="slot-emoji">{{ slot.xuxe?.emoji }}</span>
 
-            <span class="badge" [ngClass]="'badge--' + slot.xuxemon?.tipus?.toLowerCase()">
-              {{ slot.xuxemon?.tipus }}
+            <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
+              {{ slot.xuxe?.tipus }}
             </span>
 
             <button class="btn-remove" (click)="removeOne(slot, $event)" aria-label="Eliminar"></button>
