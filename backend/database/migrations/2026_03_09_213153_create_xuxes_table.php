@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre_xuxes');
             $table->string('descripcio')->nullable();
             $table->string('imagen')->nullable();
+            $table->boolean('apilable');
             $table->timestamps();
         });
     }
