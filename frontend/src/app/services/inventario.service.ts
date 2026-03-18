@@ -60,8 +60,9 @@ export class InventarioService {
 
   // ── Carga las Xuxes guardadas del jugador ───────
   cargarInventario(): void {
-    this.http.get<InventarioItemApi[]>(`${API_URL}/inventario`).subscribe({
-      next: (items) => {
+    this.http.get<{ items: InventarioItemApi[] }>(`${API_URL}/inventario`).subscribe({
+      next: (response) => {
+        const items = Array.isArray(response?.items) ? response.items : [];
         const slots = CreaciondeSlots();
 
         // Separa las Xuxes en apilables y no apilables con filter
