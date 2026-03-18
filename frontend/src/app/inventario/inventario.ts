@@ -5,9 +5,6 @@ import { InventarioService, Slot } from '../services/inventario.service';
 export type TipusFilter = 'Tots' | 'Aigua' | 'Terra' | 'Aire';
 export type MidaFilter = 'Tots' | 'Petit' | 'Mitjà'  | 'Gran';
 
-const TIPUS_OPTIONS: TipusFilter[] = ['Tots', 'Aigua', 'Terra', 'Aire'];
-const MIDA_OPTIONS:  MidaFilter[]  = ['Tots', 'Petit', 'Mitjà',  'Gran'];
-
 const STARS_ARRAY = Array.from({ length: 40 }, () => ({
   x: parseFloat((Math.random() * 100).toFixed(1)),
   y: parseFloat((Math.random() * 100).toFixed(1)),
@@ -37,9 +34,6 @@ export class Inventario implements OnInit {
   tipusFilter: TipusFilter = 'Tots';
   midaFilter:  MidaFilter = 'Tots';
 
-  readonly tipusOptions = TIPUS_OPTIONS;
-  readonly midaOptions = MIDA_OPTIONS;
-  readonly starsArray = STARS_ARRAY;
 
   ngOnInit(): void {
     this.inventarioService.cargarInventario();
@@ -103,9 +97,5 @@ export class Inventario implements OnInit {
       'slot--mida-gran': slot.xuxe?.mida  === 'Gran',
       'slot--stack-max': (slot.cantidad ?? 0) === 5,
     };
-  }
-
-  pillClasses(opt: string, current: string): Record<string, boolean> {
-    return { 'pill': true, 'pill--active': opt === current };
   }
 }

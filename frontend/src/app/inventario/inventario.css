@@ -80,39 +80,6 @@
     0 16px 28px rgba(0, 0, 0, .28);
 }
 
-/* ===== FILTROS ===== */
-.filters-row {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-
-  width: min(860px, 92vw);
-  background: rgba(255, 255, 255, .80);
-  border: 4px solid rgba(255, 214, 0, .95);
-  border-radius: 22px;
-  box-shadow: 0 12px 22px rgba(0, 0, 0, .16);
-  padding: 14px 20px;
-}
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.filter-label {
-  font-weight: 900;
-  font-size: 0.9rem;
-  color: #1f2a44;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-}
-
 /* Pills — mismo estilo que los btn-menu pero más pequeños */
 .pill {
   appearance: none;
@@ -210,6 +177,12 @@
   position: relative;
   overflow: hidden;
   transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.slot-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
 }
 
 .slot:hover:not(.slot--empty) {
