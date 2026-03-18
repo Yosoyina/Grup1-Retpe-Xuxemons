@@ -18,22 +18,22 @@ class InventarioSeeder extends Seeder
             [
                 'nombre_xuxes' => 'Xuxa de Foc',
                 'descripcio' => 'Una xuxa ardent que escalfa la motxilla.',
-                'imagen' => null,
+                'imagen' => 'Imatges/Xuxes/CuraXuxe.png',
             ],
             [
                 'nombre_xuxes' => "Xuxa d'Aigua",
                 'descripcio' => 'Una xuxa fresca i refrescant.',
-                'imagen' => null,
+                'imagen' => 'Imatges/Xuxes/Xucolate.png',
             ],
             [
                 'nombre_xuxes' => 'Xuxa de Terra',
                 'descripcio' => 'Una xuxa sòlida com una roca.',
-                'imagen' => null,
+                'imagen' => 'Imatges/Xuxes/SodaPrime.png',
             ],
             [
                 'nombre_xuxes' => 'Xuxa EV',
                 'descripcio' => 'Xuxe para evolucionar els teus xuxemons.',
-                'imagen' => null,
+                'imagen' => 'Imatges/Xuxes/XuxEvos.png',
             ],
         ];
 
