@@ -61,12 +61,18 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // $user = User::where('id_jugador', $request->id_jugador)->first();
+        // Permet login amb id_jugador (#Marc1234) o amb email.
+        // També accepta id_jugador sense el prefix '#', per a usuaris que no l'han copiat.
+        $login = trim($request->id_jugador);
+        $query = User::where('email', $login);
 
-        // Permet login amb id_jugador (#Marc1234) o amb email
-        $user = User::where('id_jugador', $request->id_jugador)
-            ->orWhere('email', $request->id_jugador)
-            ->first();
+        // Si sembla un id_jugador (no té @), intenta amb i sense '#'
+        if (!str_contains($login, '@')) {
+            $query = $query->orWhere('id_jugador', $login);
+            $query = $query->orWhere('id_jugador', "#{$login}");
+        }
+
+        $user = $query->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Credencials incorrectes'], 401);
