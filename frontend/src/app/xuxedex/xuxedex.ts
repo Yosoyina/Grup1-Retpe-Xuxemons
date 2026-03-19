@@ -1,8 +1,9 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { XuxemonService, Xuxemon, EtapaEvoluciones } from '../services/xuxemon.service';
+import { InventarioService, Slot } from '../services/inventario.service';
 
 @Component({
   selector: 'app-xuxedex',
@@ -22,7 +23,9 @@ export class Xuxedex implements OnDestroy {
   mostrarEvolucion = false;
   cargarEvolucion = false;
   errorEvolucion: string | null = null;
+  xuxeEvoSlot: Slot | null = null;
 
+  private inventarioService = inject(InventarioService);
   private xuxemonsSub: Subscription;
 
   get mostrarPaginacio(): boolean {
@@ -34,6 +37,12 @@ export class Xuxedex implements OnDestroy {
     this.xuxemonsSub = this.xuxemons$.subscribe((xuxemons) => {
       this.sincronizarSeleccion(xuxemons);
     });
+
+    this.inventarioService.cargarInventario();
+    this.inventarioService.slots$.subscribe(() => {
+      this.xuxeEvoSlot = this.getXuxeEvo();
+    });
+
     this.xuxemonService.carregarXuxemons('Todos');
   }
 
@@ -182,7 +191,66 @@ export class Xuxedex implements OnDestroy {
     this.errorEvolucion = null;
   }
 
+  getCadenaEvolucioNormalitzada(): EtapaEvoluciones[] {
+    const ordre = ['Petit', 'Mitja', 'Gran'];
+    return ordre
+      .map((tamano) => this.cadenaEvolucio.find((etapa) => etapa.tamano === tamano))
+      .filter((etapa): etapa is EtapaEvoluciones => !!etapa);
+  }
+
   PosicionActual(etapa: EtapaEvoluciones): boolean {
-    return etapa.tamano === this.xuxemonSeleccionado?.tamano;
+    if (!this.xuxemonSeleccionado) return false;
+
+    if (etapa.id === Number(this.xuxemonSeleccionado.id)) {
+      return true;
+    }
+
+    return etapa.tamano === this.xuxemonSeleccionado.tamano;
+  }
+
+  // ── Evolució ─────────────────────────────────────────────────────
+
+  // Retorna el slot que conté una 'Xuxa EV'
+  getXuxeEvo(): Slot | null {
+    return this.inventarioService.slots.find((s) => {
+      if (s.empty || !s.xuxe) return false;
+
+      const xuxeName = (s.xuxe.nom ?? s.xuxe.nombre_xuxes ?? '').trim().toLowerCase();
+      return xuxeName === 'xuxa ev';
+    }) ?? null;
+  }
+
+  // Retorna la següent etapa de la cadena (Petit → Mitja → Gran)
+  getSegurentEtapa(): EtapaEvoluciones | null {
+    if (!this.xuxemonSeleccionado) return null;
+
+    const cadena = this.getCadenaEvolucioNormalitzada();
+    if (cadena.length === 0) return null;
+
+    const idx = cadena.findIndex(e => e.id === Number(this.xuxemonSeleccionado?.id));
+    if (idx !== -1 && idx + 1 < cadena.length) {
+      return cadena[idx + 1];
+    }
+
+    // Si no troba per id, busca segons tamano
+    const ordre = ['Petit', 'Mitja', 'Gran'];
+    const idxTamano = ordre.indexOf(this.xuxemonSeleccionado.tamano);
+    if (idxTamano === -1 || idxTamano >= ordre.length - 1) {
+      return null;
+    }
+
+    return cadena[idxTamano + 1] ?? null;
+  }
+
+  // Consumeix una Xuxa EV i desbloqueja la següent etapa
+  evolucionar(): void {
+    const slot = this.xuxeEvoSlot ?? this.getXuxeEvo();
+    const segurent = this.getSegurentEtapa();
+    if (!slot || !segurent) return;
+
+    this.inventarioService.EliminarXuxesinv(slot.id);
+    this.xuxemonService.xuxemons$.next([]);
+    this.xuxemonService.carregarXuxemons(this.filtroActual);
+    this.cerrarEvolucion();
   }
 }
