@@ -389,3 +389,14 @@
     font-size: 15px;
   }
 }
+
+.slots-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.slots-grid li {
+  margin: 0;
+  padding: 0;
+}
