@@ -131,6 +131,64 @@ class XuxemonsController extends Controller
     }
 
 
+    // POST /api/xuxemons/{id}/evolucionar
+    // Consumeix una Xuxa EV i desbloqueja la següent etapa al xuxedex de l'usuari
+    public function evolucionar(Request $request, string $id)
+    {
+        $xuxemon = Xuxemons::findOrFail($id);
+        $userId  = $request->user()->id;
+
+        $nextTamano = match ($xuxemon->tamano) {
+            'Petit' => 'Mitja',
+            'Mitja' => 'Gran',
+            default => null,
+        };
+
+        if (!$nextTamano) {
+            return response()->json(['message' => "Ja es troba a l'estat màxim d'evolució."], 422);
+        }
+
+        $nextEvolution = Xuxemons::where('tipo_elemento', $xuxemon->tipo_elemento)
+            ->where('evolucion_xuxemon', $xuxemon->evolucion_xuxemon)
+            ->where('tamano', $nextTamano)
+            ->first();
+
+        if (!$nextEvolution) {
+            return response()->json(['message' => "No s'ha trobat l'evolució."], 404);
+        }
+
+        // Comprova que l'usuari te una Xuxa EV a l'inventari
+        $xuxaEv = DB::table('inventario')
+            ->join('xuxes', 'inventario.xuxe_id', '=', 'xuxes.id')
+            ->where('inventario.user_id', $userId)
+            ->where('xuxes.nombre_xuxes', 'Xuxa EV')
+            ->where('inventario.cantidad', '>', 0)
+            ->select('inventario.id', 'inventario.cantidad')
+            ->first();
+
+        if (!$xuxaEv) {
+            return response()->json(['message' => 'Necessites una Xuxa EV per evolucionar.'], 422);
+        }
+
+        // Consumeix 1 Xuxa EV
+        if ($xuxaEv->cantidad > 1) {
+            DB::table('inventario')->where('id', $xuxaEv->id)->decrement('cantidad');
+        } else {
+            DB::table('inventario')->where('id', $xuxaEv->id)->delete();
+        }
+
+        // Afegeix la següent evolució al xuxedex de l'usuari
+        DB::table('xuxedex')->updateOrInsert(
+            ['id_usuario' => $userId, 'id_xuxemon' => $nextEvolution->id],
+            ['esta_capturado' => true, 'updated_at' => now(), 'created_at' => now()]
+        );
+
+        return response()->json([
+            'message' => 'Evolució completada!',
+            'xuxemon' => $nextEvolution,
+        ], 200);
+    }
+
     // Evoluciones Xuxemons
 
     public function Evoluciones(string $id)

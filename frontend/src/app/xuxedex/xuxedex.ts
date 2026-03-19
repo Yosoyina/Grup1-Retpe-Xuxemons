@@ -242,15 +242,25 @@ export class Xuxedex implements OnDestroy {
     return cadena[idxTamano + 1] ?? null;
   }
 
-  // Consumeix una Xuxa EV i desbloqueja la següent etapa
+  // Consumeix una Xuxa EV al backend i desbloqueja la següent etapa
   evolucionar(): void {
     const slot = this.xuxeEvoSlot ?? this.getXuxeEvo();
     const segurent = this.getSegurentEtapa();
-    if (!slot || !segurent) return;
+    if (!slot || !segurent || !this.xuxemonSeleccionado) return;
 
-    this.inventarioService.EliminarXuxesinv(slot.id);
-    this.xuxemonService.xuxemons$.next([]);
-    this.xuxemonService.carregarXuxemons(this.filtroActual);
-    this.cerrarEvolucion();
+    this.xuxemonService.evolucionar(Number(this.xuxemonSeleccionado.id)).subscribe({
+      next: () => {
+        // Actualitza l'inventari local immediament i recarrega des del backend
+        this.inventarioService.EliminarXuxesinv(slot.id);
+        this.inventarioService.cargarInventario();
+        // Recarrega la llista de xuxemons
+        this.xuxemonService.xuxemons$.next([]);
+        this.xuxemonService.carregarXuxemons(this.filtroActual);
+        this.cerrarEvolucion();
+      },
+      error: (err) => {
+        this.errorEvolucion = err.error?.message ?? "Error al evolucionar.";
+      },
+    });
   }
 }
