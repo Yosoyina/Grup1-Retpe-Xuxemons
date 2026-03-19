@@ -657,36 +657,66 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 12px;
   padding-top: 2px;
   min-width: 0;
 }
 
 .paginacion button,
 .paginacion span {
-  min-width: 168px;
-  min-height: 54px;
-  padding: 0 22px;
+  min-width: 158px;
+  min-height: 52px;
+  padding: 0 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: 3px solid var(--yellow);
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 252, 0.96));
-  color: #2a2d39;
   font-family: inherit;
   font-size: 1rem;
-  font-weight: 700;
-  box-shadow: var(--shadow-md);
+  font-weight: 800;
+  letter-spacing: .02em;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, .20),
+    inset 0 1px 0 rgba(255, 255, 255, .55);
 }
 
+/* Botons de navegació ← → */
 .paginacion button {
+  background: rgba(255, 255, 255, .80);
+  color: #1E2A78;
   cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.paginacion button:hover:not(:disabled) {
+  background: #FFD400;
+  color: #1E2A78;
+  border-color: #FFD400;
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, .24),
+    inset 0 1px 0 rgba(255, 255, 255, .60);
+}
+
+.paginacion button:active:not(:disabled) {
+  transform: translateY(0) scale(.98);
 }
 
 .paginacion button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
+}
+
+/* Indicador de pàgina central */
+.paginacion span {
+  background: #FFD400;
+  color: #1E2A78;
+  border-color: #FFD400;
+  min-width: 148px;
+  box-shadow:
+    0 6px 18px rgba(255, 212, 0, .40),
+    inset 0 1px 0 rgba(255, 255, 255, .55);
 }
 
 .sortir-btn {
@@ -1754,9 +1784,9 @@
 
   .paginacion button,
   .paginacion span {
-    min-width: 142px;
-    min-height: 48px;
-    font-size: 0.94rem;
+    min-width: 128px;
+    min-height: 46px;
+    font-size: 0.92rem;
   }
 
   .sortir-btn {

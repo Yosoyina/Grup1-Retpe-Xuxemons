@@ -1,17 +1,8 @@
-import { Component, inject, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { InventarioService, Slot } from '../services/inventario.service';
-
-export type TipusFilter = 'Tots' | 'Aigua' | 'Terra' | 'Aire';
-export type MidaFilter = 'Tots' | 'Petit' | 'Mitjà' | 'Gran';
-
-const STARS_ARRAY = Array.from({ length: 40 }, () => ({
-  x: parseFloat((Math.random() * 100).toFixed(1)),
-  y: parseFloat((Math.random() * 100).toFixed(1)),
-  delay: parseFloat((Math.random() * 2).toFixed(2)),
-}));
 
 @Component({
   selector: 'app-inventario',
@@ -22,13 +13,7 @@ const STARS_ARRAY = Array.from({ length: 40 }, () => ({
 })
 export class Inventario implements OnInit, OnDestroy {
 
-  // Inputs (recibir datos del padre):
-  @Input() maxSlots!: number; // Número máximo de slots
-
-  // Outputs (enviar datos al padre):
-  @Output() slotSelected = new EventEmitter<Slot | null>(); // Slot seleccionado
-
-  // inject() funciona en la zona de campos de clase 
+  // Injecció de serveis i dependències
   private inventarioService = inject(InventarioService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
@@ -36,10 +21,7 @@ export class Inventario implements OnInit, OnDestroy {
 
   slots: Slot[] = [];
 
-  tipusFilter: TipusFilter = 'Tots';
-  midaFilter: MidaFilter = 'Tots';
-
-
+  // Mètodes per gestionar l'inventari i la interacció amb els slots
   ngOnInit(): void {
     this.slotsSub = this.inventarioService.slots$.subscribe(slots => {
       this.slots = slots;
@@ -48,72 +30,38 @@ export class Inventario implements OnInit, OnDestroy {
     this.inventarioService.cargarInventario();
   }
 
+  // Mètode per gestionar el clic en un slot, pot ser per eliminar o mostrar informació
   ngOnDestroy(): void {
     this.slotsSub?.unsubscribe();
   }
 
-  // ── Getters filtrados ───────────────────────────
-  get apilableSlots(): Slot[] {
-    return this.slots
-      .filter(s => s.apilable)
-      .filter(s => this.passesFilter(s));
-  }
+  // Getters per filtrar els slots segons les seves característiques
+  get apilablesFills(): Slot[] { return this.slots.filter(s => s.apilable && !s.empty); }
+  get apilablesEmpties(): Slot[] { return this.slots.filter(s => s.apilable && s.empty); }
+  get noApilablesFills(): Slot[] { return this.slots.filter(s => !s.apilable && !s.empty); }
+  get noApilablesEmpties(): Slot[] { return this.slots.filter(s => !s.apilable && s.empty); }
 
-  get noApilableSlots(): Slot[] {
-    return this.slots
-      .filter(s => !s.apilable)
-      .filter(s => this.passesFilter(s));
-  }
-
-  private passesFilter(s: Slot): boolean {
-    const okTipus = this.tipusFilter === 'Tots' || s.xuxe?.tipus === this.tipusFilter;
-    const okMida = this.midaFilter === 'Tots' || s.xuxe?.mida === this.midaFilter;
-    return okTipus && okMida;
-  }
-
-  // ── Separar slots llenos / vacíos ───────────────────────────────
-  get apilablesFills(): Slot[] { return this.apilableSlots.filter(s => !s.empty); }
-  get apilablesEmpties(): Slot[] { return this.apilableSlots.filter(s => s.empty); }
-  get noApilablesFills(): Slot[] { return this.noApilableSlots.filter(s => !s.empty); }
-  get noApilablesEmpties(): Slot[] { return this.noApilableSlots.filter(s => s.empty); }
-
+  // Mètode per comprovar si l'inventari està ple
   isFull(): boolean {
     return this.inventarioService.InventarioLleno();
   }
 
-  // ── Interacciones ────────────────────────────────────────────────
-  onSlotClick(slot: Slot): void {
-    if (!slot.empty) {
-      this.slotSelected.emit(slot);
-    }
-  }
-
+  // Mètode per eliminar un Xuxemon del slot, aturant la propagació de l'event per evitar altres accions
   removeOne(slot: Slot, event: MouseEvent): void {
     event.stopPropagation();
     this.inventarioService.EliminarXuxesinv(slot.id);
   }
 
-  // ── Helper para [ngClass] ────────────────────────────────────────
+  // Mètode per obtenir les classes CSS d'un slot
   slotClasses(slot: Slot): Record<string, boolean> {
     return {
       'slot': true,
       'slot--empty': slot.empty,
       'slot--filled': !slot.empty,
-      'slot--tipus-aigua': slot.xuxe?.tipus === 'Aigua',
-      'slot--tipus-terra': slot.xuxe?.tipus === 'Terra',
-      'slot--tipus-aire': slot.xuxe?.tipus === 'Aire',
-      'slot--mida-petit': slot.xuxe?.mida === 'Petit',
-      'slot--mida-mitja': slot.xuxe?.mida === 'Mitjà',
-      'slot--mida-gran': slot.xuxe?.mida === 'Gran',
-      'slot--stack-max': (slot.cantidad ?? 0) === 5,
     };
   }
 
-  getXuxeSrc(imagen: string | undefined): string {
-    if (!imagen) return '';
-    return '/Imatges/Xuxemons/' + imagen;
-  }
-
+  // Mètode per sortir de l'inventari i tornar al menú principal
   sortir(): void {
     this.router.navigate(['/menu-principal']);
   }

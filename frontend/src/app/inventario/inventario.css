@@ -80,37 +80,20 @@
     0 16px 28px rgba(0, 0, 0, .28);
 }
 
-/* Pills — mismo estilo que los btn-menu pero más pequeños */
-.pill {
-  appearance: none;
-  border: 3px solid rgba(255, 214, 0, .95);
-  background: rgba(255, 255, 255, .60);
-  color: #1f2a44;
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 0.88rem;
-  letter-spacing: .03em;
-  padding: 6px 16px;
-  border-radius: 999px;
-  cursor: pointer;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, .12);
-  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+/* ===== GRID DE SLOTS ===== */
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.pill:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, .16);
-  background: rgba(255, 255, 255, .90);
+.slots-grid li {
+  margin: 0;
+  padding: 0;
 }
-
-.pill[aria-pressed="true"] {
-  background: rgba(255, 255, 255, .95);
-  box-shadow:
-    0 10px 20px rgba(0, 0, 0, .16),
-    0 0 0 3px rgba(255, 214, 0, .30);
-}
-
-/* ===== ALERTA ===== */
 .alert-full {
   position: relative;
   z-index: 2;
@@ -154,6 +137,14 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.slots-grid li {
+  margin: 0;
+  padding: 0;
 }
 
 /* Slot — mismo estilo que .btn-menu */
@@ -204,12 +195,6 @@
 }
 
 /* ===== CONTENIDO SLOT ===== */
-.slot-emoji {
-  font-size: 2.8rem;
-  pointer-events: none;
-  user-select: none;
-}
-
 .slot-count {
   position: absolute;
   bottom: 4px;
@@ -357,10 +342,6 @@
   pointer-events: none;
 }
 
-.sortir-icon {
-  font-size: 1.1rem;
-}
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .panels-row {
@@ -373,11 +354,6 @@
   .inv-title {
     font-size: clamp(34px, 9vw, 52px);
     -webkit-text-stroke: 5px #1E2A78;
-  }
-
-  .filters-row {
-    gap: 1rem;
-    padding: 12px 14px;
   }
 
   .slots-grid {
@@ -399,15 +375,4 @@
     padding: 13px 28px;
     font-size: 15px;
   }
-}
-
-.slots-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.slots-grid li {
-  margin: 0;
-  padding: 0;
 }
