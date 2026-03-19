@@ -177,6 +177,12 @@ class XuxemonsController extends Controller
             DB::table('inventario')->where('id', $xuxaEv->id)->delete();
         }
 
+        // Elimina l'evolució anterior del xuxedex de l'usuari
+        DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->where('id_xuxemon', $xuxemon->id)
+            ->delete();
+
         // Afegeix la següent evolució al xuxedex de l'usuari
         DB::table('xuxedex')->updateOrInsert(
             ['id_usuario' => $userId, 'id_xuxemon' => $nextEvolution->id],
@@ -194,12 +200,12 @@ class XuxemonsController extends Controller
     public function Evoluciones(string $id)
     {
         $xuxemon = Xuxemons::findOrFail($id);
- 
+
         $cadena = Xuxemons::where('tipo_elemento', $xuxemon->tipo_elemento)
             ->where('evolucion_xuxemon', $xuxemon->evolucion_xuxemon)
             ->orderByRaw("FIELD(tamano, 'Petit', 'Mitja', 'Gran')")
             ->get(['id', 'nombre_xuxemon', 'tamano', 'imagen']);
- 
+
         return response()->json([
             'cadena_evolutiva' => $cadena,
             'total_etapes'     => $cadena->count(),
@@ -249,10 +255,12 @@ class XuxemonsController extends Controller
 
         $this->xuxedexService->ensureStarterXuxedex((int) $userId);
 
+        // Només desbloquejem Xuxemons Petits; els Mitja i Gran s'obtenen per evolució
         $blockedEntry = DB::table('xuxedex')
             ->join('xuxemons', 'xuxedex.id_xuxemon', '=', 'xuxemons.id')
             ->where('id_usuario', $userId)
             ->where('esta_capturado', false)
+            ->where('xuxemons.tamano', 'Petit')
             ->inRandomOrder()
             ->select(
                 'xuxedex.id_xuxemon',

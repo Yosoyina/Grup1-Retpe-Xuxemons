@@ -75,7 +75,15 @@ export class XuxemonService {
   }
 
   getEvoluciones(id: number): Observable<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }> {
-    return this.http.get<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }>(`http://localhost:8000/api/xuxemons/${id}/evolucions`);
+    return this.http.get<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }>(`http://localhost:8000/api/xuxemons/${id}/evolucions`).pipe(
+      map(res => ({
+        ...res,
+        cadena_evolutiva: res.cadena_evolutiva.map(e => ({
+          ...e,
+          imagen: e.imagen && e.imagen.trim() !== '' ? `http://localhost:8000/${e.imagen}` : null
+        }))
+      }))
+    );
   }
 
   evolucionar(id: number): Observable<{ message: string, xuxemon: Xuxemon }> {

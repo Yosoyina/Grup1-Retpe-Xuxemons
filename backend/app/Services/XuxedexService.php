@@ -20,9 +20,10 @@ class XuxedexService
         $starterEntries = [];
 
         foreach (['Aigua', 'Terra', 'Aire'] as $tipus) {
+            // Només afegim Xuxemons Petits; els Mitja i Gran s'obtenen per evolució
             $xuxemons = Xuxemons::where('tipo_elemento', $tipus)
+                ->where('tamano', 'Petit')
                 ->inRandomOrder()
-                ->limit(6)
                 ->get();
 
             if ($xuxemons->isEmpty()) {
