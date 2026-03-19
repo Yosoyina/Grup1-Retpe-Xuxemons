@@ -7,11 +7,12 @@ export type Mida  = 'Petit' | 'Mitjà'  | 'Gran';
 
 export interface Xuxes {
   id: number;
-  nom: string;
-  emoji: string;
-  imagen: string;
-  tipus: Tipus;
-  mida: Mida;
+  nom?: string;
+  nombre_xuxes?: string;
+  emoji?: string;
+  imagen?: string;
+  tipus?: Tipus;
+  mida?: Mida;
   apilable: boolean;
 }
 
@@ -73,11 +74,18 @@ export class InventarioService {
         // Rellena los slots apilables con las Xuxes apilables del jugador
         apilables.forEach((item, index) => {
           if (index < APILABLE_SLOTS) {
+            const normalizedXuxe = {
+              ...item.xuxe,
+              nom: item.xuxe?.nom ?? item.xuxe?.nombre_xuxes ?? '',
+              tipus: item.xuxe?.tipus,
+              mida: item.xuxe?.mida,
+            } as Xuxes;
+
             slots[index] = {
               id: index,
               apilable: true,
               empty: false,
-              xuxe: item.xuxe,
+              xuxe: normalizedXuxe,
               cantidad: item.cantidad,
             };
           }
@@ -86,11 +94,18 @@ export class InventarioService {
         // Rellena los slots no apilables con las Xuxes no apilables del jugador
         noApilables.forEach((item, index) => {
           if (index < NO_APILABLE_SLOTS) {
+            const normalizedXuxe = {
+              ...item.xuxe,
+              nom: item.xuxe?.nom ?? item.xuxe?.nombre_xuxes ?? '',
+              tipus: item.xuxe?.tipus ?? 'N/A',
+              mida: item.xuxe?.mida ?? 'N/A',
+            } as Xuxes;
+
             slots[APILABLE_SLOTS + index] = {
               id: APILABLE_SLOTS + index,
               apilable: false,
               empty: false,
-              xuxe: item.xuxe,
+              xuxe: normalizedXuxe,
               cantidad: 1,
             };
           }
