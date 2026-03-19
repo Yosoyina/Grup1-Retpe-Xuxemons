@@ -283,6 +283,8 @@
   color: var(--blue);
 }
 
+/* ========= GRIDS MEJORADOS ========= */
+
 .mini-grid,
 .big-grid {
   display: grid;
@@ -293,24 +295,67 @@
 
 .mini-grid {
   margin-bottom: 16px;
-  grid-auto-rows: var(--card-height);
+  grid-auto-rows: minmax(var(--card-height), 1fr);
+  flex: 1;
+  min-height: 0;
+  align-content: stretch;
 }
 
 .big-grid {
-  grid-auto-rows: var(--card-height);
+  flex: 1;
+  min-height: 0;
+  grid-auto-rows: minmax(var(--card-height), 1fr);
+  align-content: stretch;
 }
 
 .panel-esquerra .mini-grid,
 .panel-dreta .big-grid {
   width: 100%;
+  height: 100%;
 }
 
 .panel-dreta .big-grid {
-  flex: 1;
-  min-height: 0;
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: unset;
-  align-content: start;
+}
+
+/* 1 card */
+.big-grid:has(> :only-child),
+.mini-grid:has(> :only-child) {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+/* 2 cards */
+.big-grid:has(> :nth-child(2):last-child),
+.mini-grid:has(> :nth-child(2):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: 1fr;
+}
+
+/* 3 cards */
+.big-grid:has(> :nth-child(3):last-child),
+.mini-grid:has(> :nth-child(3):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.big-grid:has(> :nth-child(3):last-child) > :first-child,
+.mini-grid:has(> :nth-child(3):last-child) > :first-child {
+  grid-column: 1 / -1;
+}
+
+/* 4 cards */
+.big-grid:has(> :nth-child(4):last-child),
+.mini-grid:has(> :nth-child(4):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+/* más de 4 */
+.big-grid:has(> :nth-child(5)),
+.mini-grid:has(> :nth-child(5)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(var(--card-height), 1fr);
 }
 
 .xuxemon-card {
@@ -335,7 +380,6 @@
     transform 0.2s ease,
     box-shadow 0.2s ease,
     border-color 0.2s ease;
-  overflow: hidden;
 }
 
 button.xuxemon-card {
@@ -397,8 +441,9 @@ button.xuxemon-card:hover,
 .xuxemon-card img,
 .placeholder-img {
   display: block;
-  width: min(100%, var(--card-image));
-  height: var(--card-image);
+  width: min(100%, calc(var(--card-image) + 18px));
+  height: auto;
+  max-height: calc(100% - 78px);
   margin: 8px auto 8px;
   object-fit: contain;
   filter: drop-shadow(0 12px 18px rgba(42, 59, 128, 0.18));
@@ -752,10 +797,10 @@ button.xuxemon-card:hover,
   }
 
   .panel-dreta .big-grid {
-    flex: none;
-    height: auto;
-    grid-template-rows: none;
-    grid-auto-rows: var(--card-height);
+    flex: 1;
+    height: 100%;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: unset;
   }
 
   .xuxemon-card {
@@ -914,6 +959,7 @@ button.xuxemon-card:hover,
   .xuxemon-card img,
   .placeholder-img {
     margin: 4px auto 6px;
+    max-height: calc(100% - 64px);
   }
 
   .xuxemon-card h3,
@@ -1186,6 +1232,7 @@ button.xuxemon-card:hover,
   .big-grid {
     grid-template-rows: none;
     grid-auto-rows: 280px;
+    height: auto;
   }
 
   .detalle {
