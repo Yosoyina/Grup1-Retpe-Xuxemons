@@ -139,7 +139,7 @@ class InventarioController extends Controller
     {
         return response()->json([
             'xuxemons' => Xuxemons::all(['id', 'nombre_xuxemon', 'tipo_elemento', 'tamano']),
-            'xuxes' => Xuxes::all(['id', 'nombre_xuxes', 'apilable']),
+            'xuxes' => Xuxes::all(['id', 'nombre_xuxes', 'imagen', 'apilable']),
         ]);
     }
 

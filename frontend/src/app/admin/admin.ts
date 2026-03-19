@@ -21,6 +21,7 @@ interface XuxeItem {
   id: number;
   nombre_xuxes: string;
   apilable: boolean;
+  imagen?: string;
 }
 
 @Component({
@@ -44,10 +45,9 @@ export class Admin implements OnInit {
 
   // Inventari
   xuxesDisponibles: XuxeItem[] = [];
+  xuxesQuantitats: Record<number, number> = {};
   modalInventariAbierto = false;
   usuarioInventariId: number | null = null;
-  xuxeSeleccionadaId: number | null = null;
-  cantidadAAfegir = 1;
   afegindoXuxes = false;
 
   // Getters para filtrar xuxemons por tipo
@@ -236,7 +236,7 @@ export class Admin implements OnInit {
     this.http.get<{ xuxemons: any[]; xuxes: XuxeItem[] }>(`${this.apiUrl}/inventario/items`).subscribe({
       next: (res) => {
         this.xuxesDisponibles = res.xuxes;
-        this.xuxeSeleccionadaId = res.xuxes[0]?.id ?? null;
+        res.xuxes.forEach(x => { this.xuxesQuantitats[x.id] = 1; });
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error carregant Xuxes disponibles', err),
@@ -247,8 +247,7 @@ export class Admin implements OnInit {
   obrirModalInventari(userId: number): void {
     this.usuarioInventariId = userId;
     this.modalInventariAbierto = true;
-    this.xuxeSeleccionadaId = this.xuxesDisponibles[0]?.id ?? null;
-    this.cantidadAAfegir = 1;
+    this.xuxesDisponibles.forEach(x => { this.xuxesQuantitats[x.id] = 1; });
     this.mensajeExito = '';
     this.mensajeError = '';
   }
@@ -259,14 +258,15 @@ export class Admin implements OnInit {
     this.usuarioInventariId = null;
   }
 
-  // Agrega Xuxes al inventario del usuario seleccionado
-  afegirXuxes(): void {
-    if (!this.usuarioInventariId || !this.xuxeSeleccionadaId || this.cantidadAAfegir < 1) return;
+  // Agrega una Xuxa específica al inventario del usuario
+  afegirXuxa(xuxeId: number): void {
+    const cantidad = this.xuxesQuantitats[xuxeId] ?? 1;
+    if (!this.usuarioInventariId || !xuxeId || cantidad < 1) return;
     this.afegindoXuxes = true;
 
     this.http.post<{ mensaje: string; descartado: number; slots_utilizados: number; max_slots: number }>(
       `${this.apiUrl}/inventario`,
-      { user_id: this.usuarioInventariId, xuxe_id: this.xuxeSeleccionadaId, cantidad: this.cantidadAAfegir }
+      { user_id: this.usuarioInventariId, xuxe_id: xuxeId, cantidad }
     ).pipe(finalize(() => { this.afegindoXuxes = false; this.cdr.detectChanges(); }))
       .subscribe({
         next: (res) => {
@@ -277,7 +277,7 @@ export class Admin implements OnInit {
             this.mensajeExito = res.mensaje;
             this.mensajeError = '';
           }
-          this.cantidadAAfegir = 1;
+          this.xuxesQuantitats[xuxeId] = 1;
           this.cdr.detectChanges();
         },
         error: (err) => {

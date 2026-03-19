@@ -42,6 +42,7 @@ export class InfoUsuari {
     'Vent-Petit-Xiulet.png',
   ];
 
+  // FormGroup para editar el perfil del usuario
   editForm = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.maxLength(25)]),
     apellidos: new FormControl('', [Validators.required, Validators.maxLength(25)]),
@@ -50,6 +51,7 @@ export class InfoUsuari {
     password_confirmation: new FormControl('', [Validators.minLength(6)]),
   }, { validators: InfoUsuari.passwordsCoincideixen });
 
+  // Validador personalizado para comprobar que las contraseñas coinciden
   static passwordsCoincideixen(form: AbstractControl): ValidationErrors | null {
     const pw = form.get('password')?.value;
     const conf = form.get('password_confirmation')?.value;
@@ -59,6 +61,7 @@ export class InfoUsuari {
     return null;
   }
 
+  // Inyectamos los servicios necesarios en el constructor
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {
     // carreguem les dades de l'usuari al crear el component
     this.authService.getPerfil().subscribe({
@@ -100,6 +103,7 @@ export class InfoUsuari {
     });
   }
 
+  // Funció per a guardar els canvis del perfil
   guardarCanvis() {
     if (this.editForm.invalid) {
       this.editForm.markAllAsTouched();
@@ -137,6 +141,7 @@ export class InfoUsuari {
     });
   }
 
+  // Funció per a mostrar el modal de confirmació d'eliminació
   confirmarEliminar() {
     this.authService.eliminarCompte().subscribe({
       next: () => {
@@ -151,6 +156,7 @@ export class InfoUsuari {
     });
   }
 
+  // Funció per a tancar el modal de confirmació
   tornarAlMenu() {
     this.router.navigate(['/menu-principal']);
   }

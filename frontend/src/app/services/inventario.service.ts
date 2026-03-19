@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
 export type Tipus = 'Aigua' | 'Terra' | 'Aire';
-export type Mida  = 'Petit' | 'Mitjà'  | 'Gran';
+export type Mida = 'Petit' | 'Mitjà' | 'Gran';
 
 export interface Xuxes {
   id: number;
@@ -68,7 +68,7 @@ export class InventarioService {
         const slots = CreaciondeSlots();
 
         // Separa las Xuxes en apilables y no apilables con filter
-        const apilables = items.filter(item =>  item.apilable);
+        const apilables = items.filter(item => item.apilable);
         const noApilables = items.filter(item => !item.apilable);
 
         // Rellena los slots apilables con las Xuxes apilables del jugador

@@ -4,9 +4,6 @@
 
 <div class="container">
   @if (xuxemons$ | async; as xuxemons) {
-  @if (getFiltrats(xuxemons).length === 0) {
-  <p class="missatge-buit">No hi ha Xuxemons disponibles.</p>
-  } @else {
   <section class="panel panel-esquerra" aria-label="Selecció de Xuxemon">
     <div class="filtros tipus-filtros" role="group" aria-label="Filtrar per tipus">
       @for (tipo of xuxemonService.getTipus(); track tipo) {
@@ -29,6 +26,15 @@
       }
     </div>
 
+    @if (getFiltrats(xuxemons).length === 0) {
+    <div class="missatge-buit-panel">
+      <div class="missatge-buit-icona">🔍</div>
+      <p class="missatge-buit-titol">Cap Xuxemon trobat</p>
+      <p class="missatge-buit-sub">No tens cap Xuxemon de mida <strong>{{ filtroMida }}</strong>{{ filtroActual !==
+        'Todos' ? ' de tipus ' + filtroActual : '' }}.</p>
+      <button type="button" class="btn-reset-filtres" (click)="canviarMida('Tots')">Veure tots</button>
+    </div>
+    } @else {
     <div class="mini-grid" role="list" aria-label="Xuxemons del panell esquerre">
       @for (xuxemon of getPanelEsquerra(xuxemons); track xuxemon.id) {
       @if (xuxemon.bloquejat) {
@@ -71,21 +77,31 @@
           (click)="verCadenaEvolucion()">Evolució</button>
       </div>
 
-      @if (xuxemonSeleccionado.imagen) {
-      <img [src]="xuxemonSeleccionado.imagen" [alt]="xuxemonSeleccionado.nombre_xuxemon">
-      } @else {
-      <div class="placeholder-img placeholder-gran" aria-hidden="true">{{ xuxemonSeleccionado.nombre_xuxemon.charAt(0)
-        }}</div>
-      }
+      <div class="detalle-visual">
+        @if (xuxemonSeleccionado.imagen) {
+        <img [src]="xuxemonSeleccionado.imagen" [alt]="xuxemonSeleccionado.nombre_xuxemon">
+        } @else {
+        <div class="placeholder-img placeholder-gran" aria-hidden="true">{{ xuxemonSeleccionado.nombre_xuxemon.charAt(0)
+          }}</div>
+        }
+      </div>
     </div>
     } @else {
     <div class="detalle detalle-buit" aria-hidden="true">
       <p>Selecciona un Xuxemon per veure els detalls</p>
     </div>
     }
+    }
   </section>
 
   <section class="panel panel-dreta" aria-label="Tots els Xuxemons">
+    @if (getFiltrats(xuxemons).length === 0) {
+    <div class="missatge-buit-panel missatge-buit-dreta">
+      <div class="missatge-buit-icona">🌟</div>
+      <p class="missatge-buit-titol">Cap resultat</p>
+      <p class="missatge-buit-sub">Evoluciona els teus Xuxemons per desbloquejar noves mides!</p>
+    </div>
+    } @else {
     <div class="big-grid" role="list">
       @for (xuxemon of getPanelDreta(xuxemons); track xuxemon.id) {
       @if (xuxemon.bloquejat) {
@@ -112,6 +128,7 @@
       }
       }
     </div>
+    }
   </section>
 
   @if (mostrarPaginacio) {
@@ -124,7 +141,6 @@
       Seguent &rarr;
     </button>
   </nav>
-  }
   }
   }
 
@@ -150,10 +166,8 @@
       } @else {
       <div class="evolucio-cadena">
         @for (etapa of getCadenaEvolucioNormalitzada(); track etapa.id; let last = $last; let i = $index) {
-        <div class="evolucio-etapa"
-          [class.actual]="PosicionActual(etapa)"
-          [class.futura]="!PosicionActual(etapa) && i > 0"
-          [ngClass]="'etapa-' + i">
+        <div class="evolucio-etapa" [class.actual]="PosicionActual(etapa)"
+          [class.futura]="!PosicionActual(etapa) && i > 0" [ngClass]="'etapa-' + i">
           <div class="etapa-nivell">{{ getNivell(etapa.tamano) }}</div>
           <div class="etapa-img-wrapper">
             @if (etapa.imagen) {
@@ -178,19 +192,18 @@
 
       <div class="evolucio-accio">
         @if (getSegurentEtapa(); as seguent) {
-          @if (xuxeEvoSlot) {
-          <button type="button" class="btn-evolucionar"
-            [ngClass]="getClassTipus(xuxemonSeleccionado!.tipo_elemento)"
-            (click)="evolucionar()">
-            <span class="btn-evolucionar-icon">⬆</span>
-            Evolucionar a {{ getSegurentEtapa()?.nombre_xuxemon }}
-            <span class="btn-evolucionar-cost">· Xuxa EV (x{{ xuxeEvoSlot.cantidad }})</span>
-          </button>
-          } @else {
-          <p class="evolucio-sense-xuxe">
-            Necessites una <strong>Xuxa EV</strong> a la motxilla per evolucionar.
-          </p>
-          }
+        @if (xuxeEvoSlot) {
+        <button type="button" class="btn-evolucionar" [ngClass]="getClassTipus(xuxemonSeleccionado!.tipo_elemento)"
+          (click)="evolucionar()">
+          <span class="btn-evolucionar-icon">⬆</span>
+          Evolucionar a {{ getSegurentEtapa()?.nombre_xuxemon }}
+          <span class="btn-evolucionar-cost">· Xuxa EV (x{{ xuxeEvoSlot.cantidad }})</span>
+        </button>
+        } @else {
+        <p class="evolucio-sense-xuxe">
+          Necessites una <strong>Xuxa EV</strong> a la motxilla per evolucionar.
+        </p>
+        }
         } @else {
         <p class="evolucio-maxim">
           <span class="maxim-icon">👑</span>
@@ -205,7 +218,7 @@
   }
 
   <button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menú principal">
-    <span class="sortir-icon" aria-hidden="true">&#9711;</span>
-    <span>SORTIR</span>
+    <img src="/Sortir.png" alt="" />
+    SORTIR
   </button>
 </div>

@@ -16,20 +16,23 @@ export class LoginComponent {
   isLoading = false;
   successMessage = '';
 
-  // CLAVE: solo mostramos errores de required después de intentar enviar
+  // Para controlar cuándo mostrar los errores de validación
   submitted = false;
 
+  // FormGroup para el formulario de login
   loginForm = new FormGroup({
     id_jugador: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
 
+  // Inyectamos los servicios necesarios en el constructor
   constructor(
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
+  // Función para manejar el envío del formulario de login
   onSubmit() {
     if (this.isLoading) return;
 
@@ -56,7 +59,7 @@ export class LoginComponent {
     });
   }
 
-  // ahora NO depende de touched (click), depende de submitted (login)
+  // Función para verificar si un campo del formulario es inválido y se ha intentado enviar
   isFieldInvalid(field: 'id_jugador' | 'password'): boolean {
     const control = this.loginForm.get(field);
     return !!(control && control.invalid && this.submitted);

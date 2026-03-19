@@ -171,26 +171,31 @@
         <div class="mensaje error">⚠ {{ mensajeError }}</div>
         }
 
-        <label class="form-label">
-          <span>Tipus de Xuxa</span>
-          <select [(ngModel)]="xuxeSeleccionadaId" class="form-select">
-            @for (xuxa of xuxesDisponibles; track xuxa.id) {
-            <option [ngValue]="xuxa.id">
-              {{ xuxa.nombre_xuxes }} {{ xuxa.apilable ? '(apilable)' : '(no apilable)' }}
-            </option>
-            }
-          </select>
-        </label>
-
-        <label class="form-label">
-          <span>Quantitat</span>
-          <input type="number" [(ngModel)]="cantidadAAfegir" min="1" max="99" class="form-input">
-        </label>
-
-        <button class="btn-afegir" (click)="afegirXuxes()"
-          [disabled]="afegindoXuxes || !xuxeSeleccionadaId || cantidadAAfegir < 1">
-          {{ afegindoXuxes ? 'Afegint...' : 'Afegir a la motxilla' }}
-        </button>
+        <div class="xuxes-lista">
+          @for (xuxa of xuxesDisponibles; track xuxa.id) {
+          <div class="xuxa-row">
+            <div class="xuxa-info">
+              @if (xuxa.imagen) {
+                <img class="xuxa-img" [src]="'http://localhost:8000/' + xuxa.imagen" [alt]="xuxa.nombre_xuxes">
+              } @else {
+                <div class="xuxa-img-placeholder">🍬</div>
+              }
+              <div class="xuxa-text">
+                <span class="xuxa-nom">{{ xuxa.nombre_xuxes }}</span>
+                <span class="xuxa-tipus" [class.apilable]="xuxa.apilable">
+                  {{ xuxa.apilable ? 'Apilable' : 'No apilable' }}
+                </span>
+              </div>
+            </div>
+            <div class="xuxa-accio">
+              <input type="number" [(ngModel)]="xuxesQuantitats[xuxa.id]" min="1" max="99" class="qty-input">
+              <button class="btn-afegir-fila" (click)="afegirXuxa(xuxa.id)" [disabled]="afegindoXuxes">
+                Afegir
+              </button>
+            </div>
+          </div>
+          }
+        </div>
       </div>
     </div>
   </div>

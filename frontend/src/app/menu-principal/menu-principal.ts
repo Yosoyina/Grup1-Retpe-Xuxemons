@@ -13,6 +13,7 @@ export class MenuPrincipal {
 
   carregant = true;
 
+  // En el constructor, verificamos que el backend está disponible y que el token es válido
   constructor(public authService: AuthService, private router: Router) {
     // verificar que el backend esta disponible i el token es valid
     this.authService.getPerfil().subscribe({
@@ -26,6 +27,7 @@ export class MenuPrincipal {
     });
   }
 
+  // Función para cerrar sesión
   logout() {
     this.authService.logout().subscribe({
       next: () => this.router.navigate(['/login']),

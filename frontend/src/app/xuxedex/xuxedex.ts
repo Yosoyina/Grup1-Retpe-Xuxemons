@@ -28,6 +28,7 @@ export class Xuxedex implements OnDestroy {
   private inventarioService = inject(InventarioService);
   private cdr = inject(ChangeDetectorRef);
   private xuxemonsSub: Subscription;
+  private slotsSub: Subscription;
   private evolucioSub: Subscription | null = null;
 
   get mostrarPaginacio(): boolean {
@@ -42,7 +43,7 @@ export class Xuxedex implements OnDestroy {
     });
 
     this.inventarioService.cargarInventario();
-    this.inventarioService.slots$.subscribe(() => {
+    this.slotsSub = this.inventarioService.slots$.subscribe(() => {
       this.xuxeEvoSlot = this.getXuxeEvo();
       this.cdr.markForCheck();
     });
@@ -52,6 +53,8 @@ export class Xuxedex implements OnDestroy {
 
   ngOnDestroy(): void {
     this.xuxemonsSub.unsubscribe();
+    this.slotsSub.unsubscribe();
+    this.evolucioSub?.unsubscribe();
   }
 
   cambiarFiltro(tipo: string): void {

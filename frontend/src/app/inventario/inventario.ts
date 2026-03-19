@@ -1,9 +1,11 @@
-import { Component, inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { InventarioService, Slot } from '../services/inventario.service';
 
 export type TipusFilter = 'Tots' | 'Aigua' | 'Terra' | 'Aire';
-export type MidaFilter = 'Tots' | 'Petit' | 'Mitjà'  | 'Gran';
+export type MidaFilter = 'Tots' | 'Petit' | 'Mitjà' | 'Gran';
 
 const STARS_ARRAY = Array.from({ length: 40 }, () => ({
   x: parseFloat((Math.random() * 100).toFixed(1)),
@@ -18,7 +20,7 @@ const STARS_ARRAY = Array.from({ length: 40 }, () => ({
   templateUrl: './inventario.html',
   styleUrl: './inventario.css',
 })
-export class Inventario implements OnInit {
+export class Inventario implements OnInit, OnDestroy {
 
   // Inputs (recibir datos del padre):
   @Input() maxSlots!: number; // Número máximo de slots
@@ -28,18 +30,26 @@ export class Inventario implements OnInit {
 
   // inject() funciona en la zona de campos de clase 
   private inventarioService = inject(InventarioService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+  private slotsSub!: Subscription;
 
   slots: Slot[] = [];
 
   tipusFilter: TipusFilter = 'Tots';
-  midaFilter:  MidaFilter = 'Tots';
+  midaFilter: MidaFilter = 'Tots';
 
 
   ngOnInit(): void {
-    this.inventarioService.cargarInventario();
-    this.inventarioService.slots$.subscribe(slots => {
+    this.slotsSub = this.inventarioService.slots$.subscribe(slots => {
       this.slots = slots;
+      this.cdr.markForCheck();
     });
+    this.inventarioService.cargarInventario();
+  }
+
+  ngOnDestroy(): void {
+    this.slotsSub?.unsubscribe();
   }
 
   // ── Getters filtrados ───────────────────────────
@@ -57,15 +67,15 @@ export class Inventario implements OnInit {
 
   private passesFilter(s: Slot): boolean {
     const okTipus = this.tipusFilter === 'Tots' || s.xuxe?.tipus === this.tipusFilter;
-    const okMida = this.midaFilter === 'Tots' || s.xuxe?.mida  === this.midaFilter;
+    const okMida = this.midaFilter === 'Tots' || s.xuxe?.mida === this.midaFilter;
     return okTipus && okMida;
   }
 
   // ── Separar slots llenos / vacíos ───────────────────────────────
   get apilablesFills(): Slot[] { return this.apilableSlots.filter(s => !s.empty); }
-  get apilablesEmpties(): Slot[] { return this.apilableSlots.filter(s =>  s.empty); }
+  get apilablesEmpties(): Slot[] { return this.apilableSlots.filter(s => s.empty); }
   get noApilablesFills(): Slot[] { return this.noApilableSlots.filter(s => !s.empty); }
-  get noApilablesEmpties():Slot[] { return this.noApilableSlots.filter(s =>  s.empty); }
+  get noApilablesEmpties(): Slot[] { return this.noApilableSlots.filter(s => s.empty); }
 
   isFull(): boolean {
     return this.inventarioService.InventarioLleno();
@@ -92,9 +102,9 @@ export class Inventario implements OnInit {
       'slot--tipus-aigua': slot.xuxe?.tipus === 'Aigua',
       'slot--tipus-terra': slot.xuxe?.tipus === 'Terra',
       'slot--tipus-aire': slot.xuxe?.tipus === 'Aire',
-      'slot--mida-petit': slot.xuxe?.mida  === 'Petit',
-      'slot--mida-mitja': slot.xuxe?.mida  === 'Mitjà',
-      'slot--mida-gran': slot.xuxe?.mida  === 'Gran',
+      'slot--mida-petit': slot.xuxe?.mida === 'Petit',
+      'slot--mida-mitja': slot.xuxe?.mida === 'Mitjà',
+      'slot--mida-gran': slot.xuxe?.mida === 'Gran',
       'slot--stack-max': (slot.cantidad ?? 0) === 5,
     };
   }
@@ -102,5 +112,9 @@ export class Inventario implements OnInit {
   getXuxeSrc(imagen: string | undefined): string {
     if (!imagen) return '';
     return '/Imatges/Xuxemons/' + imagen;
+  }
+
+  sortir(): void {
+    this.router.navigate(['/menu-principal']);
   }
 }
