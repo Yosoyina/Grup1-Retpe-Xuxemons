@@ -382,16 +382,22 @@
     border-color 0.2s ease;
 }
 
-button.xuxemon-card {
+.xuxemon-card[role="button"] {
   cursor: pointer;
+  outline: none;
 }
 
-button.xuxemon-card:hover,
+.xuxemon-card[role="button"]:hover,
+.xuxemon-card[role="button"]:focus-visible,
 .xuxemon-card.selected {
   transform: translateY(-4px);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.82),
     0 18px 34px rgba(22, 34, 88, 0.18);
+}
+
+.xuxemon-card[role="button"]:focus-visible {
+  border-color: #ffd84f;
 }
 
 .xuxemon-card.selected {
@@ -458,7 +464,7 @@ button.xuxemon-card:hover,
   font-weight: 800;
 }
 
-.xuxemon-card h3,
+.xuxemon-card h2,
 .bloqueig-text {
   position: absolute;
   left: 50%;
@@ -807,7 +813,7 @@ button.xuxemon-card:hover,
     padding: 14px 14px 56px;
   }
 
-  .xuxemon-card h3,
+  .xuxemon-card h2,
   .bloqueig-text {
     bottom: 10px;
     min-width: 124px;
@@ -962,7 +968,7 @@ button.xuxemon-card:hover,
     max-height: calc(100% - 64px);
   }
 
-  .xuxemon-card h3,
+  .xuxemon-card h2,
   .bloqueig-text {
     bottom: 8px;
     min-width: 108px;
@@ -1071,7 +1077,7 @@ button.xuxemon-card:hover,
     padding: 8px 10px 40px;
   }
 
-  .xuxemon-card h3,
+  .xuxemon-card h2,
   .bloqueig-text {
     min-width: 96px;
     padding: 6px 10px;

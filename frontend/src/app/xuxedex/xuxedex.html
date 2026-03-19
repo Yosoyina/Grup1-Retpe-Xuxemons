@@ -1,8 +1,8 @@
 <header class="xuxedex-header">
-  <h1>XUXEDEX</h1>
+  <h1 id="xuxedex-title">XUXEDEX</h1>
 </header>
 
-<div class="container">
+<section class="container" aria-labelledby="xuxedex-title">
   @if (xuxemons$ | async; as xuxemons) {
   @if (getFiltrats(xuxemons).length === 0) {
   <p class="missatge-buit">No hi ha Xuxemons disponibles.</p>
@@ -32,26 +32,29 @@
     <div class="mini-grid" role="list" aria-label="Xuxemons del panell esquerre">
       @for (xuxemon of getPanelEsquerra(xuxemons); track xuxemon.id) {
       @if (xuxemon.bloquejat) {
-      <div class="xuxemon-card bloquejat" [ngClass]="getClassMida(xuxemon.tamano)" role="listitem"
+      <article class="xuxemon-card bloquejat" [ngClass]="getClassMida(xuxemon.tamano)" role="listitem"
         aria-label="Xuxemon bloquejat">
         <div class="card-badge lock-badge" aria-hidden="true"></div>
         <div class="bloqueig-icona" aria-hidden="true"></div>
         <p class="bloqueig-text">???</p>
-      </div>
+      </article>
       } @else {
-      <button type="button" class="xuxemon-card" role="listitem"
+      <article class="xuxemon-card" role="button" tabindex="0"
         [class.selected]="xuxemonSeleccionado?.id === xuxemon.id"
         [ngClass]="[getClassTipus(xuxemon.tipo_elemento), getClassMida(xuxemon.tamano)]"
         [attr.aria-pressed]="xuxemonSeleccionado?.id === xuxemon.id"
-        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento" (click)="seleccionar(xuxemon)">
+        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento"
+        (click)="seleccionar(xuxemon)"
+        (keydown.enter)="seleccionar(xuxemon)"
+        (keydown.space)="seleccionar(xuxemon); $event.preventDefault()">
         <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
         @if (xuxemon.imagen) {
         <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
         } @else {
         <div class="placeholder-img" aria-hidden="true">{{ xuxemon.nombre_xuxemon.charAt(0) }}</div>
         }
-        <h3>{{ xuxemon.nombre_xuxemon }}</h3>
-      </button>
+        <h2>{{ xuxemon.nombre_xuxemon }}</h2>
+      </article>
       }
       }
     </div>
@@ -86,26 +89,29 @@
     <div class="big-grid" role="list">
       @for (xuxemon of getPanelDreta(xuxemons); track xuxemon.id) {
       @if (xuxemon.bloquejat) {
-      <div class="xuxemon-card bloquejat" [ngClass]="getClassMida(xuxemon.tamano)" role="listitem"
+      <article class="xuxemon-card bloquejat" [ngClass]="getClassMida(xuxemon.tamano)" role="listitem"
         aria-label="Xuxemon bloquejat">
         <div class="card-badge lock-badge" aria-hidden="true"></div>
         <div class="bloqueig-icona" aria-hidden="true"></div>
         <p class="bloqueig-text">???</p>
-      </div>
+      </article>
       } @else {
-      <button type="button" class="xuxemon-card" role="listitem"
+      <article class="xuxemon-card" role="button" tabindex="0"
         [class.selected]="xuxemonSeleccionado?.id === xuxemon.id"
         [ngClass]="[getClassTipus(xuxemon.tipo_elemento), getClassMida(xuxemon.tamano)]"
         [attr.aria-pressed]="xuxemonSeleccionado?.id === xuxemon.id"
-        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento" (click)="seleccionar(xuxemon)">
+        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento"
+        (click)="seleccionar(xuxemon)"
+        (keydown.enter)="seleccionar(xuxemon)"
+        (keydown.space)="seleccionar(xuxemon); $event.preventDefault()">
         <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
         @if (xuxemon.imagen) {
         <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
         } @else {
         <div class="placeholder-img" aria-hidden="true">{{ xuxemon.nombre_xuxemon.charAt(0) }}</div>
         }
-        <h3>{{ xuxemon.nombre_xuxemon }}</h3>
-      </button>
+        <h2>{{ xuxemon.nombre_xuxemon }}</h2>
+      </article>
       }
       }
     </div>
@@ -124,8 +130,6 @@
   }
   }
   }
-
-  <!-- Boton de Evolucion de Xuxemons -->
 
   @if (xuxemonSeleccionado) {
   <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
@@ -172,4 +176,4 @@
     <span class="sortir-icon" aria-hidden="true">&#9711;</span>
     <span>SORTIR</span>
   </button>
-</div>
+</section>
