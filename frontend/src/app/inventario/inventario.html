@@ -16,44 +16,48 @@
   <!-- Panells -->
   <div class="panels-row">
 
-    <!--  APILABLES  -->
+    <!-- APILABLES -->
     <section class="panel panel--apilable" aria-labelledby="lbl-apilable">
-      <div class="slots-grid">
+      <ul class="slots-grid">
 
         <!-- Slots plens -->
         @for (slot of apilablesFills; track slot.id) {
-          <button type="button"
-                  [ngClass]="slotClasses(slot)"
-                  (click)="onSlotClick(slot)"
-                  [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad">
+          <li>
+            <button type="button"
+                    [ngClass]="slotClasses(slot)"
+                    (click)="onSlotClick(slot)"
+                    [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad">
 
-            <img class="slot-img"
-                 [src]="slot.xuxe?.imagen"
-                 [alt]="slot.xuxe?.nom"/>
+              <img class="slot-img"
+                   [src]="slot.xuxe?.imagen"
+                   [alt]="slot.xuxe?.nom" />
 
-            <!-- Apilament x1..x5 -->
-            <span class="slot-count"
-                  [ngClass]="{
-                    'slot-count--max':  slot.cantidad === 5,
-                    'slot-count--high': slot.cantidad >= 3 && slot.cantidad < 5
-                  }">
-              x{{ slot.cantidad }}
-            </span>
+              <!-- Apilament x1..x5 -->
+              <span class="slot-count"
+                    [ngClass]="{
+                      'slot-count--max': slot.cantidad === 5,
+                      'slot-count--high': slot.cantidad >= 3 && slot.cantidad < 5
+                    }">
+                x{{ slot.cantidad }}
+              </span>
 
-            <!-- Badge tipus -->
-            <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
-              {{ slot.xuxe?.tipus }}
-            </span>
+              <!-- Badge tipus -->
+              <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
+                {{ slot.xuxe?.tipus }}
+              </span>
 
-          </button>
+            </button>
+          </li>
         }
 
         <!-- Slots buits -->
         @for (slot of apilablesEmpties; track slot.id) {
-          <div [ngClass]="slotClasses(slot)" aria-label="Slot buit"></div>
+          <li>
+            <div [ngClass]="slotClasses(slot)" aria-label="Slot buit"></div>
+          </li>
         }
 
-      </div>
+      </ul>
 
       <footer class="panel-footer">
         <span class="panel-label" id="lbl-apilable">Apilables</span>
@@ -61,36 +65,40 @@
       </footer>
     </section>
 
-    <!--  NO APILABLES  -->
+    <!-- NO APILABLES -->
     <section class="panel panel--noapilable" aria-labelledby="lbl-noapilable">
-      <div class="slots-grid">
+      <ul class="slots-grid">
 
         <!-- Slots plens -->
         @for (slot of noApilablesFills; track slot.id) {
-          <button type="button"
-                  [ngClass]="slotClasses(slot)"
-                  (click)="onSlotClick(slot)"
-                  [attr.aria-label]="slot.xuxe?.nom">
+          <li>
+            <button type="button"
+                    [ngClass]="slotClasses(slot)"
+                    (click)="onSlotClick(slot)"
+                    [attr.aria-label]="slot.xuxe?.nom">
 
-            <img class="slot-img"
-                 [src]="slot.xuxe?.imagen"
-                 [alt]="slot.xuxe?.nom" />
+              <img class="slot-img"
+                   [src]="slot.xuxe?.imagen"
+                   [alt]="slot.xuxe?.nom" />
 
-            <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
-              {{ slot.xuxe?.tipus }}
-            </span>
+              <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
+                {{ slot.xuxe?.tipus }}
+              </span>
 
-            <button class="btn-remove" (click)="removeOne(slot, $event)" aria-label="Eliminar"></button>
+              <button class="btn-remove" (click)="removeOne(slot, $event)" aria-label="Eliminar"></button>
 
-          </button>
+            </button>
+          </li>
         }
 
         <!-- Slots buits -->
         @for (slot of noApilablesEmpties; track slot.id) {
-          <div [ngClass]="slotClasses(slot)" aria-label="Slot buit"></div>
+          <li>
+            <div [ngClass]="slotClasses(slot)" aria-label="Slot buit"></div>
+          </li>
         }
 
-      </div>
+      </ul>
 
       <footer class="panel-footer">
         <span class="panel-label" id="lbl-noapilable">No apilables</span>
