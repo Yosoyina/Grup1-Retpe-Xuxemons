@@ -14,6 +14,7 @@ class AuthController extends Controller
     {
     }
 
+    // Registra un nou usuari i li assigna un id_jugador únic. El primer usuari registrat és admin.
     public function register(Request $request)
     {
         $request->validate([
@@ -27,6 +28,7 @@ class AuthController extends Controller
 
         $role = User::count() === 0 ? 'admin' : 'user';
 
+        // Genera un id_jugador únic basat en el nom i un número aleatori
         $nombre_sin_espacios = str_replace(' ', '', $request->nombre);
         do {
             $id_jugador = '#' . $nombre_sin_espacios . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
@@ -54,6 +56,7 @@ class AuthController extends Controller
         ], 201);
     }
 
+    // Permet login amb id_jugador o email, i també accepta id_jugador amb o sense '#'
     public function login(Request $request)
     {
         $request->validate([
@@ -92,6 +95,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Tanca la sessió de l'usuari actual
     public function logout()
     {
         Auth::guard('api')->logout();
