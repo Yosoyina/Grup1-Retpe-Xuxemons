@@ -19,11 +19,27 @@ export class InfoUsuari {
   mostrarSeleccioAvatar = false;
   mostrarModalActualitzat = false;
 
-  // llista de avatars disponibles
+  // Llista d'avatars disponibles
   avatars = [
     'avatarpordefecto.png',
-    'Futsin.png',
-    'Piturrin.png',
+    'Aigua-Petit-Bulleta.png',
+    'Aigua-Petit-Esquitx.png',
+    'Aigua-Petit-Goteta.png',
+    'Aigua-Petit-Gotim.png',
+    'Aigua-Petit-Perleta.png',
+    'Aigua-Petit-Regalim.png',
+    'Terra-Petit-Fanguet.png',
+    'Terra-Petit-Graveta.png',
+    'Terra-Petit-Grumoll.png',
+    'Terra-Petit-Pedrot.png',
+    'Terra-Petit-Sorreta.png',
+    'Terra-Petit-Terros.png',
+    'Vent-Petit-Airos.png',
+    'Vent-Petit-Alenat.png',
+    'Vent-Petit-Briseta.png',
+    'Vent-Petit-Bufet.png',
+    'Vent-Petit-Sospir.png',
+    'Vent-Petit-Xiulet.png',
   ];
 
   editForm = new FormGroup({
@@ -59,6 +75,14 @@ export class InfoUsuari {
         this.router.navigate(['/login']);
       }
     });
+  }
+
+  // retorna la URL correcta per a cada avatar
+  getAvatarSrc(avatar: string): string {
+    if (!avatar || avatar === 'avatarpordefecto.png') {
+      return '/avatarpordefecto.png';
+    }
+    return '/Imatges/Xuxemons/' + avatar;
   }
 
   // canvia l'avatar de l'usuari

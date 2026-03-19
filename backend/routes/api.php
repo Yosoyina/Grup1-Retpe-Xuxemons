@@ -32,6 +32,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/inventario', [InventarioController::class, 'index']);
     Route::get('/inventario/{id}', [InventarioController::class, 'show']);
+    Route::get('/xuxes', [InventarioController::class, 'listXuxes']);
 
     // ── RUTES ADMIN ───────────────────────────────────────
     Route::middleware('admin')->prefix('admin')->group(function () {

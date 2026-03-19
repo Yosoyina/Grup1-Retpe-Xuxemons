@@ -47,10 +47,12 @@
   <!-- SORTIR -->
   <div class="menu-footer">
     <!-- ADMIN (solo visible si es admin) -->
-    <button *ngIf="authService.isAdmin()" class="btn-admin" routerLink="/admin">
-      <img src="/admin.png" alt="Admin" />
-      <span>ADMIN</span>
-    </button>
+    @if ((authService.usuari$ | async)?.role === 'admin') {
+      <button class="btn-admin" routerLink="/admin">
+        <img src="/admin.png" alt="Admin" />
+        <span>ADMIN</span>
+      </button>
+    }
 
     <button class="btn-sortir" (click)="logout()">
       <img src="/Sortir.png" alt="Salida" />

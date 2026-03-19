@@ -152,4 +152,12 @@ class InventarioController extends Controller
         ]);
     }
 
+    public function listXuxes()
+    {
+        $xuxes = Xuxes::select('id', 'nombre_xuxes', 'imagen', 'apilable')
+            ->get();
+
+        return response()->json($xuxes, 200);
+    }
+
 }

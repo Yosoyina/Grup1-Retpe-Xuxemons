@@ -22,6 +22,7 @@ class Inventario extends Model
         'user_id',
         'xuxe_id',
         'cantidad',
+        'apilable',
     ];
 
     // Relaciones de Xuxemon y Xuxes
@@ -30,7 +31,7 @@ class Inventario extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function xuxa()
+    public function xuxe()
     {
         return $this->belongsTo(Xuxes::class, 'xuxe_id');
 

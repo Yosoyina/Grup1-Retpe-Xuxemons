@@ -26,7 +26,7 @@ class XuxedexService
                 ->get();
 
             if ($xuxemons->isEmpty()) {
-                return false;
+                continue;
             }
 
             $numDesbloquejats = $xuxemons->count() === 1

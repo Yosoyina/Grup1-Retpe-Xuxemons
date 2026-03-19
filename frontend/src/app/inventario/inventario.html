@@ -1,54 +1,10 @@
-<!-- ╔═══════════════════════════════╗ -->
-<!-- ║   MOTXILLA – Inventari        ║ -->
-<!-- ╚═══════════════════════════════╝ -->
-
 <div class="motxilla-wrapper">
-
-  <!-- Stars -->
-  <div class="stars-layer" aria-hidden="true">
-    @for (star of starsArray; track $index) {
-      <span class="star"
-            [style.left.%]="star.x"
-            [style.top.%]="star.y"
-            [style.animation-delay.s]="star.delay">
-      </span>
-    }
-  </div>
 
   <!-- Header -->
   <header class="inv-header">
     <span class="bag-icon"></span>
     <h1 class="inv-title">Motxilla</h1>
   </header>
-
-  <!-- Filtres -->
-  <div class="filters-row" role="toolbar" aria-label="Filtres de l'inventari">
-
-    <div class="filter-group">
-      <span class="filter-label">Tipus</span>
-      @for (opt of tipusOptions; track opt) {
-        <button class="pill"
-                [ngClass]="pillClasses(opt, tipusFilter)"
-                (click)="tipusFilter = opt"
-                [attr.aria-pressed]="tipusFilter === opt">
-          {{ opt }}
-        </button>
-      }
-    </div>
-
-    <div class="filter-group">
-      <span class="filter-label">Mida</span>
-      @for (opt of midaOptions; track opt) {
-        <button class="pill"
-                [ngClass]="pillClasses(opt, midaFilter)"
-                (click)="midaFilter = opt"
-                [attr.aria-pressed]="midaFilter === opt">
-          {{ opt }}
-        </button>
-      }
-    </div>
-
-  </div>
 
   <!-- Alerta motxilla plena -->
   @if (isFull()) {
@@ -69,25 +25,25 @@
           <button type="button"
                   [ngClass]="slotClasses(slot)"
                   (click)="onSlotClick(slot)"
-                  [attr.aria-label]="slot.xuxemon?.nom + ' x' + slot.quantitat">
+                  [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad">
 
-            <span class="slot-emoji">{{ slot.xuxemon?.emoji }}</span>
+            <img class="slot-img"
+                 [src]="slot.xuxe?.imagen"
+                 [alt]="slot.xuxe?.nom"/>
 
             <!-- Apilament x1..x5 -->
             <span class="slot-count"
                   [ngClass]="{
-                    'slot-count--max':  slot.quantitat === 5,
-                    'slot-count--high': slot.quantitat >= 3 && slot.quantitat < 5
+                    'slot-count--max':  slot.cantidad === 5,
+                    'slot-count--high': slot.cantidad >= 3 && slot.cantidad < 5
                   }">
-              x{{ slot.quantitat }}
+              x{{ slot.cantidad }}
             </span>
 
             <!-- Badge tipus -->
-            <span class="badge" [ngClass]="'badge--' + slot.xuxemon?.tipus?.toLowerCase()">
-              {{ slot.xuxemon?.tipus }}
+            <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
+              {{ slot.xuxe?.tipus }}
             </span>
-
-            <button class="btn-remove" (click)="removeOne(slot, $event)" aria-label="Eliminar un"></button>
 
           </button>
         }
@@ -114,12 +70,14 @@
           <button type="button"
                   [ngClass]="slotClasses(slot)"
                   (click)="onSlotClick(slot)"
-                  [attr.aria-label]="slot.xuxemon?.nom">
+                  [attr.aria-label]="slot.xuxe?.nom">
 
-            <span class="slot-emoji">{{ slot.xuxemon?.emoji }}</span>
+            <img class="slot-img"
+                 [src]="slot.xuxe?.imagen"
+                 [alt]="slot.xuxe?.nom" />
 
-            <span class="badge" [ngClass]="'badge--' + slot.xuxemon?.tipus?.toLowerCase()">
-              {{ slot.xuxemon?.tipus }}
+            <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
+              {{ slot.xuxe?.tipus }}
             </span>
 
             <button class="btn-remove" (click)="removeOne(slot, $event)" aria-label="Eliminar"></button>

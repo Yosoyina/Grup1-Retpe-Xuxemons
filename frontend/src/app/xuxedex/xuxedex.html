@@ -39,14 +39,11 @@
         <p class="bloqueig-text">???</p>
       </article>
       } @else {
-      <article class="xuxemon-card" role="button" tabindex="0"
-        [class.selected]="xuxemonSeleccionado?.id === xuxemon.id"
+      <article class="xuxemon-card" role="button" tabindex="0" [class.selected]="xuxemonSeleccionado?.id === xuxemon.id"
         [ngClass]="[getClassTipus(xuxemon.tipo_elemento), getClassMida(xuxemon.tamano)]"
         [attr.aria-pressed]="xuxemonSeleccionado?.id === xuxemon.id"
-        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento"
-        (click)="seleccionar(xuxemon)"
-        (keydown.enter)="seleccionar(xuxemon)"
-        (keydown.space)="seleccionar(xuxemon); $event.preventDefault()">
+        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento" (click)="seleccionar(xuxemon)"
+        (keydown.enter)="seleccionar(xuxemon)" (keydown.space)="seleccionar(xuxemon); $event.preventDefault()">
         <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
         @if (xuxemon.imagen) {
         <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
@@ -69,6 +66,9 @@
         <p><strong>Grandaria:</strong> {{ xuxemonSeleccionado.tamano }}</p>
         <p><strong>Nivell:</strong> <span class="nivel">{{ getNivell(xuxemonSeleccionado.tamano) }}</span></p>
         <p><strong>Descripcio:</strong> {{ xuxemonSeleccionado.descripcio }}</p>
+
+        <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
+          (click)="verCadenaEvolucion()">Evolució</button>
       </div>
 
       @if (xuxemonSeleccionado.imagen) {
@@ -96,14 +96,11 @@
         <p class="bloqueig-text">???</p>
       </article>
       } @else {
-      <article class="xuxemon-card" role="button" tabindex="0"
-        [class.selected]="xuxemonSeleccionado?.id === xuxemon.id"
+      <article class="xuxemon-card" role="button" tabindex="0" [class.selected]="xuxemonSeleccionado?.id === xuxemon.id"
         [ngClass]="[getClassTipus(xuxemon.tipo_elemento), getClassMida(xuxemon.tamano)]"
         [attr.aria-pressed]="xuxemonSeleccionado?.id === xuxemon.id"
-        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento"
-        (click)="seleccionar(xuxemon)"
-        (keydown.enter)="seleccionar(xuxemon)"
-        (keydown.space)="seleccionar(xuxemon); $event.preventDefault()">
+        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento" (click)="seleccionar(xuxemon)"
+        (keydown.enter)="seleccionar(xuxemon)" (keydown.space)="seleccionar(xuxemon); $event.preventDefault()">
         <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
         @if (xuxemon.imagen) {
         <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
@@ -131,10 +128,6 @@
   }
   }
 
-  @if (xuxemonSeleccionado) {
-  <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
-    (click)="verCadenaEvolucion()"></button>
-  }
   @if (mostrarEvolucion) {
   <div class="evolucio-overlay" (click)="cerrarEvolucion()">
     <div class="evolucio-modal" (click)="$event.stopPropagation()">
