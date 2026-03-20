@@ -23,10 +23,8 @@
         <!-- Slots plens -->
         @for (slot of apilablesFills; track slot.id) {
           <li>
-            <button type="button"
-                    [ngClass]="slotClasses(slot)"
-                    (click)="onSlotClick(slot)"
-                    [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad">
+            <div [ngClass]="slotClasses(slot)"
+                 [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad">
 
               <img class="slot-img"
                    [src]="slot.xuxe?.imagen"
@@ -46,7 +44,7 @@
                 {{ slot.xuxe?.tipus }}
               </span>
 
-            </button>
+            </div>
           </li>
         }
 
@@ -74,7 +72,6 @@
           <li>
             <button type="button"
                     [ngClass]="slotClasses(slot)"
-                    (click)="onSlotClick(slot)"
                     [attr.aria-label]="slot.xuxe?.nom">
 
               <img class="slot-img"
@@ -109,3 +106,8 @@
   </div>
 
 </div>
+
+<button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menú principal">
+  <img src="/Sortir.png" alt="" />
+  SORTIR
+</button>

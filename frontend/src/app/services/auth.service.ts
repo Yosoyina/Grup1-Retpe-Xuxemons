@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, map, catchError, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +79,24 @@ export class AuthService {
   isAdmin(): boolean {
     const usuario = this.usuariActual.getValue();
     return usuario && usuario.role === 'admin';
+  }
+
+  // Intenta recuperar la sessió existent validant el token al backend.
+  // Si el token és vàlid, carrega l'usuari al BehaviorSubject i retorna true.
+  // Si és invàlid o ha caducat, neteja el token i retorna false.
+  intentarAutoLogin(): Observable<boolean> {
+    if (!localStorage.getItem('token')) {
+      return of(false);
+    }
+
+    return this.getPerfil().pipe(
+      map(() => true),
+      catchError(() => {
+        localStorage.removeItem('token');
+        this.usuariActual.next(null);
+        return of(false);
+      })
+    );
   }
 
 }

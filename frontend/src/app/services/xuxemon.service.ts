@@ -54,10 +54,12 @@ export class XuxemonService {
     return xuxemons.filter(x => x.tamano === mida);
   }
 
+  // Obté les evolucions d'un Xuxemon donat el seu ID
   getTipus(): string[] {
     return ['Todos', 'Aigua', 'Terra', 'Aire'];
   }
 
+  //  Obté les evolucions d'un Xuxemon donat el seu ID
   getMides(): string[] {
     return ['Tots', 'Petit', 'Mitja', 'Gran'];
   }
@@ -74,7 +76,21 @@ export class XuxemonService {
     return this.http.post(`${this.adminUrl}`, { user_id: userId });
   }
 
+  // Mètodes per obtenir les classes CSS segons el tipus i mida del Xuxemon
   getEvoluciones(id: number): Observable<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }> {
-    return this.http.get<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }>(`http://localhost:8000/api/xuxemons/${id}/evolucions`);
+    return this.http.get<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }>(`http://localhost:8000/api/xuxemons/${id}/evolucions`).pipe(
+      map(res => ({
+        ...res,
+        cadena_evolutiva: res.cadena_evolutiva.map(e => ({
+          ...e,
+          imagen: e.imagen && e.imagen.trim() !== '' ? `http://localhost:8000/${e.imagen}` : null
+        }))
+      }))
+    );
+  }
+
+  // Método para evolucionar un Xuxemon dado su ID, devuelve el mensaje y el Xuxemon evolucionado
+  evolucionar(id: number): Observable<{ message: string, xuxemon: Xuxemon }> {
+    return this.http.post<{ message: string, xuxemon: Xuxemon }>(`http://localhost:8000/api/xuxemons/${id}/evolucionar`, {});
   }
 }

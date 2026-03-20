@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -26,7 +26,10 @@ export class Xuxedex implements OnDestroy {
   xuxeEvoSlot: Slot | null = null;
 
   private inventarioService = inject(InventarioService);
+  private cdr = inject(ChangeDetectorRef);
   private xuxemonsSub: Subscription;
+  private slotsSub: Subscription;
+  private evolucioSub: Subscription | null = null;
 
   get mostrarPaginacio(): boolean {
     return this.filtroActual === 'Todos';
@@ -36,11 +39,13 @@ export class Xuxedex implements OnDestroy {
     this.xuxemons$ = this.xuxemonService.xuxemons$;
     this.xuxemonsSub = this.xuxemons$.subscribe((xuxemons) => {
       this.sincronizarSeleccion(xuxemons);
+      this.cdr.markForCheck();
     });
 
     this.inventarioService.cargarInventario();
-    this.inventarioService.slots$.subscribe(() => {
+    this.slotsSub = this.inventarioService.slots$.subscribe(() => {
       this.xuxeEvoSlot = this.getXuxeEvo();
+      this.cdr.markForCheck();
     });
 
     this.xuxemonService.carregarXuxemons('Todos');
@@ -48,6 +53,8 @@ export class Xuxedex implements OnDestroy {
 
   ngOnDestroy(): void {
     this.xuxemonsSub.unsubscribe();
+    this.slotsSub.unsubscribe();
+    this.evolucioSub?.unsubscribe();
   }
 
   cambiarFiltro(tipo: string): void {
@@ -173,20 +180,26 @@ export class Xuxedex implements OnDestroy {
     this.errorEvolucion = null;
     this.cadenaEvolucio = [];
 
-    this.xuxemonService.getEvoluciones(Number(this.xuxemonSeleccionado.id)).subscribe({
+    this.evolucioSub?.unsubscribe();
+    this.evolucioSub = this.xuxemonService.getEvoluciones(Number(this.xuxemonSeleccionado.id)).subscribe({
       next: (res) => {
         this.cadenaEvolucio = res.cadena_evolutiva;
         this.cargarEvolucion = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.errorEvolucion = 'No s\'ha pogut carregar la cadena evolutiva.';
         this.cargarEvolucion = false;
+        this.cdr.markForCheck();
       },
     });
   }
 
   cerrarEvolucion(): void {
+    this.evolucioSub?.unsubscribe();
+    this.evolucioSub = null;
     this.mostrarEvolucion = false;
+    this.cargarEvolucion = false;
     this.cadenaEvolucio = [];
     this.errorEvolucion = null;
   }
@@ -242,15 +255,25 @@ export class Xuxedex implements OnDestroy {
     return cadena[idxTamano + 1] ?? null;
   }
 
-  // Consumeix una Xuxa EV i desbloqueja la següent etapa
+  // Consumeix una Xuxa EV al backend i desbloqueja la següent etapa
   evolucionar(): void {
     const slot = this.xuxeEvoSlot ?? this.getXuxeEvo();
     const segurent = this.getSegurentEtapa();
-    if (!slot || !segurent) return;
+    if (!slot || !segurent || !this.xuxemonSeleccionado) return;
 
-    this.inventarioService.EliminarXuxesinv(slot.id);
-    this.xuxemonService.xuxemons$.next([]);
-    this.xuxemonService.carregarXuxemons(this.filtroActual);
-    this.cerrarEvolucion();
+    this.xuxemonService.evolucionar(Number(this.xuxemonSeleccionado.id)).subscribe({
+      next: () => {
+        this.inventarioService.EliminarXuxesinv(slot.id);
+        this.inventarioService.cargarInventario();
+        this.xuxemonService.xuxemons$.next([]);
+        this.xuxemonService.carregarXuxemons(this.filtroActual);
+        this.cerrarEvolucion();
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.errorEvolucion = err.error?.message ?? "Error al evolucionar.";
+        this.cdr.markForCheck();
+      },
+    });
   }
 }

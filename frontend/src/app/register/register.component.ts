@@ -6,8 +6,6 @@ import { AuthService } from '../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 
-
-
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -24,6 +22,7 @@ export class RegisterComponent {
   idJugadorGenerat = '';
   submitted = false;
 
+  // FormGroup para el formulario de registro
   registerForm = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.maxLength(25)]),
     apellidos: new FormControl('', [Validators.required, Validators.maxLength(25)]),
@@ -33,14 +32,17 @@ export class RegisterComponent {
 
   }, { validators: this.contrasenyesIgualsValidator });
 
+  // Inyectamos los servicios necesarios en el constructor
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) { }
 
+  // Validador personalizado para comprobar que las contraseñas coinciden
   contrasenyesIgualsValidator(form: AbstractControl): ValidationErrors | null {
     const password = form.get('password')?.value;
     const confirm = form.get('password_confirmation')?.value;
     return password === confirm ? null : { contrasenyesDiferents: true };
   }
-
+  
+  // Función para manejar el envío del formulario de registro
   onSubmit() {
     this.submitted = true;
     this.registerForm.markAllAsTouched();
@@ -66,16 +68,19 @@ export class RegisterComponent {
     });
   }
 
+  // Función para ir a la página de login
   anarAlLogin() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 
+  // Función para verificar si un campo del formulario es inválido y se ha intentado enviar
   isFieldInvalid(field: string): boolean {
     const control = this.registerForm.get(field);
     return !!(control && control.invalid && this.submitted);
   }
 
+  // Función para obtener el mensaje de error correspondiente a un campo del formulario
   getErrorMessage(field: string): string {
     const control = this.registerForm.get(field);
     if (!control || !control.errors || !this.submitted) return '';

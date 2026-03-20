@@ -10,9 +10,7 @@ use App\Models\Xuxes;
 
 class InventarioController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // ── INVENTARIO DEL JUGADOR ───────────────────────────────────
     public function index(Request $request)
     {
         $userId = Auth::guard('api')->user()->id;
@@ -28,9 +26,7 @@ class InventarioController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // ── AFEGIR ITEM AL INVENTARIO (ADMIN) ───────────────────────────────────
     public function store(Request $request)
     {
         $request->validate([
@@ -101,9 +97,7 @@ class InventarioController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // ── MOSTRAR ITEM DEL INVENTARIO ───────────────────────────────────
     public function show(int $id)
     {
         $user = Auth::guard('api')->user();
@@ -112,14 +106,12 @@ class InventarioController extends Controller
         // Un usuari normal només pot veure els seus propis items
         if ($user->role !== 'admin' && $item->user_id !== $user->id) {
             return response()->json(['message' => 'No autoritzat'], 403);
-        }
+        }   
  
         return response()->json($item);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // ── ACTUALITZAR ITEM DEL INVENTARIO (ADMIN) ───────────────────────────────────
     public function update(Request $request, int $id)
     {
         $item = Inventario::with('xuxe')->findOrFail($id);
@@ -135,23 +127,23 @@ class InventarioController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // ── ELIMINAR ITEM DEL INVENTARIO (ADMIN) ───────────────────────────────────
     public function destroy(int $id)
     {
         Inventario::findOrFail($id)->delete();
         return response()->json(['mensaje' => 'Item eliminado del inventario']);
     }
 
+    // ── LISTADOS DE ITEMS ───────────────────────────────────
     public function listadosItems()
     {
         return response()->json([
             'xuxemons' => Xuxemons::all(['id', 'nombre_xuxemon', 'tipo_elemento', 'tamano']),
-            'xuxes' => Xuxes::all(['id', 'nombre_xuxes', 'apilable']),
+            'xuxes' => Xuxes::all(['id', 'nombre_xuxes', 'imagen', 'apilable']),
         ]);
     }
 
+    // ── LISTADO DE XUXES PARA SELECCIONAR EN EL INVENTARIO (ADMIN) ───────────────────────────────────
     public function listXuxes()
     {
         $xuxes = Xuxes::select('id', 'nombre_xuxes', 'imagen', 'apilable')
