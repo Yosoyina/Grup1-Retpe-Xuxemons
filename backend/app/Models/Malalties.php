@@ -14,15 +14,23 @@ class Malalties extends Model
     protected $table = 'malalties';
 
     protected $fillable = [
-        'Bajon_Azucar',
-        'Atracon',
+        'xuxedex_id',
+        'tipo_enfermedad',
     ];
 
     protected function casts(): array
     {
         return [
-            'Bajon_Azucar' => 'number',
-            'Atracon' => 'number',
+            'xuxedex_id' => 'integer',
+            'tipo_enfermedad' => 'string',
         ];
+    }
+
+    /*
+     * Una enfermedad pertenece a un xuxemon (xuxedex)
+     */
+    public function xuxedex()
+    {
+        return $this->belongsTo(Xuxedex::class, 'xuxedex_id');
     }
 }
