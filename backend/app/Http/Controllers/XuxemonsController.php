@@ -37,6 +37,7 @@ class XuxemonsController extends Controller
                 'xuxemons.descripcio',
                 'xuxemons.imagen',
                 'xuxedex.esta_capturado',
+                'xuxedex.enfermedad',
             );
 
         // Aplica filtres si l'usuari els ha enviat
@@ -58,6 +59,7 @@ class XuxemonsController extends Controller
                 'imagen'         => $x->esta_capturado ? $x->imagen : null,
                 'esta_capturado' => (bool) $x->esta_capturado,
                 'bloquejat'      => !(bool) $x->esta_capturado,
+                'enfermedad'     => $x->enfermedad ?? null,
             ]);
 
         return response()->json($xuxemons, 200);
