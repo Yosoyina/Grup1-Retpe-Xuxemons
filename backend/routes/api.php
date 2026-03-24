@@ -28,6 +28,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/xuxemons/{id}', [XuxemonsController::class, 'show']);
     Route::get('/xuxemons/{id}/evolucions', [XuxemonsController::class, 'Evoluciones']);
     Route::post('/xuxemons/{id}/evolucionar', [XuxemonsController::class, 'evolucionar']);
+    Route::post('/xuxemons/{id}/feed', [XuxemonsController::class, 'feed']);
 
     // ── iNVENTARIO DEL JUGADOR ───────────────────────────────────
 

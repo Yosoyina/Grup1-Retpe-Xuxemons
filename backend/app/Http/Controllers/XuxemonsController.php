@@ -212,6 +212,83 @@ class XuxemonsController extends Controller
         ], 200);
     }
 
+    /**
+     * POST /api/xuxemons/{id}/feed
+     *
+     * Alimenta un xuxemon. Hi ha probabilitat d'infecció:
+     *   5%  → 'Bajon de azucar'
+     *   10% → 'Sobredosis'
+     *   15% → 'Atracon'
+     *   70% → sense infecció
+     *
+     * Si el xuxemon ja té 'Atracon', no es pot alimentar.
+     * Si ja té qualsevol altra malaltia, no es pot infectar de nou.
+     */
+    public function feed(Request $request, string $id)
+    {
+        $userId  = $request->user()->id;
+        $xuxemon = Xuxemons::findOrFail($id);
+
+        // Busca l'entrada del xuxedex per aquest usuari i xuxemon
+        $entrada = DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->where('id_xuxemon', $xuxemon->id)
+            ->where('esta_capturado', true)
+            ->first();
+
+        if (!$entrada) {
+            return response()->json(['error' => 'No tens aquest Xuxemon.'], 404);
+        }
+
+        // Si té Atracón, no pot ser alimentat
+        if ($entrada->enfermedad === 'Atracon') {
+            return response()->json([
+                'infectat'    => false,
+                'enfermedad'  => 'Atracon',
+                'message'     => "Aquest Xuxemon té Atracón i no pot ser alimentat!",
+                'bloquejat'   => true,
+            ], 422);
+        }
+
+        // Si ja té qualsevol altra malaltia, no es pot infectar de nou
+        if (!is_null($entrada->enfermedad)) {
+            return response()->json([
+                'infectat'   => false,
+                'enfermedad' => $entrada->enfermedad,
+                'message'    => "Aquest Xuxemon ja està malalt ({$entrada->enfermedad}).",
+                'bloquejat'  => false,
+            ], 422);
+        }
+
+        // Tirada aleatòria d'infecció (1–100)
+        $roll = rand(1, 100);
+
+        if ($roll <= 5) {
+            $nova = 'Bajon de azucar';   // 1–5  → 5%
+        } elseif ($roll <= 15) {
+            $nova = 'Sobredosis';        // 6–15 → 10%
+        } elseif ($roll <= 30) {
+            $nova = 'Atracon';           // 16–30 → 15%
+        } else {
+            $nova = null;                // 31–100 → 70% sa
+        }
+
+        if ($nova !== null) {
+            DB::table('xuxedex')
+                ->where('id_usuario', $userId)
+                ->where('id_xuxemon', $xuxemon->id)
+                ->update(['enfermedad' => $nova, 'updated_at' => now()]);
+        }
+
+        return response()->json([
+            'infectat'   => $nova !== null,
+            'enfermedad' => $nova,
+            'message'    => $nova !== null
+                ? "El teu Xuxemon {$xuxemon->nombre_xuxemon} ha agafat {$nova}!"
+                : "{$xuxemon->nombre_xuxemon} ha menjat bé. No ha passat res.",
+        ], 200);
+    }
+
     /** GET /admin/xuxedex */
     
     // Retorna els xuxemons d'un usuari específic (per a administradors)
