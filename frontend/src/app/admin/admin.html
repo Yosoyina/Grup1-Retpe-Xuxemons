@@ -8,119 +8,95 @@
   <div class="mensaje error">✗ {{ mensajeError }}</div>
   }
 
-  <div class="seccions-grid">
+  <!-- ── SECCIÓ ÚNICA USUARIS ──────────────────────────── -->
+  <div class="seccio">
+    <div class="seccio-header">
+      <span class="seccio-icon">👥</span>
+      <h2>Gestió d'Usuaris</h2>
+      <span class="seccio-badge">{{ usuarios.length }} usuaris</span>
+    </div>
 
-    <!-- ── SECCIÓ USUARIS ──────────────────────────── -->
-    <div class="seccio">
-      <div class="seccio-header">
-        <span class="seccio-icon">🐾</span>
-        <h2>Gestió de Xuxemons</h2>
+    <div class="seccio-body">
+      @if (cargandoUsuarios) {
+      <div class="cargando">
+        <span class="cargando-spinner"></span>
+        Carregant usuaris...
       </div>
+      }
 
-      <div class="seccio-body">
-        @if (cargandoUsuarios) {
-        <div class="cargando">Carregant usuaris...</div>
-        }
+      @if (!cargandoUsuarios && usuarios.length > 0) {
+      <div class="lista-usuarios">
+        @for (usuario of usuarios; track usuario.id) {
+        <div class="usuario-card" [class.card-inactiva]="!usuario.actiu">
 
-        @if (!cargandoUsuarios && usuarios.length > 0) {
-        <div class="lista-usuarios">
-          @for (usuario of usuarios; track usuario.id) {
-          <div class="usuario-card">
-            <div class="usuario-info">
-              <div class="avatar">
-                {{ getIniciales(usuario.nombre, usuario.apellidos) }}
-                @if (usuario.avatar) {
-                <img [src]="'/' + usuario.avatar" [alt]="usuario.nombre" class="avatar-img"
-                  (error)="$event.target['style'].display='none'">
-                }
-              </div>
-              <div class="datos">
-                <h3>{{ usuario.nombre }} {{ usuario.apellidos }}</h3>
-                <span class="id-jugador">#{{ usuario.id_jugador || usuario.id }}</span>
-                <span class="estado" [class.inactivo]="!usuario.actiu">
-                  {{ usuario.actiu ? 'Actiu' : 'Inactiu' }}
-                </span>
-              </div>
+          <!-- Avatar + Dades -->
+          <div class="usuario-info">
+            <div class="avatar">
+              {{ getIniciales(usuario.nombre, usuario.apellidos) }}
+              @if (usuario.avatar) {
+              <img [src]="'/' + usuario.avatar" [alt]="usuario.nombre" class="avatar-img"
+                (error)="$event.target['style'].display='none'">
+              }
             </div>
+            <div class="datos">
+              <h3>{{ usuario.nombre }} {{ usuario.apellidos }}</h3>
+              <div class="datos-meta">
+                <span class="id-jugador">#{{ usuario.id_jugador || usuario.id }}</span>
+                <span class="rol-badge">{{ usuario.role }}</span>
+              </div>
+              <span class="estado" [class.inactivo]="!usuario.actiu">
+                {{ usuario.actiu ? '● Actiu' : '● Inactiu' }}
+              </span>
+            </div>
+          </div>
 
-            <div class="acciones">
-              <button class="btn-xuxemon" (click)="agregarXuxemonAleatorio(usuario.id)"
+          <!-- Accions -->
+          <div class="acciones">
+            <div class="acciones-grup">
+              <span class="acciones-label">Xuxemons</span>
+              <button class="btn-accio btn-xuxemon" (click)="agregarXuxemonAleatorio(usuario.id)"
                 [disabled]="agregandoParaUsuarioId === usuario.id">
-                {{ agregandoParaUsuarioId === usuario.id ? 'Assignant...' : 'Donar Xuxemon' }}
+                <span class="btn-icon">🐾</span>
+                {{ agregandoParaUsuarioId === usuario.id ? 'Assignant...' : 'Donar' }}
               </button>
-              <button class="btn-ver" (click)="cargarXuxemonsUsuario(usuario.id)">
-                Veure Xuxemons
+              <button class="btn-accio btn-ver" (click)="cargarXuxemonsUsuario(usuario.id)">
+                <span class="btn-icon">👁</span>
+                Veure
               </button>
-              <button class="btn-toggle" [class.btn-habilitar]="!usuario.actiu" [class.btn-deshabilitar]="usuario.actiu"
+            </div>
+            <div class="acciones-grup">
+              <span class="acciones-label">Inventari</span>
+              <button class="btn-accio btn-inventari" (click)="obrirModalInventari(usuario.id)">
+                <span class="btn-icon">🎒</span>
+                Afegir Xuxes
+              </button>
+            </div>
+            <div class="acciones-grup">
+              <span class="acciones-label">Compte</span>
+              <button class="btn-accio btn-toggle"
+                [class.btn-habilitar]="!usuario.actiu"
+                [class.btn-deshabilitar]="usuario.actiu"
                 (click)="pedirConfirmacionToggle(usuario)">
+                <span class="btn-icon">{{ usuario.actiu ? '🔒' : '🔓' }}</span>
                 {{ usuario.actiu ? 'Deshabilitar' : 'Habilitar' }}
               </button>
             </div>
           </div>
-          }
-        </div>
-        }
 
-        @if (!cargandoUsuarios && usuarios.length === 0) {
-        <div class="sin-xuxemons">
-          <p>No hi ha usuaris per mostrar.</p>
         </div>
         }
       </div>
+      }
+
+      @if (!cargandoUsuarios && usuarios.length === 0) {
+      <div class="sin-xuxemons">
+        <p>No hi ha usuaris per mostrar.</p>
+      </div>
+      }
     </div>
-
-    <!-- ── SECCIÓ INVENTARI ──────────────────────────── -->
-    <div class="seccio">
-      <div class="seccio-header">
-        <span class="seccio-icon">🎒</span>
-        <h2>Gestió d'Inventari</h2>
-      </div>
-
-      <div class="seccio-body">
-        @if (cargandoUsuarios) {
-        <div class="cargando">Carregant usuaris...</div>
-        }
-
-        @if (!cargandoUsuarios && usuarios.length > 0) {
-        <div class="lista-usuarios">
-          @for (usuario of usuarios; track usuario.id) {
-          <div class="usuario-card">
-            <div class="usuario-info">
-              <div class="avatar">
-                {{ getIniciales(usuario.nombre, usuario.apellidos) }}
-                @if (usuario.avatar) {
-                <img [src]="'/' + usuario.avatar" [alt]="usuario.nombre" class="avatar-img"
-                  (error)="$event.target['style'].display='none'">
-                }
-              </div>
-              <div class="datos">
-                <h3>{{ usuario.nombre }} {{ usuario.apellidos }}</h3>
-                <span class="id-jugador">#{{ usuario.id_jugador || usuario.id }}</span>
-                <span class="estado" [class.inactivo]="!usuario.actiu">
-                  {{ usuario.actiu ? 'Actiu' : 'Inactiu' }}
-                </span>
-              </div>
-            </div>
-
-            <div class="acciones">
-              <button class="btn-inventari" (click)="obrirModalInventari(usuario.id)">
-                🎒 Afegir Xuxes
-              </button>
-            </div>
-          </div>
-          }
-        </div>
-        }
-
-        @if (!cargandoUsuarios && usuarios.length === 0) {
-        <div class="sin-xuxemons">
-          <p>No hi ha usuaris per mostrar.</p>
-        </div>
-        }
-      </div>
-    </div>
-
   </div>
+
+  <div class="admin-spacer"></div>
 
   <div class="admin-footer">
     <button class="btn-salir" (click)="salir()">
