@@ -186,22 +186,38 @@ class XuxemonsController extends Controller
             return response()->json(['message' => "No s'ha trobat l'evolució."], 404);
         }
 
+        // Comprobamos las XuxEvos — si té Bajon_Azucar necessita +2 xuxes addicionals per nivell
+        $xuxesNecessaries = 1;
+        if ($xuxedexEntry) {
+            $teBajonAzucar = DB::table('malalties')
+                ->where('xuxedex_id', $xuxedexEntry->id)
+                ->where('tipo_enfermedad', 'Bajon_Azucar')
+                ->exists();
+ 
+            if ($teBajonAzucar) {
+                $xuxesNecessaries += 2;
+            }
+        }
+
         // Comprova que l'usuari te una Xuxa EV a l'inventari
         $xuxaEv = DB::table('inventario')
             ->join('xuxes', 'inventario.xuxe_id', '=', 'xuxes.id')
             ->where('inventario.user_id', $userId)
             ->where('xuxes.nombre_xuxes', 'Xuxa EV')
-            ->where('inventario.cantidad', '>', 0)
+            ->where('inventario.cantidad', '>=', $xuxesNecessaries)
             ->select('inventario.id', 'inventario.cantidad')
             ->first();
 
         if (!$xuxaEv) {
-            return response()->json(['message' => 'Necessites una Xuxa EV per evolucionar.'], 422);
+            return response()->json([
+                'message' => "Necessites {$xuxesNecessaries} Xuxa EV per evolucionar" .
+                    ($xuxesNecessaries > 1 ? ' (el teu xuxemon té Bajón de Azúcar).' : '.'),
+            ], 422);
         }
 
         // Consumeix 1 Xuxa EV
         if ($xuxaEv->cantidad > 1) {
-            DB::table('inventario')->where('id', $xuxaEv->id)->decrement('cantidad');
+            DB::table('inventario')->where('id', $xuxaEv->id)->decrement($xuxesNecessaries);
         } else {
             DB::table('inventario')->where('id', $xuxaEv->id)->delete();
         }
