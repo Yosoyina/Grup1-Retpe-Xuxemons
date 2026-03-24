@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Inventario;
 use App\Models\Xuxemons;
@@ -175,4 +177,59 @@ class InventarioController extends Controller
         return response()->json($xuxes, 200);
     }
 
+     // ── ALIMENTAR UN XUXEMON ───────────────────────────────────
+    
+    public function alimentar(Request $request, int $inventari_id, int $xuxedex_id)
+    {
+        $userId = Auth::guard('api')->user()->id;
+ 
+        $item = Inventario::with('xuxe')->findOrFail($inventari_id);
+ 
+        if ($item->user_id !== $userId) {
+            return response()->json(['message' => 'No autoritzat'], 403);
+        }
+ 
+        // Comprova que l'ítem és una xuxe (apilable) y no una vacuna
+        if (!$item->xuxe->apilable) {
+            return response()->json([
+                'message' => 'Aquest ítem no és comida i no es pot usar per alimentar.',
+            ], 422);
+        }
+ 
+        // Comprova que el xuxemon pertany al jugador
+        $entrada = DB::table('xuxedex')
+            ->where('id', $xuxedex_id)
+            ->where('id_usuario', $userId)
+            ->where('esta_capturado', true)
+            ->first();
+ 
+        if (!$entrada) {
+            return response()->json([
+                'message' => 'Xuxemon no trobat al teu xuxedex.',
+            ], 404);
+        }
+ 
+        // ── BLOQUEIG INVENTARI ( ENFERMETAT ATRACÓN ) ──────────────────────────────────────────────────
+        $Atracon = DB::table('malalties')
+            ->where('xuxedex_id', $xuxedex_id)
+            ->where('tipo_enfermedad', 'Atracon')
+            ->exists();
+ 
+        if ($Atracon) {
+            return response()->json([
+                'message' => 'No pots alimentar aquest xuxemon: té la malaltia "Atracón" activa. Cura\'l primer amb una vacuna.',
+            ], 422);
+        }
+ 
+        // Consumeix la xuxe
+        if ($item->cantidad > 1) {
+            $item->decrement('cantidad');
+        } else {
+            $item->delete();
+        }
+ 
+        return response()->json([
+            'message' => 'Xuxemon alimentat correctament.',
+        ], 200);
+    }
 }
