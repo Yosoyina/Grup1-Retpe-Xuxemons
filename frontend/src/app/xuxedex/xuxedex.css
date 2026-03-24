@@ -1796,3 +1796,148 @@
     font-size: 15px;
   }
 }
+
+/* ── DETALLE ACCIONS ─────────────────────────────── */
+.detalle-accions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-alimentar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border: 3px solid #e8a020;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fff7e0, #ffe9a0);
+  color: var(--ink, #1b2237);
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.15s;
+  white-space: nowrap;
+}
+
+.btn-alimentar:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.btn-alimentar:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── BADGE MALALTIA A LA TARGETA ─────────────────── */
+.enfermedad-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 1.1rem;
+  line-height: 1;
+  z-index: 2;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+/* ── DETALL MALALTIA ─────────────────────────────── */
+.detalle-malaltia {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(230, 60, 60, 0.12);
+  border: 2px solid rgba(200, 50, 50, 0.35);
+  margin-bottom: 4px;
+  width: fit-content;
+}
+
+.malaltia-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.malaltia-nom {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #c0392b;
+  text-transform: capitalize;
+}
+
+/* ── TOAST FEED ──────────────────────────────────── */
+.feed-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  border-radius: 18px;
+  border: 3px solid transparent;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  max-width: min(540px, 92vw);
+  animation: toastIn 0.28s ease;
+  backdrop-filter: blur(6px);
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-16px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.toast-infectat {
+  background: rgba(255, 230, 225, 0.96);
+  border-color: #e04040;
+  color: #8b1a1a;
+}
+
+.toast-bloquejat {
+  background: rgba(240, 230, 200, 0.96);
+  border-color: #c07020;
+  color: #7a4400;
+}
+
+.toast-ok {
+  background: rgba(220, 248, 225, 0.96);
+  border-color: #3a9a50;
+  color: #1a5e28;
+}
+
+.toast-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.toast-msg {
+  flex: 1;
+  line-height: 1.35;
+}
+
+.toast-tancar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+  color: inherit;
+  opacity: 0.6;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+.toast-tancar:hover {
+  opacity: 1;
+}

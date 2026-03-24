@@ -2,6 +2,22 @@
   <h1>XUXEDEX</h1>
 </header>
 
+<!-- TOAST FEED -->
+@if (feedResultat) {
+<div class="feed-toast"
+  [class.toast-infectat]="feedResultat.infectat"
+  [class.toast-bloquejat]="feedResultat.bloquejat"
+  [class.toast-ok]="!feedResultat.infectat && !feedResultat.bloquejat">
+  <span class="toast-icon">
+    @if (feedResultat.bloquejat) { 🚫 }
+    @else if (feedResultat.infectat) { 🦠 }
+    @else { ✅ }
+  </span>
+  <span class="toast-msg">{{ feedResultat.message }}</span>
+  <button class="toast-tancar" (click)="feedResultat = null">✕</button>
+</div>
+}
+
 <div class="container">
   @if (xuxemons$ | async; as xuxemons) {
   <section class="panel panel-esquerra" aria-label="Selecció de Xuxemon">
@@ -51,6 +67,9 @@
         [attr.aria-pressed]="xuxemonSeleccionado?.id === xuxemon.id"
         [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento" (click)="seleccionar(xuxemon)">
         <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
+        @if (xuxemon.enfermedad) {
+        <div class="enfermedad-badge" [title]="xuxemon.enfermedad">{{ getEnfermedadIcon(xuxemon.enfermedad) }}</div>
+        }
         @if (xuxemon.imagen) {
         <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
         } @else {
@@ -73,8 +92,24 @@
         <p><strong>Nivell:</strong> <span class="nivel">{{ getNivell(xuxemonSeleccionado.tamano) }}</span></p>
         <p><strong>Descripcio:</strong> {{ xuxemonSeleccionado.descripcio }}</p>
 
-        <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
-          (click)="verCadenaEvolucion()">Evolució</button>
+        @if (xuxemonSeleccionado.enfermedad) {
+        <div class="detalle-malaltia">
+          <span class="malaltia-icon">{{ getEnfermedadIcon(xuxemonSeleccionado.enfermedad) }}</span>
+          <span class="malaltia-nom">{{ xuxemonSeleccionado.enfermedad }}</span>
+        </div>
+        }
+
+        <div class="detalle-accions">
+          <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
+            (click)="verCadenaEvolucion()">Evolució</button>
+
+          <button type="button" class="btn-alimentar"
+            [disabled]="feedCarregant || xuxemonSeleccionado.enfermedad === 'Atracon'"
+            [title]="xuxemonSeleccionado.enfermedad === 'Atracon' ? 'No pot menjar (Atracón)' : 'Alimentar'"
+            (click)="alimentar()">
+            {{ feedCarregant ? '🍬...' : '🍬 Alimentar' }}
+          </button>
+        </div>
       </div>
 
       <div class="detalle-visual">
@@ -118,6 +153,9 @@
         [attr.aria-pressed]="xuxemonSeleccionado?.id === xuxemon.id"
         [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento" (click)="seleccionar(xuxemon)">
         <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
+        @if (xuxemon.enfermedad) {
+        <div class="enfermedad-badge" [title]="xuxemon.enfermedad">{{ getEnfermedadIcon(xuxemon.enfermedad) }}</div>
+        }
         @if (xuxemon.imagen) {
         <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
         } @else {

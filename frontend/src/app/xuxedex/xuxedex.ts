@@ -2,7 +2,7 @@ import { Component, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { XuxemonService, Xuxemon, EtapaEvoluciones } from '../services/xuxemon.service';
+import { XuxemonService, Xuxemon, EtapaEvoluciones, FeedResult } from '../services/xuxemon.service';
 import { InventarioService, Slot } from '../services/inventario.service';
 
 @Component({
@@ -24,6 +24,11 @@ export class Xuxedex implements OnDestroy {
   cargarEvolucion = false;
   errorEvolucion: string | null = null;
   xuxeEvoSlot: Slot | null = null;
+
+  // Feed / Infecció
+  feedResultat: FeedResult | null = null;
+  feedCarregant = false;
+  private feedTimer: ReturnType<typeof setTimeout> | null = null;
 
   private inventarioService = inject(InventarioService);
   private cdr = inject(ChangeDetectorRef);
@@ -55,6 +60,7 @@ export class Xuxedex implements OnDestroy {
     this.xuxemonsSub.unsubscribe();
     this.slotsSub.unsubscribe();
     this.evolucioSub?.unsubscribe();
+    if (this.feedTimer) clearTimeout(this.feedTimer);
   }
 
   cambiarFiltro(tipo: string): void {
@@ -150,6 +156,55 @@ export class Xuxedex implements OnDestroy {
 
   sortir(): void {
     this.router.navigate(['/menu-principal']);
+  }
+
+  // ── Feed / Infecció ───────────────────────────────────────────────
+
+  alimentar(): void {
+    if (!this.xuxemonSeleccionado || this.feedCarregant) return;
+
+    this.feedCarregant = true;
+    this.feedResultat = null;
+
+    this.xuxemonService.feed(this.xuxemonSeleccionado.id).subscribe({
+      next: (res) => {
+        this.feedResultat = res;
+        this.feedCarregant = false;
+        // Recarrega per reflectir la nova malaltia a la targeta
+        this.xuxemonService.carregarXuxemons(this.filtroActual);
+        // Amaga el toast després de 4 segons
+        if (this.feedTimer) clearTimeout(this.feedTimer);
+        this.feedTimer = setTimeout(() => {
+          this.feedResultat = null;
+          this.cdr.markForCheck();
+        }, 4000);
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.feedResultat = {
+          infectat: false,
+          enfermedad: err.error?.enfermedad ?? null,
+          message: err.error?.message ?? 'Error en alimentar el Xuxemon.',
+          bloquejat: err.error?.bloquejat ?? false,
+        };
+        this.feedCarregant = false;
+        if (this.feedTimer) clearTimeout(this.feedTimer);
+        this.feedTimer = setTimeout(() => {
+          this.feedResultat = null;
+          this.cdr.markForCheck();
+        }, 4000);
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  getEnfermedadIcon(enfermedad: string | null | undefined): string {
+    const icons: Record<string, string> = {
+      'Bajon de azucar': '🍭',
+      'Sobredosis':      '💊',
+      'Atracon':         '🤢',
+    };
+    return enfermedad ? (icons[enfermedad] ?? '🤒') : '';
   }
 
   private sincronizarSeleccion(xuxemons: Xuxemon[]): void {
