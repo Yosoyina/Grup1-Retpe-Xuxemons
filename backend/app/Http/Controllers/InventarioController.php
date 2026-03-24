@@ -17,14 +17,23 @@ class InventarioController extends Controller
         $items = Inventario::with('xuxe')->where('user_id', $userId)->get();
         $slotsUtilizados = Inventario::slotsUtilizados($userId);
 
-        // Mapears los items para incluir correctamente el campo apilable del xuxe
+        // Mapea los items para incluir correctamente el campo apilable del xuxe y construir URL de imagen
         $itemsFormateados = $items->map(function ($item) {
+            $xuxeArray = $item->xuxe->toArray();
+
+            // Construye la URL completa de la imagen si existe
+            if ($xuxeArray['imagen'] && $xuxeArray['imagen'] !== 'null' && trim($xuxeArray['imagen']) !== '') {
+                $xuxeArray['imagen'] = 'http://localhost:8000/' . $xuxeArray['imagen'];
+            } else {
+                $xuxeArray['imagen'] = null;
+            }
+
             return [
                 'id' => $item->id,
                 'xuxe_id' => $item->xuxe_id,
                 'cantidad' => $item->cantidad,
                 'apilable' => $item->xuxe->apilable,
-                'xuxe' => $item->xuxe,
+                'xuxe' => $xuxeArray,
             ];
         });
 

@@ -13,19 +13,19 @@ class VacunesSeeder extends Seeder
             [
                 'nombre_xuxes' => 'Xocolatina',
                 'descripcio'   => 'Vacuna no apilable. En usar-la en un Xuxemon treu "Bajón de azúcar".',
-                'imagen'       => null,
+                'imagen'       => 'Imatges/Vacunes/Xocolatina.png',
                 'apilable'     => false,
             ],
             [
                 'nombre_xuxes' => 'Xal de fruites',
                 'descripcio'   => 'Vacuna no apilable. En usar-la en un Xuxemon treu "Atracón".',
-                'imagen'       => null,
+                'imagen'       => 'Imatges/Vacunes/XalFrutas.png',
                 'apilable'     => false,
             ],
             [
                 'nombre_xuxes' => 'Inxulina',
                 'descripcio'   => 'Vacuna no apilable. En usar-la en un Xuxemon cura totes les malalties.',
-                'imagen'       => null,
+                'imagen'       => 'Imatges/Vacunes/Inxulina.png',
                 'apilable'     => false,
             ],
         ];
