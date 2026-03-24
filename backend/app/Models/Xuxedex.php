@@ -14,6 +14,8 @@ class Xuxedex extends Model
     protected $fillable = [
         'id_usuario',
         'id_xuxemon',
+        'esta_capturado',
+        'enfermedad',
     ];
  
     // Relació amb el xuxemon
