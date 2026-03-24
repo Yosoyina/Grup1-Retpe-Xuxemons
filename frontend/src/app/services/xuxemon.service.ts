@@ -11,6 +11,8 @@ export interface EtapaEvoluciones {
 }
 
 
+export type Enfermedad = 'Bajon de azucar' | 'Sobredosis' | 'Atracon' | null;
+
 export interface Xuxemon {
   id: number | string;
   nombre_xuxemon: string;
@@ -19,6 +21,14 @@ export interface Xuxemon {
   descripcio: string;
   imagen: string | null;
   esta_capturado?: boolean;
+  bloquejat?: boolean;
+  enfermedad?: Enfermedad;
+}
+
+export interface FeedResult {
+  infectat: boolean;
+  enfermedad: Enfermedad;
+  message: string;
   bloquejat?: boolean;
 }
 
@@ -92,5 +102,10 @@ export class XuxemonService {
   // Método para evolucionar un Xuxemon dado su ID, devuelve el mensaje y el Xuxemon evolucionado
   evolucionar(id: number): Observable<{ message: string, xuxemon: Xuxemon }> {
     return this.http.post<{ message: string, xuxemon: Xuxemon }>(`http://localhost:8000/api/xuxemons/${id}/evolucionar`, {});
+  }
+
+  // Alimenta un Xuxemon i pot provocar una infecció
+  feed(id: number | string): Observable<FeedResult> {
+    return this.http.post<FeedResult>(`http://localhost:8000/api/xuxemons/${id}/feed`, {});
   }
 }
