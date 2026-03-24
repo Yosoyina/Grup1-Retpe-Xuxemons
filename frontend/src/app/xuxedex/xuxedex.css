@@ -1941,3 +1941,27 @@
 .toast-tancar:hover {
   opacity: 1;
 }
+
+/* ── BLOQUEIG EVOLUCIÓ PER SOBREDOSIS ────────────── */
+.evolucio-bloqueig {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  background: rgba(200, 80, 200, 0.12);
+  border: 2px solid rgba(180, 60, 180, 0.35);
+  color: #7a207a;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.cost-malaltia {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #c0392b;
+  background: rgba(192, 57, 43, 0.12);
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-left: 4px;
+}

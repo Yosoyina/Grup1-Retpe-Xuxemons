@@ -134,7 +134,10 @@ class XuxemonsController extends Controller
 
 
     // POST /api/xuxemons/{id}/evolucionar
-    // Consumeix una Xuxa EV i desbloqueja la següent etapa al xuxedex de l'usuari
+    // Consumeix una/tres Xuxa EV i desbloqueja la següent etapa al xuxedex de l'usuari.
+    // Efectes de malalties:
+    //   'Sobredosis'      → bloqueja l'evolució fins que es curi
+    //   'Bajon de azucar' → necessita 3 Xuxa EV en lloc d'1
     public function evolucionar(Request $request, string $id)
     {
         $xuxemon = Xuxemons::findOrFail($id);
@@ -150,6 +153,23 @@ class XuxemonsController extends Controller
             return response()->json(['message' => "Ja es troba a l'estat màxim d'evolució."], 422);
         }
 
+        // Comprova l'estat de malaltia del xuxemon
+        $entrada = DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->where('id_xuxemon', $xuxemon->id)
+            ->first();
+
+        // Sobredosis → bloqueja l'evolució
+        if ($entrada && $entrada->enfermedad === 'Sobredosis') {
+            return response()->json([
+                'message' => 'El Xuxemon té Sobredosis i no pot evolucionar fins que es curi.',
+                'enfermedad' => 'Sobredosis',
+            ], 422);
+        }
+
+        // Bajón de azúcar → necessita 3 Xuxa EV en lloc d'1
+        $xuxesNecessaries = ($entrada && $entrada->enfermedad === 'Bajon de azucar') ? 3 : 1;
+
         $nextEvolution = Xuxemons::where('tipo_elemento', $xuxemon->tipo_elemento)
             ->where('evolucion_xuxemon', $xuxemon->evolucion_xuxemon)
             ->where('tamano', $nextTamano)
@@ -159,24 +179,41 @@ class XuxemonsController extends Controller
             return response()->json(['message' => "No s'ha trobat l'evolució."], 404);
         }
 
-        // Comprova que l'usuari te una Xuxa EV a l'inventari
-        $xuxaEv = DB::table('inventario')
+        // Comprova que l'usuari té prou Xuxa EV a l'inventari
+        $totalEv = DB::table('inventario')
             ->join('xuxes', 'inventario.xuxe_id', '=', 'xuxes.id')
             ->where('inventario.user_id', $userId)
             ->where('xuxes.nombre_xuxes', 'Xuxa EV')
-            ->where('inventario.cantidad', '>', 0)
-            ->select('inventario.id', 'inventario.cantidad')
-            ->first();
+            ->sum('inventario.cantidad');
 
-        if (!$xuxaEv) {
-            return response()->json(['message' => 'Necessites una Xuxa EV per evolucionar.'], 422);
+        if ($totalEv < $xuxesNecessaries) {
+            return response()->json([
+                'message'           => "Necessites {$xuxesNecessaries} Xuxa EV per evolucionar" .
+                                       ($xuxesNecessaries > 1 ? ' (Bajón de azúcar).' : '.'),
+                'xuxes_necessaries' => $xuxesNecessaries,
+                'xuxes_disponibles' => $totalEv,
+            ], 422);
         }
 
-        // Consumeix 1 Xuxa EV
-        if ($xuxaEv->cantidad > 1) {
-            DB::table('inventario')->where('id', $xuxaEv->id)->decrement('cantidad');
-        } else {
-            DB::table('inventario')->where('id', $xuxaEv->id)->delete();
+        // Consumeix les Xuxa EV necessàries (pot ser en diversos slots)
+        $perConsumir = $xuxesNecessaries;
+        $slots = DB::table('inventario')
+            ->join('xuxes', 'inventario.xuxe_id', '=', 'xuxes.id')
+            ->where('inventario.user_id', $userId)
+            ->where('xuxes.nombre_xuxes', 'Xuxa EV')
+            ->select('inventario.id', 'inventario.cantidad')
+            ->get();
+
+        foreach ($slots as $slot) {
+            if ($perConsumir <= 0) break;
+            $consumir = min($perConsumir, $slot->cantidad);
+            $resta    = $slot->cantidad - $consumir;
+            if ($resta > 0) {
+                DB::table('inventario')->where('id', $slot->id)->update(['cantidad' => $resta]);
+            } else {
+                DB::table('inventario')->where('id', $slot->id)->delete();
+            }
+            $perConsumir -= $consumir;
         }
 
         // Elimina l'evolució anterior del xuxedex de l'usuari
@@ -188,12 +225,13 @@ class XuxemonsController extends Controller
         // Afegeix la següent evolució al xuxedex de l'usuari
         DB::table('xuxedex')->updateOrInsert(
             ['id_usuario' => $userId, 'id_xuxemon' => $nextEvolution->id],
-            ['esta_capturado' => true, 'updated_at' => now(), 'created_at' => now()]
+            ['esta_capturado' => true, 'enfermedad' => null, 'updated_at' => now(), 'created_at' => now()]
         );
 
         return response()->json([
-            'message' => 'Evolució completada!',
-            'xuxemon' => $nextEvolution,
+            'message'           => 'Evolució completada!',
+            'xuxemon'           => $nextEvolution,
+            'xuxes_consumides'  => $xuxesNecessaries,
         ], 200);
     }
 
@@ -217,7 +255,6 @@ class XuxemonsController extends Controller
     /**
      * POST /api/xuxemons/{id}/feed
      *
-     * Alimenta un xuxemon. Hi ha probabilitat d'infecció:
      *   5%  → 'Bajon de azucar'
      *   10% → 'Sobredosis'
      *   15% → 'Atracon'
@@ -288,6 +325,86 @@ class XuxemonsController extends Controller
             'message'    => $nova !== null
                 ? "El teu Xuxemon {$xuxemon->nombre_xuxemon} ha agafat {$nova}!"
                 : "{$xuxemon->nombre_xuxemon} ha menjat bé. No ha passat res.",
+        ], 200);
+    }
+
+    /**
+     * POST /api/xuxemons/{id}/curar
+     *
+     * Gasta una vacuna de l'inventari de l'usuari per curar la malaltia del xuxemon.
+     *
+     * Mapa de vacunes:
+     *   'Xocolatina'     → cura 'Bajon de azucar'
+     *   'Xal de fruites' → cura 'Atracon'
+     *   'Inxulina'       → cura qualsevol malaltia
+     */
+    public function curar(Request $request, string $id)
+    {
+        $request->validate([
+            'vacuna_id' => 'required|integer|exists:xuxes,id',
+        ]);
+
+        $userId    = $request->user()->id;
+        $xuxemon   = Xuxemons::findOrFail($id);
+        $vacunaId  = $request->input('vacuna_id');
+
+        // Comprova que el xuxemon pertany a l'usuari i que està malalt
+        $entrada = DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->where('id_xuxemon', $xuxemon->id)
+            ->where('esta_capturado', true)
+            ->first();
+
+        if (!$entrada) {
+            return response()->json(['error' => 'No tens aquest Xuxemon.'], 404);
+        }
+
+        if (is_null($entrada->enfermedad)) {
+            return response()->json(['error' => 'Aquest Xuxemon no està malalt.'], 422);
+        }
+
+        // Comprova que la vacuna existeix a l'inventari de l'usuari
+        $slotVacuna = DB::table('inventario')
+            ->where('user_id', $userId)
+            ->where('xuxe_id', $vacunaId)
+            ->first();
+
+        if (!$slotVacuna) {
+            return response()->json(['error' => 'No tens aquesta vacuna a l\'inventari.'], 422);
+        }
+
+        // Comprova que la vacuna és compatible amb la malaltia
+        $vacuna = DB::table('xuxes')->where('id', $vacunaId)->first();
+        $curesAll = $vacuna->nombre_xuxes === 'Inxulina';
+
+        $mapaVacunes = [
+            'Xocolatina'     => 'Bajon de azucar',
+            'Xal de fruites' => 'Atracon',
+        ];
+
+        $curaMalaltia = $mapaVacunes[$vacuna->nombre_xuxes] ?? null;
+
+        if (!$curesAll && $curaMalaltia !== $entrada->enfermedad) {
+            return response()->json([
+                'error'   => "La vacuna '{$vacuna->nombre_xuxes}' no cura '{$entrada->enfermedad}'.",
+                'cura'    => $curaMalaltia,
+                'te'      => $entrada->enfermedad,
+            ], 422);
+        }
+
+        // Gasta la vacuna (no apilable → elimina el slot)
+        DB::table('inventario')->where('id', $slotVacuna->id)->delete();
+
+        // Cura el xuxemon
+        $malaltiaActual = $entrada->enfermedad;
+        DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->where('id_xuxemon', $xuxemon->id)
+            ->update(['enfermedad' => null, 'updated_at' => now()]);
+
+        return response()->json([
+            'message'   => "{$xuxemon->nombre_xuxemon} ha estat curat de {$malaltiaActual}!",
+            'enfermedad' => null,
         ], 200);
     }
 

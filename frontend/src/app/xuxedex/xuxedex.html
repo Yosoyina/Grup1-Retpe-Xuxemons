@@ -229,17 +229,30 @@
       </div>
 
       <div class="evolucio-accio">
-        @if (getSegurentEtapa(); as seguent) {
-        @if (xuxeEvoSlot) {
+        @if (xuxemonSeleccionado?.enfermedad === 'Sobredosis') {
+        <p class="evolucio-bloqueig">
+          <span>💊</span> El Xuxemon té <strong>Sobredosis</strong> i no pot evolucionar fins que es curi.
+        </p>
+        } @else if (getSegurentEtapa(); as seguent) {
+        @if (potEvolucionar()) {
         <button type="button" class="btn-evolucionar" [ngClass]="getClassTipus(xuxemonSeleccionado!.tipo_elemento)"
           (click)="evolucionar()">
           <span class="btn-evolucionar-icon">⬆</span>
-          Evolucionar a {{ getSegurentEtapa()?.nombre_xuxemon }}
-          <span class="btn-evolucionar-cost">· Xuxa EV (x{{ xuxeEvoSlot.cantidad }})</span>
+          Evolucionar a {{ seguent.nombre_xuxemon }}
+          <span class="btn-evolucionar-cost">
+            · Xuxa EV (x{{ getCostEvolucio() }})
+            @if (xuxemonSeleccionado?.enfermedad === 'Bajon de azucar') {
+            <span class="cost-malaltia"> +2 per Bajón de azúcar</span>
+            }
+          </span>
         </button>
         } @else {
         <p class="evolucio-sense-xuxe">
+          @if (xuxemonSeleccionado?.enfermedad === 'Bajon de azucar') {
+          Necessites <strong>3 Xuxa EV</strong> per evolucionar (Bajón de azúcar).
+          } @else {
           Necessites una <strong>Xuxa EV</strong> a la motxilla per evolucionar.
+          }
         </p>
         }
         } @else {

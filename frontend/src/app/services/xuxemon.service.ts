@@ -108,4 +108,5 @@ export class XuxemonService {
   feed(id: number | string): Observable<FeedResult> {
     return this.http.post<FeedResult>(`http://localhost:8000/api/xuxemons/${id}/feed`, {});
   }
+
 }

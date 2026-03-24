@@ -207,6 +207,21 @@ export class Xuxedex implements OnDestroy {
     return enfermedad ? (icons[enfermedad] ?? '🤒') : '';
   }
 
+  // Cost en Xuxa EV per evolucionar (3 si té Bajón de azúcar)
+  getCostEvolucio(): number {
+    return this.xuxemonSeleccionado?.enfermedad === 'Bajon de azucar' ? 3 : 1;
+  }
+
+  // Pot evolucionar? (no si té Sobredosis o no té prou Xuxa EV)
+  potEvolucionar(): boolean {
+    if (this.xuxemonSeleccionado?.enfermedad === 'Sobredosis') return false;
+    const cost = this.getCostEvolucio();
+    const totalEv = this.inventarioService.slots
+      .filter(s => !s.empty && (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase() === 'xuxa ev')
+      .reduce((acc, s) => acc + s.cantidad, 0);
+    return totalEv >= cost;
+  }
+
   private sincronizarSeleccion(xuxemons: Xuxemon[]): void {
     const visibles = this.getPaginats(xuxemons);
     if (visibles.length === 0) {
