@@ -212,9 +212,10 @@ export class Xuxedex implements OnDestroy {
     return this.xuxemonSeleccionado?.enfermedad === 'Bajon de azucar' ? 3 : 1;
   }
 
-  // Pot evolucionar? (no si té Sobredosis o no té prou Xuxa EV)
+  // Pot evolucionar? (no si té Sobredosis, Atracon, o no té prou Xuxa EV)
   potEvolucionar(): boolean {
     if (this.xuxemonSeleccionado?.enfermedad === 'Sobredosis') return false;
+    if (this.xuxemonSeleccionado?.enfermedad === 'Atracon') return false;
     const cost = this.getCostEvolucio();
     const totalEv = this.inventarioService.slots
       .filter(s => !s.empty && (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase() === 'xuxa ev')

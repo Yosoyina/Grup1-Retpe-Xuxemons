@@ -155,7 +155,7 @@ class XuxemonsController extends Controller
 
         if ($xuxedexEntry && $xuxedexEntry->enfermedad === 'Atracon') {
             return response()->json([
-                'message' => 'El xuxemon no pot evolucionar perquè té la malaltia Atracón activa.',
+                'message' => 'El xuxemon no pot evolucionar perquè té la malaltia Atracon activa.',
             ], 422);
         }
 

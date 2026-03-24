@@ -17,12 +17,23 @@ class InventarioController extends Controller
         $items = Inventario::with('xuxe')->where('user_id', $userId)->get();
         $slotsUtilizados = Inventario::slotsUtilizados($userId);
 
+        // Mapears los items para incluir correctamente el campo apilable del xuxe
+        $itemsFormateados = $items->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'xuxe_id' => $item->xuxe_id,
+                'cantidad' => $item->cantidad,
+                'apilable' => $item->xuxe->apilable,
+                'xuxe' => $item->xuxe,
+            ];
+        });
+
         return response()->json([
             'user_id' => $userId,
             'slots_utilizados' => $slotsUtilizados,
             'max_slots' => Inventario::MAX_SLOTS,
             'free_slots' => Inventario::MAX_SLOTS - $slotsUtilizados,
-            'items' => $items,
+            'items' => $itemsFormateados,
         ]);
     }
 
@@ -34,31 +45,32 @@ class InventarioController extends Controller
             'xuxe_id' => 'required|integer|exists:xuxes,id',
             'cantidad' => 'required|integer|min:1',
         ]);
- 
+
         $userId = $request->input('user_id');
         $xuxeId = $request->input('xuxe_id');
         $cantidad = $request->input('cantidad');
- 
+
         $xuxe = Xuxes::findOrFail($xuxeId);
- 
+
         if ($xuxe->apilable) {
-            // ── APILABLE (Xuxes) 
+            // ── APILABLE (Xuxes)
 
             //Llenamos los stacks existentes del mismo tipo que no estén llenos
             $itemsExistents = Inventario::where('user_id', $userId)
                 ->where('xuxe_id', $xuxeId)
                 ->where('cantidad', '<', Inventario::MAX_STACK)
                 ->get();
- 
+
             foreach ($itemsExistents as $item) {
                 if ($cantidad <= 0) break;
                 $espai = Inventario::MAX_STACK - $item->cantidad;
                 $agregar = min($cantidad, $espai);
                 $item->cantidad += $agregar;
+                $item->apilable = true;
                 $item->save();
                 $cantidad -= $agregar;
             }
- 
+
             // En este apartado creeamos nuevos slots si todavia quedan cadtidades por agregar y hay espacio en el inventario
             while ($cantidad > 0 && Inventario::slotsUtilizados($userId) < Inventario::MAX_SLOTS) {
                 $agregar = min($cantidad, Inventario::MAX_STACK);
@@ -66,29 +78,31 @@ class InventarioController extends Controller
                     'user_id' => $userId,
                     'xuxe_id' => $xuxeId,
                     'cantidad' => $agregar,
+                    'apilable' => true,
                 ]);
                 $cantidad -= $agregar;
             }
- 
+
         } else {
             // ── NO APILABLE (Vacunas)
- 
+
             while ($cantidad > 0 && Inventario::slotsUtilizados($userId) < Inventario::MAX_SLOTS) {
                 Inventario::create([
                     'user_id' => $userId,
                     'xuxe_id' => $xuxeId,
                     'cantidad' => 1,
+                    'apilable' => false,
                 ]);
                 $cantidad--;
             }
         }
- 
+
         $descartado = $cantidad;
- 
+
         $mensaje = $descartado > 0
             ? "Inventari ple. S'han descartat {$descartado} unitats per manca d'espai."
             : "Items afegits a l'inventari correctament.";
- 
+
         return response()->json([
             'mensaje' => $mensaje,
             'descartado' => $descartado,
