@@ -17,6 +17,13 @@ class Xuxedex extends Model
         'esta_capturado',
         'enfermedad',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'esta_capturado' => 'boolean',
+        ];
+    }
  
     // Relació amb el xuxemon
     public function xuxemon()
@@ -28,5 +35,13 @@ class Xuxedex extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id_usuario');
+    }
+
+    
+    //Un xuxemon puede tener muchas enfermedades.
+     
+    public function malalties()
+    {
+        return $this->hasMany(Malalties::class, 'xuxedex_id');
     }
 }

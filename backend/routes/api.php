@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RewardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\XuxemonsController;
 use App\Http\Controllers\InventarioController;
@@ -18,6 +19,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/profile', [UserController::class, 'perfil']);
     Route::put('/profile', [UserController::class, 'updatePerfil']);
     Route::delete('/profile', [UserController::class, 'eliminarUsuario']);
+    Route::post('/reward', [RewardController::class, 'claim']);
 
     // ── XUXEDEX ROUTES ───────────────────────────────────
     Route::get('/xuxedex', [XuxemonsController::class, 'getUserXuxedex']);
