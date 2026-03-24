@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\InventarioService;
 use App\Services\XuxedexService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -10,8 +11,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function __construct(private XuxedexService $xuxedexService)
-    {
+    public function __construct(
+        private XuxedexService $xuxedexService,
+        private InventarioService $inventarioService,
+    ) {
     }
 
     // Registra un nou usuari i li assigna un id_jugador únic. El primer usuari registrat és admin.
@@ -45,6 +48,7 @@ class AuthController extends Controller
         ]);
 
         $this->xuxedexService->ensureStarterXuxedex($user->id);
+        $this->inventarioService->ensureStarterInventario($user->id);
 
         $token = Auth::guard('api')->login($user);
 
