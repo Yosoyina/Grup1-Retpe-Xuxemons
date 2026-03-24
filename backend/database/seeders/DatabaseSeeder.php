@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([XuxemonsSeeder::class]);
-        $this->call([XuxesSeeder::class]);
+        $this->call([VacunesSeeder::class]);
         $this->call([UserSeeder::class]);
         $this->call([InventarioSeeder::class]);
     }
