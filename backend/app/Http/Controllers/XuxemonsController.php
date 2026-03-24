@@ -51,11 +51,6 @@ class XuxemonsController extends Controller
         }
 
         $xuxemons = $query->get()->map(function ($x) {
-            // Obtenim les enfermedades del xuxemon
-            $malalties = DB::table('malalties')
-                ->where('xuxedex_id', $x->xuxedex_id)
-                ->pluck('tipo_enfermedad');
-
             return [
                 'id' => $x->id,
                 'nombre_xuxemon' => $x->esta_capturado ? $x->nombre_xuxemon : '???',
@@ -66,9 +61,9 @@ class XuxemonsController extends Controller
                 'esta_capturado' => (bool) $x->esta_capturado,
                 'bloquejat' => !(bool) $x->esta_capturado,
 
-                // Estat de salut: mostrat sempre que el xuxemon estigui capturat
-                'esta_enfermo' => $x->esta_capturado ? $malalties->isNotEmpty() : false,
-                'malalties' => $x->esta_capturado ? $malalties->values() : [],
+                // Estat de salut: llegit directament de xuxedex.enfermedad
+                'esta_enfermo' => $x->esta_capturado ? !is_null($x->enfermedad) : false,
+                'enfermedad' => $x->esta_capturado ? $x->enfermedad : null,
             ];
         });
         return response()->json($xuxemons, 200);
@@ -152,23 +147,16 @@ class XuxemonsController extends Controller
         $xuxemon = Xuxemons::findOrFail($id);
         $userId = $request->user()->id;
 
-        // Comprabar si el Xuxemon tiene la Enfermedad Atracon para que no pueda evolucionar
+        // Comprova si el Xuxemon té alguna malaltia que bloquegi l'evolució
         $xuxedexEntry = DB::table('xuxedex')
             ->where('id_usuario', $userId)
             ->where('id_xuxemon', $xuxemon->id)
             ->first();
 
-        if ($xuxedexEntry) {
-            $Atracon = DB::table('malalties')
-                ->where('xuxedex_id', $xuxedexEntry->id)
-                ->where('tipo_enfermedad', 'Atracon')
-                ->exists();
-
-            if ($Atracon) {
-                return response()->json([
-                    'message' => 'El xuxemon no pot evolucionar perquè té la malaltia Atracón activa.',
-                ], 422);
-            }
+        if ($xuxedexEntry && $xuxedexEntry->enfermedad === 'Atracon') {
+            return response()->json([
+                'message' => 'El xuxemon no pot evolucionar perquè té la malaltia Atracón activa.',
+            ], 422);
         }
 
         $nextTamano = match ($xuxemon->tamano) {
@@ -207,19 +195,6 @@ class XuxemonsController extends Controller
             return response()->json(['message' => "No s'ha trobat l'evolució."], 404);
         }
 
-        // Comprobamos las XuxEvos — si té Bajon_Azucar necessita +2 xuxes addicionals per nivell
-        $xuxesNecessaries = 1;
-        if ($xuxedexEntry) {
-            $teBajonAzucar = DB::table('malalties')
-                ->where('xuxedex_id', $xuxedexEntry->id)
-                ->where('tipo_enfermedad', 'Bajon_Azucar')
-                ->exists();
-
-            if ($teBajonAzucar) {
-                $xuxesNecessaries += 2;
-            }
-        }
-
         // Comprova que l'usuari te una Xuxa EV a l'inventari
         $xuxaEv = DB::table('inventario')
             ->join('xuxes', 'inventario.xuxe_id', '=', 'xuxes.id')
@@ -236,9 +211,9 @@ class XuxemonsController extends Controller
             ], 422);
         }
 
-        // Consumeix 1 Xuxa EV
-        if ($xuxaEv->cantidad > 1) {
-            DB::table('inventario')->where('id', $xuxaEv->id)->decrement($xuxesNecessaries);
+        // Consumeix les Xuxa EV necessàries
+        if ($xuxaEv->cantidad > $xuxesNecessaries) {
+            DB::table('inventario')->where('id', $xuxaEv->id)->decrement('cantidad', $xuxesNecessaries);
         } else {
             DB::table('inventario')->where('id', $xuxaEv->id)->delete();
         }
@@ -454,6 +429,7 @@ class XuxemonsController extends Controller
             ->where('xuxedex.esta_capturado', true)
             ->select(
                 'xuxedex.id as xuxedex_id',
+                'xuxedex.enfermedad',
                 'xuxemons.id',
                 'xuxemons.nombre_xuxemon',
                 'xuxemons.tipo_elemento',
@@ -463,10 +439,6 @@ class XuxemonsController extends Controller
             )
             ->get()
             ->map(function ($x) {
-                $malalties = DB::table('malalties')
-                    ->where('xuxedex_id', $x->xuxedex_id)
-                    ->pluck('tipus');
-
                 return [
                     'id' => $x->id,
                     'xuxedex_id' => $x->xuxedex_id,
@@ -475,8 +447,8 @@ class XuxemonsController extends Controller
                     'tamano' => $x->tamano,
                     'descripcio' => $x->descripcio,
                     'imagen' => $x->imagen,
-                    'esta_enfermo' => $malalties->isNotEmpty(),
-                    'malalties' => $malalties->values(),
+                    'esta_enfermo' => !is_null($x->enfermedad),
+                    'enfermedad' => $x->enfermedad,
                 ];
             });
 
