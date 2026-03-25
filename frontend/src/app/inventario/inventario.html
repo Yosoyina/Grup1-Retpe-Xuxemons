@@ -2,7 +2,7 @@
 
   <!-- Header -->
   <header class="inv-header">
-    <span class="bag-icon"></span>
+    <img class="bag-deco" src="/Moxilla_Inventario.png" alt="Motxilla">
     <h1 class="inv-title">Motxilla</h1>
   </header>
 
@@ -81,9 +81,6 @@
               <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
                 {{ slot.xuxe?.tipus }}
               </span>
-
-              <button class="btn-remove" (click)="removeOne(slot, $event)" aria-label="Eliminar"></button>
-
             </button>
           </li>
         }
