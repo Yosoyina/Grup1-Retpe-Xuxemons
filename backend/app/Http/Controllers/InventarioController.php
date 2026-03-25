@@ -221,15 +221,19 @@ class InventarioController extends Controller
             ], 422);
         }
  
-        // Consumeix la xuxe
+        // Consumeix la xuxe i calcula la quantitat restant
         if ($item->cantidad > 1) {
             $item->decrement('cantidad');
+            $cantidadRestant = $item->cantidad - 1;
         } else {
             $item->delete();
+            $cantidadRestant = 0;
         }
- 
+
         return response()->json([
-            'message' => 'Xuxemon alimentat correctament.',
+            'message'          => 'Xuxemon alimentat correctament.',
+            'xuxe_id'          => $item->xuxe_id,
+            'cantidad_restant' => $cantidadRestant,
         ], 200);
     }
 }
