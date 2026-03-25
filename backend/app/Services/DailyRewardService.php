@@ -25,25 +25,27 @@ class DailyRewardService
         $availableAt = $now->copy()->startOfDay()->setHour(self::REWARD_HOUR);
 
         if ($now->lt($availableAt)) {
-            return [
-                'status' => 'not_available_yet',
-                'granted' => false,
-                'message' => 'La recompensa diaria estará disponible a las 08:00.',
-                'available_at' => $availableAt->toIso8601String(),
-                'next_available_at' => $availableAt->toIso8601String(),
-            ];
+            return $this->buildResponse(
+                'not_available_yet',
+                false,
+                'La recompensa diaria estará disponible a las 08:00.',
+                $availableAt,
+                $availableAt,
+                []
+            );
         }
 
         $lastRewardAt = $user->last_reward_at?->copy()->timezone(self::REWARD_TIMEZONE);
 
         if ($lastRewardAt && $lastRewardAt->greaterThanOrEqualTo($availableAt)) {
-            return [
-                'status' => 'already_claimed',
-                'granted' => false,
-                'message' => 'La recompensa diaria de hoy ya fue recibida.',
-                'available_at' => $availableAt->toIso8601String(),
-                'next_available_at' => $availableAt->copy()->addDay()->toIso8601String(),
-            ];
+            return $this->buildResponse(
+                'already_claimed',
+                false,
+                'La recompensa diaria de hoy ya fue recibida.',
+                $availableAt,
+                $availableAt->copy()->addDay(),
+                $user->last_reward_summary ?? []
+            );
         }
 
         return DB::transaction(function () use ($user, $now, $availableAt) {
@@ -53,16 +55,7 @@ class DailyRewardService
             $this->xuxedexService->ensureStarterXuxedex($user->id);
             $xuxemonReward = $this->unlockRandomSmallXuxemon($user->id);
 
-            $user->forceFill([
-                'last_reward_at' => $now->copy()->setTimezone('UTC'),
-            ])->save();
-
-            return [
-                'status' => 'granted',
-                'granted' => true,
-                'message' => 'Has recibido tu recompensa diaria.',
-                'available_at' => $availableAt->toIso8601String(),
-                'next_available_at' => $availableAt->copy()->addDay()->toIso8601String(),
+            $summary = [
                 'xuxes' => $xuxesSummary['items'],
                 'xuxes_requested' => self::DAILY_XUXES,
                 'xuxes_added' => $xuxesSummary['added'],
@@ -70,7 +63,44 @@ class DailyRewardService
                 'xuxemon' => $xuxemonReward,
                 'xuxemon_unlocked' => $xuxemonReward !== null,
             ];
+
+            $user->forceFill([
+                'last_reward_at' => $now->copy()->setTimezone('UTC'),
+                'last_reward_summary' => $summary,
+            ])->save();
+
+            return $this->buildResponse(
+                'granted',
+                true,
+                'Has recibido tu recompensa diaria.',
+                $availableAt,
+                $availableAt->copy()->addDay(),
+                $summary
+            );
         });
+    }
+
+    private function buildResponse(
+        string $status,
+        bool $granted,
+        string $message,
+        Carbon $availableAt,
+        Carbon $nextAvailableAt,
+        array $summary
+    ): array {
+        return [
+            'status' => $status,
+            'granted' => $granted,
+            'message' => $message,
+            'available_at' => $availableAt->toIso8601String(),
+            'next_available_at' => $nextAvailableAt->toIso8601String(),
+            'xuxes' => $summary['xuxes'] ?? [],
+            'xuxes_requested' => $summary['xuxes_requested'] ?? self::DAILY_XUXES,
+            'xuxes_added' => $summary['xuxes_added'] ?? 0,
+            'xuxes_discarded' => $summary['xuxes_discarded'] ?? 0,
+            'xuxemon' => $summary['xuxemon'] ?? null,
+            'xuxemon_unlocked' => $summary['xuxemon_unlocked'] ?? false,
+        ];
     }
 
     private function buildRandomXuxesReward(): Collection
