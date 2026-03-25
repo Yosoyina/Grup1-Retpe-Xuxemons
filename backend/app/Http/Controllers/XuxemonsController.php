@@ -267,11 +267,17 @@ class XuxemonsController extends Controller
      */
     public function feed(Request $request, string $id)
     {
+        $request->validate([
+            'xuxedex_id' => 'required|integer|exists:xuxedex,id',
+        ]);
+
         $userId = $request->user()->id;
         $xuxemon = Xuxemons::findOrFail($id);
 
         // Busca l'entrada del xuxedex per aquest usuari i xuxemon
+        $xuxedexId = $request->input('xuxedex_id');
         $entrada = DB::table('xuxedex')
+            ->where('id', $xuxedexId)
             ->where('id_usuario', $userId)
             ->where('id_xuxemon', $xuxemon->id)
             ->where('esta_capturado', true)
@@ -316,8 +322,8 @@ class XuxemonsController extends Controller
 
         if ($nova !== null) {
             DB::table('xuxedex')
+                ->where('id', $xuxedexId)
                 ->where('id_usuario', $userId)
-                ->where('id_xuxemon', $xuxemon->id)
                 ->update(['enfermedad' => $nova, 'updated_at' => now()]);
         }
 
