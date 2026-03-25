@@ -52,6 +52,7 @@ class XuxemonsController extends Controller
 
         $xuxemons = $query->get()->map(function ($x) {
             return [
+                'xuxedex_id' => $x->xuxedex_id,
                 'id' => $x->id,
                 'nombre_xuxemon' => $x->esta_capturado ? $x->nombre_xuxemon : '???',
                 'tipo_elemento' => $x->tipo_elemento,

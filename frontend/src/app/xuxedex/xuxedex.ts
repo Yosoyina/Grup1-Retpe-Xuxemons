@@ -166,7 +166,7 @@ export class Xuxedex implements OnDestroy {
     this.feedCarregant = true;
     this.feedResultat = null;
 
-    this.xuxemonService.feed(this.xuxemonSeleccionado.id).subscribe({
+    this.xuxemonService.feed(this.xuxemonSeleccionado.id, this.xuxemonSeleccionado.xuxedex_id || 0).subscribe({
       next: (res) => {
         this.feedResultat = res;
         this.feedCarregant = false;

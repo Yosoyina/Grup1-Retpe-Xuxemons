@@ -14,6 +14,7 @@ export interface EtapaEvoluciones {
 export type Enfermedad = 'Bajon de azucar' | 'Sobredosis' | 'Atracon' | null;
 
 export interface Xuxemon {
+  xuxedex_id?: number;
   id: number | string;
   nombre_xuxemon: string;
   tipo_elemento: 'Aigua' | 'Terra' | 'Aire';
@@ -105,8 +106,8 @@ export class XuxemonService {
   }
 
   // Alimenta un Xuxemon i pot provocar una infecció
-  feed(id: number | string): Observable<FeedResult> {
-    return this.http.post<FeedResult>(`http://localhost:8000/api/xuxemons/${id}/feed`, {});
+  feed(id: number | string, xuxedex_id: number): Observable<FeedResult> {
+    return this.http.post<FeedResult>(`http://localhost:8000/api/xuxemons/${id}/feed`, { xuxedex_id });
   }
 
 }
