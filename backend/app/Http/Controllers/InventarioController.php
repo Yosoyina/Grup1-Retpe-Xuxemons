@@ -182,7 +182,13 @@ class InventarioController extends Controller
     public function alimentar(Request $request, int $inventari_id, int $xuxedex_id)
     {
         $userId = Auth::guard('api')->user()->id;
- 
+
+        $request->validate([
+            'cantidad' => 'required|integer|min:1',
+        ]);
+
+        $cantidadAUsar = $request->input('cantidad');
+
         $item = Inventario::with('xuxe')->findOrFail($inventari_id);
  
         if ($item->user_id !== $userId) {
@@ -195,7 +201,15 @@ class InventarioController extends Controller
                 'message' => 'Aquest ítem no és comida i no es pot usar per alimentar.',
             ], 422);
         }
- 
+
+        // Validar xuxes suficients
+        if ($item->cantidad < $cantidadAUsar) {
+            return response()->json([
+                'message'            => "No tens prou xuxes. Tens {$item->cantidad} i necessites {$cantidadAUsar}.",
+                'cantidad_available' => $item->cantidad,
+            ], 422);
+        }
+
         // Comprova que el xuxemon pertany al jugador
         $entrada = DB::table('xuxedex')
             ->where('id', $xuxedex_id)
@@ -222,9 +236,11 @@ class InventarioController extends Controller
         }
  
         // Consumeix la xuxe i calcula la quantitat restant
-        if ($item->cantidad > 1) {
-            $item->decrement('cantidad');
-            $cantidadRestant = $item->cantidad - 1;
+        $cantidadAbans = $item->cantidad;
+
+        if ($item->cantidad > $cantidadAUsar) {
+            $item->decrement('cantidad', $cantidadAUsar);
+            $cantidadRestant = $cantidadAbans - $cantidadAUsar;
         } else {
             $item->delete();
             $cantidadRestant = 0;
@@ -233,6 +249,8 @@ class InventarioController extends Controller
         return response()->json([
             'message'          => 'Xuxemon alimentat correctament.',
             'xuxe_id'          => $item->xuxe_id,
+            'cantidad_abans'   => $cantidadAbans,
+            'cantidad_usada'   => $cantidadAUsar,
             'cantidad_restant' => $cantidadRestant,
         ], 200);
     }
