@@ -865,6 +865,56 @@
   to { transform: rotate(360deg); }
 }
 
+@keyframes evoSceneIn {
+  0% { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes evoAuraPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.88); opacity: 0.5; }
+  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.95; }
+}
+
+@keyframes evoWave {
+  0% { transform: translate(-50%, -50%) scale(0.55); opacity: 0; }
+  30% { opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+
+@keyframes evoShake {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  10% { transform: translate3d(-8px, 2px, 0) rotate(-2deg) scale(1.02); }
+  25% { transform: translate3d(10px, -6px, 0) rotate(2.4deg) scale(1.05); }
+  40% { transform: translate3d(-12px, 4px, 0) rotate(-2.6deg) scale(1.07); }
+  55% { transform: translate3d(13px, -3px, 0) rotate(2.1deg) scale(1.08); }
+  70% { transform: translate3d(-10px, -5px, 0) rotate(-1.8deg) scale(1.05); }
+  85% { transform: translate3d(7px, 3px, 0) rotate(1.3deg) scale(1.02); }
+}
+
+@keyframes evoSpark {
+  0% { transform: translateY(18px) scale(0.35); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(-92px) scale(1.08); opacity: 0; }
+}
+
+@keyframes evoRay {
+  0%, 100% { opacity: 0; }
+  35% { opacity: 1; }
+  70% { opacity: 0.75; }
+}
+
+@keyframes evoFlash {
+  0% { opacity: 0; transform: scale(0.25); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: scale(2.8); }
+}
+
+@keyframes evoReveal {
+  0% { opacity: 0; transform: scale(0.55); filter: brightness(2.2) blur(4px); }
+  55% { opacity: 1; transform: scale(1.18); filter: brightness(1.25) blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+}
+
 .evolucio-modal {
   position: relative;
   width: min(780px, 100%);
@@ -916,6 +966,11 @@
   margin-bottom: 28px;
 }
 
+.evolucio-titol.amagat {
+  opacity: 0.18;
+  transform: scale(0.96);
+}
+
 .evolucio-titol-icon {
   font-size: 1.4rem;
   color: var(--yellow);
@@ -956,6 +1011,12 @@
   background: linear-gradient(180deg, #ffe890, #ffd84f);
 }
 
+.evolucio-tancar:disabled {
+  opacity: 0.45;
+  cursor: wait;
+  transform: none;
+}
+
 .evolucio-carregant {
   display: flex;
   flex-direction: column;
@@ -987,6 +1048,214 @@
   font-weight: 600;
   color: #c0392b;
 }
+
+.evolucio-cinematica {
+  position: relative;
+  min-height: 470px;
+  margin-top: -6px;
+  border-radius: 34px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(126, 186, 255, 0.28), rgba(15, 27, 78, 0.12) 34%, rgba(10, 16, 42, 0.92) 92%),
+    linear-gradient(180deg, rgba(10, 18, 48, 0.94), rgba(6, 10, 30, 0.98));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 26px 46px rgba(9, 20, 60, 0.28);
+  animation: evoSceneIn 0.25s ease-out;
+}
+
+.cinematica-fons,
+.cinematica-aura,
+.cinematica-flash,
+.cinematica-ones,
+.cinematica-espurna,
+.cinematica-rai {
+  position: absolute;
+  pointer-events: none;
+}
+
+.cinematica-fons {
+  inset: -10% -8% auto;
+  height: 86%;
+  background:
+    radial-gradient(circle at center, rgba(111, 193, 255, 0.34), rgba(111, 193, 255, 0) 55%);
+  filter: blur(18px);
+  opacity: 0.9;
+}
+
+.cinematica-aura {
+  left: 50%;
+  top: 43%;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(255, 252, 206, 0.9) 0, rgba(255, 224, 118, 0.72) 18%, rgba(110, 187, 255, 0.42) 44%, rgba(110, 187, 255, 0) 72%);
+  transform: translate(-50%, -50%);
+  opacity: 0.6;
+}
+
+.evolucio-cinematica.fase-charging .cinematica-aura,
+.evolucio-cinematica.fase-flash .cinematica-aura {
+  animation: evoAuraPulse 0.8s ease-in-out infinite;
+}
+
+.cinematica-flash {
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.98), rgba(255, 241, 181, 0.94) 22%, rgba(145, 208, 255, 0.3) 54%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0;
+  z-index: 6;
+}
+
+.evolucio-cinematica.fase-flash .cinematica-flash {
+  animation: evoFlash 0.58s ease-out forwards;
+}
+
+.cinematica-ones {
+  left: 50%;
+  top: 43%;
+  width: 270px;
+  height: 270px;
+  border: 3px solid rgba(255, 224, 118, 0.62);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.evolucio-cinematica.fase-charging .cinematica-ones,
+.evolucio-cinematica.fase-flash .cinematica-ones {
+  animation: evoWave 1s ease-out infinite;
+}
+
+.ona-2 {
+  animation-delay: 0.35s !important;
+}
+
+.cinematica-sprite {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: 280px;
+  height: 280px;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  z-index: 4;
+  filter: drop-shadow(0 24px 34px rgba(0, 0, 0, 0.34));
+}
+
+.cinematica-sprite img,
+.cinematica-sprite .placeholder-img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  object-position: center;
+  transform: translateX(-34px);
+}
+
+.cinematica-sprite.shaking {
+  animation: evoShake 0.22s linear infinite;
+}
+
+.cinematica-sprite.revealed img,
+.cinematica-sprite.revealed .placeholder-img {
+  animation: evoReveal 0.62s ease-out both;
+  transform: translateX(0);
+}
+
+.cinematica-sprite.hidden-by-flash {
+  opacity: 0.12;
+}
+
+.cinematica-info {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  width: min(88%, 560px);
+  transform: translateX(-50%);
+  z-index: 5;
+  text-align: center;
+}
+
+.cinematica-kicker {
+  margin: 0 0 12px;
+  color: #ffe07b;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.cinematica-info h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 900;
+  line-height: 0.92;
+  margin-top: 2px;
+  text-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.38),
+    0 0 28px rgba(126, 186, 255, 0.28);
+}
+
+.cinematica-missatge {
+  margin: 18px auto 0;
+  max-width: 470px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cinematica-espurna {
+  top: 40%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 1), rgba(255, 220, 109, 0.96) 45%, rgba(126, 186, 255, 0) 74%);
+  opacity: 0;
+  z-index: 3;
+  box-shadow: 0 0 22px rgba(255, 222, 129, 0.55);
+}
+
+.evolucio-cinematica.fase-charging .cinematica-espurna,
+.evolucio-cinematica.fase-flash .cinematica-espurna {
+  animation: evoSpark 0.72s linear infinite;
+}
+
+.espurna-1 { left: calc(50% - 146px); top: calc(40% + 12px); animation-delay: 0s; }
+.espurna-2 { left: calc(50% - 98px); top: calc(40% - 42px); animation-delay: 0.08s; }
+.espurna-3 { left: calc(50% - 36px); top: calc(40% - 82px); animation-delay: 0.16s; }
+.espurna-4 { left: calc(50% + 28px); top: calc(40% - 80px); animation-delay: 0.24s; }
+.espurna-5 { left: calc(50% + 94px); top: calc(40% - 34px); animation-delay: 0.32s; }
+.espurna-6 { left: calc(50% + 142px); top: calc(40% + 18px); animation-delay: 0.4s; }
+.espurna-7 { left: calc(50% - 72px); top: calc(40% + 88px); animation-delay: 0.48s; }
+.espurna-8 { left: calc(50% + 58px); top: calc(40% + 92px); animation-delay: 0.56s; }
+
+.cinematica-rai {
+  width: 48px;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 245, 180, 1), rgba(255, 224, 118, 1) 34%, rgba(126, 186, 255, 0.82) 68%, rgba(255, 255, 255, 0));
+  opacity: 0;
+  z-index: 2;
+  box-shadow: 0 0 26px rgba(255, 224, 118, 0.36);
+}
+
+.evolucio-cinematica.fase-charging .cinematica-rai,
+.evolucio-cinematica.fase-flash .cinematica-rai {
+  animation: evoRay 0.34s linear infinite;
+}
+
+.rai-1 { left: calc(50% - 136px); top: calc(40% - 22px); transform: rotate(-22deg); }
+.rai-2 { left: calc(50% - 118px); top: calc(40% + 56px); transform: rotate(36deg); animation-delay: 0.05s; }
+.rai-3 { left: calc(50% + 84px); top: calc(40% - 54px); transform: rotate(28deg); animation-delay: 0.1s; }
+.rai-4 { left: calc(50% + 118px); top: calc(40% + 34px); transform: rotate(-32deg); animation-delay: 0.15s; }
+.rai-5 { left: calc(50% - 18px); top: calc(40% - 120px); transform: rotate(88deg); animation-delay: 0.2s; }
+.rai-6 { left: calc(50% - 6px); top: calc(40% + 118px); transform: rotate(92deg); animation-delay: 0.25s; }
 
 .evolucio-cadena {
   display: flex;
@@ -1166,6 +1435,11 @@
   cursor: pointer;
   box-shadow: var(--shadow-md);
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.btn-evolucionar:disabled {
+  cursor: wait;
+  opacity: 0.82;
 }
 
 .btn-evolucionar:hover {
@@ -1728,6 +2002,24 @@
   .evolucio-etapa {
     width: 100%;
     max-width: 260px;
+  }
+
+  .evolucio-cinematica {
+    min-height: 410px;
+  }
+
+  .cinematica-sprite {
+    width: min(82%, 230px);
+    height: 230px;
+    top: 39%;
+  }
+
+  .cinematica-info h3 {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .cinematica-missatge {
+    font-size: 0.92rem;
   }
 }
 

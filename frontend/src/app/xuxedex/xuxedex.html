@@ -2,7 +2,6 @@
   <h1>XUXEDEX</h1>
 </header>
 
-<!-- TOAST FEED -->
 @if (feedResultat) {
 <div class="feed-toast"
   [class.toast-infectat]="feedResultat.infectat"
@@ -20,7 +19,7 @@
 
 <div class="container">
   @if (xuxemons$ | async; as xuxemons) {
-  <section class="panel panel-esquerra" aria-label="Selecció de Xuxemon">
+  <section class="panel panel-esquerra" aria-label="Seleccio de Xuxemon">
     <div class="filtros tipus-filtros" role="group" aria-label="Filtrar per tipus">
       @for (tipo of xuxemonService.getTipus(); track tipo) {
       <button type="button" class="filter-button" [class.activo]="filtroActual === tipo"
@@ -32,7 +31,7 @@
       }
     </div>
 
-    <div class="filtros mides" role="group" aria-label="Filtrar per grandària">
+    <div class="filtros mides" role="group" aria-label="Filtrar per grandaria">
       @for (mida of xuxemonService.getMides(); track mida) {
       <button type="button" class="size-button" [class.activo]="filtroMida === mida"
         [ngClass]="mida === 'Tots' ? 'mida-tots' : getClassMida(mida)" [attr.aria-pressed]="filtroMida === mida"
@@ -101,11 +100,11 @@
 
         <div class="detalle-accions">
           <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
-            (click)="verCadenaEvolucion()">Evolució</button>
+            (click)="verCadenaEvolucion()">Evolucio</button>
 
           <button type="button" class="btn-alimentar"
             [disabled]="feedCarregant || xuxemonSeleccionado.enfermedad === 'Atracon'"
-            [title]="xuxemonSeleccionado.enfermedad === 'Atracon' ? 'No pot menjar (Atracón)' : 'Alimentar'"
+            [title]="xuxemonSeleccionado.enfermedad === 'Atracon' ? 'No pot menjar (Atracon)' : 'Alimentar'"
             (click)="alimentar()">
             {{ feedCarregant ? '🍬...' : '🍬 Alimentar' }}
           </button>
@@ -170,12 +169,12 @@
   </section>
 
   @if (mostrarPaginacio) {
-  <nav class="paginacion" aria-label="Paginació">
-    <button type="button" (click)="paginaAnterior()" [disabled]="paginaActual === 0" aria-label="Pàgina anterior">&larr;
+  <nav class="paginacion" aria-label="Paginacio">
+    <button type="button" (click)="paginaAnterior()" [disabled]="paginaActual === 0" aria-label="Pagina anterior">&larr;
       Anterior</button>
     <span aria-live="polite">Pagina {{ paginaActual + 1 }} / {{ getTotalPagines(xuxemons) }}</span>
     <button type="button" (click)="paginaSiguiente(xuxemons)" [disabled]="paginaActual >= getTotalPagines(xuxemons) - 1"
-      aria-label="Pàgina següent">
+      aria-label="Pagina seguent">
       Seguent &rarr;
     </button>
   </nav>
@@ -187,9 +186,9 @@
     <div class="evolucio-modal" (click)="$event.stopPropagation()"
       [ngClass]="xuxemonSeleccionado ? getClassTipus(xuxemonSeleccionado.tipo_elemento) : ''">
 
-      <button type="button" class="evolucio-tancar" (click)="cerrarEvolucion()">✕</button>
+      <button type="button" class="evolucio-tancar" [disabled]="cinematicaEvolucio" (click)="cerrarEvolucion()">✕</button>
 
-      <div class="evolucio-titol">
+      <div class="evolucio-titol" [class.amagat]="cinematicaEvolucio">
         <span class="evolucio-titol-icon">✦</span>
         <h2>Cadena Evolutiva</h2>
       </div>
@@ -201,6 +200,49 @@
       </div>
       } @else if (errorEvolucion) {
       <p class="evolucio-error">{{ errorEvolucion }}</p>
+      } @else if (cinematicaEvolucio) {
+      <section class="evolucio-cinematica"
+        [class.fase-intro]="faseEvolucio === faseEvolucioIntro"
+        [class.fase-charging]="faseEvolucio === faseEvolucioCharging"
+        [class.fase-flash]="faseEvolucio === faseEvolucioFlash"
+        [class.fase-reveal]="faseEvolucio === faseEvolucioReveal">
+        <div class="cinematica-fons"></div>
+        <div class="cinematica-aura"></div>
+        <div class="cinematica-flash"></div>
+        <div class="cinematica-ones ona-1"></div>
+        <div class="cinematica-ones ona-2"></div>
+        <span class="cinematica-espurna espurna-1"></span>
+        <span class="cinematica-espurna espurna-2"></span>
+        <span class="cinematica-espurna espurna-3"></span>
+        <span class="cinematica-espurna espurna-4"></span>
+        <span class="cinematica-espurna espurna-5"></span>
+        <span class="cinematica-espurna espurna-6"></span>
+        <span class="cinematica-espurna espurna-7"></span>
+        <span class="cinematica-espurna espurna-8"></span>
+        <span class="cinematica-rai rai-1"></span>
+        <span class="cinematica-rai rai-2"></span>
+        <span class="cinematica-rai rai-3"></span>
+        <span class="cinematica-rai rai-4"></span>
+        <span class="cinematica-rai rai-5"></span>
+        <span class="cinematica-rai rai-6"></span>
+
+        <div class="cinematica-sprite"
+          [class.shaking]="faseEvolucio === faseEvolucioCharging"
+          [class.revealed]="faseEvolucio === faseEvolucioReveal"
+          [class.hidden-by-flash]="faseEvolucio === faseEvolucioFlash">
+          @if (getSpriteCinematica()) {
+          <img [src]="getSpriteCinematica()!" [alt]="getNomCinematica()">
+          } @else {
+          <div class="placeholder-img">{{ getNomCinematica().charAt(0) }}</div>
+          }
+        </div>
+
+        <div class="cinematica-info">
+          <p class="cinematica-kicker">@if (faseEvolucio === faseEvolucioReveal) { EVOLUCIO COMPLETA } @else { ENERGIA XUXEMON }</p>
+          <h3>{{ getNomCinematica() }}</h3>
+          <p class="cinematica-missatge">{{ getMissatgeCinematica() }}</p>
+        </div>
+      </section>
       } @else {
       <div class="evolucio-cadena">
         @for (etapa of getCadenaEvolucioNormalitzada(); track etapa.id; let last = $last; let i = $index) {
@@ -231,29 +273,29 @@
       <div class="evolucio-accio">
         @if (xuxemonSeleccionado?.enfermedad === 'Sobredosis') {
         <p class="evolucio-bloqueig">
-          <span>💊</span> El Xuxemon té <strong>Sobredosis</strong> i no pot evolucionar fins que es curi.
+          <span>💊</span> El Xuxemon te <strong>Sobredosis</strong> i no pot evolucionar fins que es curi.
         </p>
         } @else if (xuxemonSeleccionado?.enfermedad === 'Atracon') {
         <p class="evolucio-bloqueig">
-          <span>🤢</span> El Xuxemon té <strong>Atracón</strong> i no pot evolucionar fins que es curi.
+          <span>🤢</span> El Xuxemon te <strong>Atracon</strong> i no pot evolucionar fins que es curi.
         </p>
         } @else if (getSegurentEtapa(); as seguent) {
         @if (potEvolucionar()) {
-        <button type="button" class="btn-evolucionar" [ngClass]="getClassTipus(xuxemonSeleccionado!.tipo_elemento)"
-          (click)="evolucionar()">
+        <button type="button" class="btn-evolucionar" [disabled]="cinematicaEvolucio"
+          [ngClass]="getClassTipus(xuxemonSeleccionado!.tipo_elemento)" (click)="evolucionar()">
           <span class="btn-evolucionar-icon">⬆</span>
           Evolucionar a {{ seguent.nombre_xuxemon }}
           <span class="btn-evolucionar-cost">
             · Xuxa EV (x{{ getCostEvolucio() }})
             @if (xuxemonSeleccionado?.enfermedad === 'Bajon de azucar') {
-            <span class="cost-malaltia"> +2 per Bajón de azúcar</span>
+            <span class="cost-malaltia"> +2 per Bajon de azucar</span>
             }
           </span>
         </button>
         } @else {
         <p class="evolucio-sense-xuxe">
           @if (xuxemonSeleccionado?.enfermedad === 'Bajon de azucar') {
-          Necessites <strong>3 Xuxa EV</strong> per evolucionar (Bajón de azúcar).
+          Necessites <strong>3 Xuxa EV</strong> per evolucionar (Bajon de azucar).
           } @else {
           Necessites una <strong>Xuxa EV</strong> a la motxilla per evolucionar.
           }
@@ -272,7 +314,7 @@
   </div>
   }
 
-  <button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menú principal">
+  <button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menu principal">
     <img src="/Sortir.png" alt="" />
     SORTIR
   </button>
