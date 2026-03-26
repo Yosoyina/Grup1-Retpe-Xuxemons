@@ -517,4 +517,109 @@ class XuxemonsController extends Controller
             ]
         ], 201);
     }
+
+    // POST /api/xuxemons/{id}/pujar-nivell
+    // El jugador gasta xuxes per fer créixer el seu xuxemon al següent nivell.
+    
+    public function pujarNivell(Request $request, string $id)
+    {
+        $userId  = $request->user()->id;
+        $xuxemon = Xuxemons::findOrFail($id);
+
+        // Comprova que el xuxemon pertany al jugador
+        $entrada = DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->where('id_xuxemon', $xuxemon->id)
+            ->where('esta_capturado', true)
+            ->first();
+
+        if (!$entrada) {
+            return response()->json(['error' => 'No tens aquest Xuxemon.'], 404);
+        }
+
+        // Comprova que el xuxemon no és ja Gran (nivell màxim)
+        if ($xuxemon->tamano === 'Gran') {
+            return response()->json([
+                'message' => 'Aquest Xuxemon ja és a la grandària màxima (Gran).',
+            ], 422);
+        }
+
+        $nextTamano = match ($xuxemon->tamano) {
+            'Petit' => 'Mitja',
+            'Mitja' => 'Gran',
+        };
+
+        // Xuxes necessàries: llegides del camp configurable per l'admin
+        $xuxesNecessaries = $xuxemon->xuxes_nivel;
+
+        // Busca les xuxes a l'inventari del jugador (apilables)
+        $slotXuxes = DB::table('inventario')
+            ->join('xuxes', 'inventario.xuxe_id', '=', 'xuxes.id')
+            ->where('inventario.user_id', $userId)
+            ->where('xuxes.apilable', true)
+            ->where('inventario.cantidad', '>=', $xuxesNecessaries)
+            ->select('inventario.id', 'inventario.cantidad')
+            ->first();
+
+        if (!$slotXuxes) {
+            return response()->json([
+                'message'             => "Necessites {$xuxesNecessaries} xuxes per fer créixer el teu Xuxemon.",
+                'xuxes_necessaries'   => $xuxesNecessaries,
+            ], 422);
+        }
+
+        // Consumeix les xuxes necessàries
+        if ($slotXuxes->cantidad > $xuxesNecessaries) {
+            DB::table('inventario')->where('id', $slotXuxes->id)->decrement('cantidad', $xuxesNecessaries);
+        } else {
+            DB::table('inventario')->where('id', $slotXuxes->id)->delete();
+        }
+
+        // Busca el xuxemon del següent nivell
+        $nextXuxemon = Xuxemons::where('tipo_elemento', $xuxemon->tipo_elemento)
+            ->where('evolucion_xuxemon', $xuxemon->evolucion_xuxemon)
+            ->where('tamano', $nextTamano)
+            ->first();
+
+        if (!$nextXuxemon) {
+            return response()->json(['message' => "No s'ha trobat el següent nivell."], 404);
+        }
+
+        // Substitueix l'entrada del xuxedex pel nou nivell
+        DB::table('xuxedex')
+            ->where('id_usuario', $userId)
+            ->where('id_xuxemon', $xuxemon->id)
+            ->delete();
+
+        DB::table('xuxedex')->updateOrInsert(
+            ['id_usuario' => $userId, 'id_xuxemon' => $nextXuxemon->id],
+            ['esta_capturado' => true, 'enfermedad' => null, 'updated_at' => now(), 'created_at' => now()]
+        );
+
+        return response()->json([
+            'message'           => "El teu Xuxemon ha crescut a {$nextTamano}!",
+            'xuxemon'           => $nextXuxemon,
+            'xuxes_consumides'  => $xuxesNecessaries,
+        ], 200);
+    }
+
+    // PUT /admin/xuxemons/{id}/xuxes-per-pujar
+    // L'admin canvia la quantitat de xuxes necessàries per fer créixer un xuxemon.
+    public function updateXuxesPerPujar(Request $request, string $id)
+    {
+        $xuxemon = Xuxemons::findOrFail($id);
+
+        $request->validate([
+            'xuxes_nivel' => 'required|integer|min:1',
+        ]);
+
+        $xuxemon->update([
+            'xuxes_nivel' => $request->input('xuxes_nivel'),
+        ]);
+
+        return response()->json([
+            'message' => 'Quantitat de xuxes actualitzada correctament.',
+            'xuxemon' => $xuxemon->only(['id', 'nombre_xuxemon', 'tamano', 'xuxes_nivel']),
+        ], 200);
+    }
 }
