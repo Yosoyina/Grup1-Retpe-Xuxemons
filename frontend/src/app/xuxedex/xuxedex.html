@@ -322,6 +322,7 @@
       <h2>Alimentar</h2>
     </div>
     <p class="accio-modal-sub">{{ xuxemonSeleccionado.nombre_xuxemon }}</p>
+    <hr class="accio-modal-divider">
 
     @if (xuxemonSeleccionado.enfermedad === 'Atracon') {
     <p class="alimentar-bloqueig">🚫 No pot menjar per l'Atracón</p>
@@ -362,6 +363,7 @@
       <h2>Aplicar Vacuna</h2>
     </div>
     <p class="accio-modal-sub">{{ xuxemonSeleccionado.nombre_xuxemon }}</p>
+    <hr class="accio-modal-divider">
 
     @if (!xuxemonSeleccionado.enfermedad) {
     <p class="vacunes-buit vacunes-buit-modal">✅ Aquest Xuxemon no té cap malaltia.</p>
