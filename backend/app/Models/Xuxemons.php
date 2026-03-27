@@ -31,6 +31,7 @@ class Xuxemons extends Model
             'descripcio' => 'string',
             'imagen' => 'string',
             'evolucion_xuxemon' => 'string',
+            'xuxes_nivel',
         ];
     }
 
