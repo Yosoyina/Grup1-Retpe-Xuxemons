@@ -126,92 +126,6 @@
           </span>
         </div>
         }
-
-        <div class="detalle-accions">
-          <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
-            (click)="verCadenaEvolucion()">Evolució</button>
-
-          <!-- Botó Alimentar colapsable -->
-          <button type="button" class="btn-alimentar-toggle"
-            [class.obert]="mostrarPanellAlimentar"
-            [disabled]="xuxemonSeleccionado.enfermedad === 'Atracon'"
-            [title]="xuxemonSeleccionado.enfermedad === 'Atracon' ? 'No pot menjar (Atracón)' : 'Alimentar'"
-            (click)="togglePanellAlimentar()">
-            🍬 Alimentar
-            <span class="btn-toggle-arrow">{{ mostrarPanellAlimentar ? '▲' : '▼' }}</span>
-          </button>
-
-          <!-- Botó Vacuna colapsable -->
-          <button type="button" class="btn-vacuna-toggle"
-            [class.obert]="mostrarPanellVacuna"
-            (click)="togglePanellVacuna()">
-            💉 Aplicar vacuna
-            <span class="btn-toggle-arrow">{{ mostrarPanellVacuna ? '▲' : '▼' }}</span>
-          </button>
-        </div>
-
-        <!-- Panell Alimentar desplegable -->
-        @if (mostrarPanellAlimentar) {
-        <div class="accio-panell alimentar-panell">
-          @if (xuxemonSeleccionado.enfermedad === 'Atracon') {
-          <p class="alimentar-bloqueig">🚫 No pot menjar per l'Atracón</p>
-          } @else if (getMaxFeed() === 0) {
-          <p class="vacunes-buit">No tens xuxes a l'inventari.</p>
-          } @else {
-          <div class="alimentar-controls">
-            <span class="alimentar-label">Quantitat:</span>
-            <div class="alimentar-quantitat-wrapper">
-              <button type="button" class="qty-btn" (click)="decrementarFeed()" [disabled]="feedQuantitat <= 1 || feedCarregant">−</button>
-              <span class="qty-valor">{{ feedQuantitat }}</span>
-              <button type="button" class="qty-btn" (click)="incrementarFeed()" [disabled]="feedQuantitat >= getMaxFeed() || feedCarregant">+</button>
-            </div>
-            <span class="qty-stock">/ {{ getMaxFeed() }} disponibles</span>
-            <button type="button" class="btn-alimentar"
-              [disabled]="feedCarregant"
-              (click)="alimentar()">
-              {{ feedCarregant ? '🍬...' : '🍬 Alimentar' }}
-            </button>
-          </div>
-          }
-        </div>
-        }
-
-        <!-- Panell Vacunes desplegable -->
-        @if (mostrarPanellVacuna) {
-        <div class="accio-panell vacunes-panell">
-          @if (!xuxemonSeleccionado.enfermedad) {
-          <p class="vacunes-buit">Aquest Xuxemon no té cap malaltia.</p>
-          } @else if (getVacunesDisponibles().length === 0) {
-          <p class="vacunes-buit">No tens cap vacuna a l'inventari.</p>
-          } @else {
-          <div class="vacunes-selector" role="group" aria-label="Selecciona una vacuna">
-            @for (slot of getVacunesDisponibles(); track slot.id) {
-            <button
-              type="button"
-              class="vacuna-slot"
-              [class.selected]="vacunaSlotSeleccionat?.id === slot.id"
-              [title]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'"
-              (click)="seleccionarVacuna(slot)">
-              @if (slot.xuxe?.imagen) {
-              <img [src]="slot.xuxe!.imagen" [alt]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'" />
-              } @else {
-              <span class="vacuna-emoji">💊</span>
-              }
-              <span class="vacuna-nom">{{ slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes }}</span>
-            </button>
-            }
-          </div>
-          <button
-            type="button"
-            class="btn-aplicar-vacuna"
-            [disabled]="!vacunaSlotSeleccionat || vacunaCarregant"
-            (click)="aplicarVacuna()">
-            {{ vacunaCarregant ? '💉...' : '💉 Aplicar vacuna' }}
-          </button>
-          }
-        </div>
-        }
-
       </div>
 
       <div class="detalle-visual">
@@ -221,6 +135,23 @@
         <div class="placeholder-img placeholder-gran" aria-hidden="true">{{ xuxemonSeleccionado.nombre_xuxemon.charAt(0)
           }}</div>
         }
+      </div>
+
+      <div class="detalle-accions">
+        <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
+          (click)="verCadenaEvolucion()">Evolució</button>
+
+        <button type="button" class="btn-accio btn-accio-alimentar"
+          [disabled]="xuxemonSeleccionado.enfermedad === 'Atracon'"
+          [title]="xuxemonSeleccionado.enfermedad === 'Atracon' ? 'No pot menjar (Atracón)' : 'Alimentar'"
+          (click)="togglePanellAlimentar()">
+          🍬 Alimentar
+        </button>
+
+        <button type="button" class="btn-accio btn-accio-vacuna"
+          (click)="togglePanellVacuna()">
+          💉 Aplicar vacuna
+        </button>
       </div>
     </div>
     } @else {
@@ -377,3 +308,93 @@
     SORTIR
   </button>
 </div>
+
+<!-- MODAL ALIMENTAR -->
+@if (mostrarPanellAlimentar && xuxemonSeleccionado) {
+<div class="accio-overlay" (click)="togglePanellAlimentar()">
+  <div class="accio-modal" (click)="$event.stopPropagation()"
+    [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)">
+
+    <button type="button" class="evolucio-tancar" (click)="togglePanellAlimentar()">✕</button>
+
+    <div class="evolucio-titol">
+      <span class="evolucio-titol-icon">🍬</span>
+      <h2>Alimentar</h2>
+    </div>
+    <p class="accio-modal-sub">{{ xuxemonSeleccionado.nombre_xuxemon }}</p>
+
+    @if (xuxemonSeleccionado.enfermedad === 'Atracon') {
+    <p class="alimentar-bloqueig">🚫 No pot menjar per l'Atracón</p>
+    } @else if (getMaxFeed() === 0) {
+    <p class="vacunes-buit">No tens xuxes a l'inventari.</p>
+    } @else {
+    <div class="alimentar-controls alimentar-controls-modal">
+      <span class="alimentar-label">Quantitat:</span>
+      <div class="alimentar-quantitat-wrapper">
+        <button type="button" class="qty-btn" (click)="decrementarFeed()" [disabled]="feedQuantitat <= 1 || feedCarregant">−</button>
+        <span class="qty-valor">{{ feedQuantitat }}</span>
+        <button type="button" class="qty-btn" (click)="incrementarFeed()" [disabled]="feedQuantitat >= getMaxFeed() || feedCarregant">+</button>
+      </div>
+      <span class="qty-stock">/ {{ getMaxFeed() }} disponibles</span>
+    </div>
+    <div class="accio-modal-footer">
+      <button type="button" class="btn-modal-confirmar"
+        [disabled]="feedCarregant"
+        (click)="alimentar()">
+        {{ feedCarregant ? '🍬 Alimentant...' : '🍬 Confirmar' }}
+      </button>
+    </div>
+    }
+  </div>
+</div>
+}
+
+<!-- MODAL VACUNA -->
+@if (mostrarPanellVacuna && xuxemonSeleccionado) {
+<div class="accio-overlay" (click)="togglePanellVacuna()">
+  <div class="accio-modal" (click)="$event.stopPropagation()"
+    [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)">
+
+    <button type="button" class="evolucio-tancar" (click)="togglePanellVacuna()">✕</button>
+
+    <div class="evolucio-titol">
+      <span class="evolucio-titol-icon">💉</span>
+      <h2>Aplicar Vacuna</h2>
+    </div>
+    <p class="accio-modal-sub">{{ xuxemonSeleccionado.nombre_xuxemon }}</p>
+
+    @if (!xuxemonSeleccionado.enfermedad) {
+    <p class="vacunes-buit vacunes-buit-modal">✅ Aquest Xuxemon no té cap malaltia.</p>
+    } @else if (getVacunesDisponibles().length === 0) {
+    <p class="vacunes-buit vacunes-buit-modal">No tens cap vacuna a l'inventari.</p>
+    } @else {
+    <div class="vacunes-selector vacunes-selector-modal" role="group" aria-label="Selecciona una vacuna">
+      @for (slot of getVacunesDisponibles(); track slot.id) {
+      <button
+        type="button"
+        class="vacuna-slot"
+        [class.selected]="vacunaSlotSeleccionat?.id === slot.id"
+        [title]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'"
+        (click)="seleccionarVacuna(slot)">
+        @if (slot.xuxe?.imagen) {
+        <img [src]="slot.xuxe!.imagen" [alt]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'" />
+        } @else {
+        <span class="vacuna-emoji">💊</span>
+        }
+        <span class="vacuna-nom">{{ slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes }}</span>
+      </button>
+      }
+    </div>
+    <div class="accio-modal-footer">
+      <button
+        type="button"
+        class="btn-modal-confirmar"
+        [disabled]="!vacunaSlotSeleccionat || vacunaCarregant"
+        (click)="aplicarVacuna()">
+        {{ vacunaCarregant ? '💉 Aplicant...' : '💉 Confirmar vacuna' }}
+      </button>
+    </div>
+    }
+  </div>
+</div>
+}
