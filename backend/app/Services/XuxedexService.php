@@ -30,15 +30,11 @@ class XuxedexService
                 continue;
             }
 
-            $numDesbloquejats = $xuxemons->count() === 1
-                ? 1
-                : rand(1, min(5, $xuxemons->count() - 1));
-
-            foreach ($xuxemons as $index => $xuxemon) {
+            foreach ($xuxemons as $xuxemon) {
                 $starterEntries[] = [
                     'id_usuario' => $userId,
                     'id_xuxemon' => $xuxemon->id,
-                    'esta_capturado' => $index < $numDesbloquejats,
+                    'esta_capturado' => false,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

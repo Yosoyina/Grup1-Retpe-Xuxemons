@@ -14,6 +14,7 @@ export interface Xuxes {
   tipus?: Tipus;
   mida?: Mida;
   apilable: boolean;
+  descripcio?: string;
 }
 
 export interface Slot {
