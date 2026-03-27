@@ -368,22 +368,35 @@
     @if (!xuxemonSeleccionado.enfermedad) {
     <p class="vacunes-buit vacunes-buit-modal">✅ Aquest Xuxemon no té cap malaltia.</p>
     } @else if (getVacunesDisponibles().length === 0) {
-    <p class="vacunes-buit vacunes-buit-modal">No tens cap vacuna a l'inventari.</p>
+    <div class="vacunes-no-disponibles">
+      <span class="vacunes-no-disp-icon">🛒</span>
+      <p>No tens cap vacuna adequada a l'inventari.</p>
+      <span class="vacunes-no-disp-sub">Necessites: <strong>{{ getEnfermedadIcon(xuxemonSeleccionado.enfermedad) }} {{ xuxemonSeleccionado.enfermedad }}</strong></span>
+    </div>
     } @else {
-    <div class="vacunes-selector vacunes-selector-modal" role="group" aria-label="Selecciona una vacuna">
+    <div class="vacuna-malaltia-badge" [ngClass]="getEnfermedadClass(xuxemonSeleccionado.enfermedad)">
+      <span>{{ getEnfermedadIcon(xuxemonSeleccionado.enfermedad) }}</span>
+      <span>{{ xuxemonSeleccionado.enfermedad }}</span>
+    </div>
+    <div class="vacunes-selector-modal" role="group" aria-label="Selecciona una vacuna">
       @for (slot of getVacunesDisponibles(); track slot.id) {
       <button
         type="button"
-        class="vacuna-slot"
+        class="vacuna-slot-modal"
         [class.selected]="vacunaSlotSeleccionat?.id === slot.id"
-        [title]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'"
         (click)="seleccionarVacuna(slot)">
-        @if (slot.xuxe?.imagen) {
-        <img [src]="slot.xuxe!.imagen" [alt]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'" />
-        } @else {
-        <span class="vacuna-emoji">💊</span>
+        <div class="vacuna-slot-img">
+          @if (slot.xuxe?.imagen) {
+          <img [src]="slot.xuxe!.imagen" [alt]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'" />
+          } @else {
+          <span class="vacuna-emoji">💊</span>
+          }
+        </div>
+        <span class="vacuna-slot-nom">{{ slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes }}</span>
+        <span class="vacuna-slot-cura">{{ getVacunaCuraText(slot) }}</span>
+        @if (vacunaSlotSeleccionat?.id === slot.id) {
+        <span class="vacuna-slot-check">✓</span>
         }
-        <span class="vacuna-nom">{{ slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes }}</span>
       </button>
       }
     </div>

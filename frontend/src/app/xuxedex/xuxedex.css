@@ -2362,6 +2362,7 @@
   width: min(460px, 100%);
   max-height: 88dvh;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 36px 32px 32px;
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.06)),
@@ -2405,6 +2406,193 @@
   border: none;
   border-top: 2px solid rgba(32, 63, 152, 0.12);
   margin: 20px 0;
+}
+
+/* Badge malaltia actual dins el modal de vacunes */
+.vacuna-malaltia-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin: 0 auto 18px;
+  width: fit-content;
+  align-self: center;
+}
+
+.vacuna-malaltia-badge.enfermedad-bajon {
+  background: rgba(255, 230, 150, 0.55);
+  border: 2px solid rgba(200, 140, 0, 0.35);
+  color: #7a5000;
+}
+.vacuna-malaltia-badge.enfermedad-sobredosis {
+  background: rgba(200, 80, 200, 0.12);
+  border: 2px solid rgba(180, 60, 180, 0.35);
+  color: #7a207a;
+}
+.vacuna-malaltia-badge.enfermedad-atracon {
+  background: rgba(255, 200, 200, 0.45);
+  border: 2px solid rgba(200, 50, 50, 0.35);
+  color: #8b1a1a;
+}
+
+/* Missatge sense vacunes disponibles */
+.vacunes-no-disponibles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(32, 63, 152, 0.08);
+  text-align: center;
+}
+
+.vacunes-no-disp-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.vacunes-no-disponibles p {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.vacunes-no-disp-sub {
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+/* Selector de vacunes nou – llista vertical de targetes */
+.vacunes-selector-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 2px 4px 2px 0;
+  width: 100%;
+  max-height: 240px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--yellow) transparent;
+}
+
+.vacunes-selector-modal::-webkit-scrollbar {
+  width: 6px;
+}
+.vacunes-selector-modal::-webkit-scrollbar-thumb {
+  background: var(--yellow);
+  border-radius: 999px;
+}
+.vacunes-selector-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.vacuna-slot-modal {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  border: 3px solid rgba(245, 196, 0, 0.5);
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(243, 246, 252, 0.96));
+  box-shadow: 0 4px 12px rgba(22, 34, 88, 0.08);
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Fredoka', sans-serif;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.vacuna-slot-modal:hover {
+  transform: translateY(-2px);
+  border-color: var(--yellow);
+  box-shadow: 0 8px 20px rgba(22, 34, 88, 0.13);
+  background: linear-gradient(135deg, #fffdf0, #fffbde);
+}
+
+.vacuna-slot-modal.selected {
+  border-color: var(--yellow);
+  background: linear-gradient(135deg, #fffbe6, #fff5c0);
+  box-shadow:
+    0 8px 20px rgba(22, 34, 88, 0.13),
+    0 0 0 2px rgba(245, 196, 0, 0.35);
+}
+
+.vacuna-slot-img {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(245, 196, 0, 0.4);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 10px rgba(22, 34, 88, 0.1);
+}
+
+.vacuna-slot-img img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px rgba(42, 59, 128, 0.18));
+}
+
+.vacuna-slot-img .vacuna-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.vacuna-slot-nom {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.vacuna-slot-cura {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 2px;
+  line-height: 1.2;
+}
+
+.vacuna-slot-modal .vacuna-slot-nom {
+  display: flex;
+  flex-direction: column;
+}
+
+.vacuna-slot-check {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: var(--blue-deep);
+  font-size: 1rem;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 10px rgba(245, 196, 0, 0.4);
+  animation: checkIn 0.18s ease;
+}
+
+@keyframes checkIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 
 /* Panell quantitat */
@@ -2463,16 +2651,7 @@
   border: 1px solid rgba(32, 63, 152, 0.1);
 }
 
-/* Selector de vacunes dins el modal */
-.vacunes-selector-modal {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  padding: 8px 0 16px;
-  max-height: 260px;
-  overflow-y: auto;
-}
+
 
 .vacunes-selector-modal .vacuna-slot {
   min-width: 80px;

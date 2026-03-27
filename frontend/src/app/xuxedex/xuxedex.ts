@@ -296,9 +296,25 @@ export class Xuxedex implements OnDestroy {
 
   // ── Vacunes ───────────────────────────────────────────────────────
 
-  // Retorna els slots de vacunes (no apilables) que té el jugador
+  // Vacunes que curen la malaltia actual del xuxemon seleccionat
+  // Xocolatina → Bajon de azucar | Xal de fruites → Atracon | Inxulina → totes
   getVacunesDisponibles(): Slot[] {
-    return this.inventarioService.slots.filter(s => !s.empty && !s.apilable);
+    const enfermedad = this.xuxemonSeleccionado?.enfermedad ?? null;
+    const VACUNA_CURA_TOT = 'inxulina';
+
+    const VACUNA_PER_MALALTIA: Record<string, string> = {
+      'Bajon de azucar': 'xocolatina',
+      'Atracon':         'xal de fruites',
+      'Sobredosis':      'inxulina',
+    };
+
+    return this.inventarioService.slots.filter(s => {
+      if (s.empty || s.apilable) return false;
+      const nom = (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase();
+      if (nom === VACUNA_CURA_TOT) return true;
+      if (!enfermedad) return false;
+      return nom === VACUNA_PER_MALALTIA[enfermedad];
+    });
   }
 
   // Selecciona o deselecciona un slot de vacuna
@@ -306,6 +322,17 @@ export class Xuxedex implements OnDestroy {
     this.vacunaSlotSeleccionat = this.vacunaSlotSeleccionat?.id === slot.id ? null : slot;
     this.vacunaResultat = null;
     this.vacunaError = null;
+  }
+
+  // Text que explica què cura cada vacuna
+  getVacunaCuraText(slot: Slot): string {
+    const nom = (slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? '').trim().toLowerCase();
+    const cures: Record<string, string> = {
+      'xocolatina':    'Cura: Bajón de azúcar',
+      'xal de fruites': 'Cura: Atracón',
+      'inxulina':      'Cura: totes les malalties',
+    };
+    return cures[nom] ?? 'Vacuna';
   }
 
   // Aplica la vacuna seleccionada al xuxemon seleccionat
