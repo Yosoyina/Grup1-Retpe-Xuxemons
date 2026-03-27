@@ -33,6 +33,17 @@ export interface FeedResult {
   bloquejat?: boolean;
 }
 
+export interface AplicarVacunaResult {
+  message: string;
+  vacuna: string;
+  malalties_curades: string[];
+  estat_xuxemon: {
+    xuxedex_id: number;
+    esta_enfermo: boolean;
+    malalties: string[];
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -106,8 +117,16 @@ export class XuxemonService {
   }
 
   // Alimenta un Xuxemon i pot provocar una infecció
-  feed(id: number | string, xuxedex_id: number): Observable<FeedResult> {
-    return this.http.post<FeedResult>(`http://localhost:8000/api/xuxemons/${id}/feed`, { xuxedex_id });
+  feed(id: number | string, xuxedex_id: number, cantidad: number = 1): Observable<FeedResult> {
+    return this.http.post<FeedResult>(`http://localhost:8000/api/xuxemons/${id}/feed`, { xuxedex_id, cantidad });
+  }
+
+  // Aplica una vacuna de l'inventari a un xuxemon per curar la seva malaltia
+  aplicarVacuna(inventario_id: number, xuxedex_id: number): Observable<AplicarVacunaResult> {
+    return this.http.post<AplicarVacunaResult>(`http://localhost:8000/api/vacunes/aplicar`, {
+      inventario_id,
+      xuxedex_id,
+    });
   }
 
 }
