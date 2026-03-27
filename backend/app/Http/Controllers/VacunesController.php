@@ -40,7 +40,7 @@ class VacunesController extends Controller
         // Determina quina malaltia cura aquesta vacuna segons el nom
         $nombreVacuna = $slot->xuxe->nombre_xuxes;
         $curaEnfermedad = match ($nombreVacuna) {
-            'Xocolatina'      => 'Bajon_Azucar',
+            'Xocolatina'      => 'Bajon de azucar',
             'Xal de fruites'  => 'Atracon',
             'Inxulina'        => null, // null = cura totes
             default           => 'desconeguda',
@@ -52,7 +52,7 @@ class VacunesController extends Controller
             ], 422);
         }
  
-        // ── Validar que el xuxemon pertany al jugador ──────────────────────
+        // ── Validar que el xuxemon pertany al jugador i està malalt ───────
         $entrada = DB::table('xuxedex')
             ->where('id', $request->xuxedex_id)
             ->where('id_usuario', $userId)
@@ -65,12 +65,7 @@ class VacunesController extends Controller
             ], 404);
         }
  
-        // ── Validar que el xuxemon té alguna malaltia activa ───────────────
-        $malalties = DB::table('malalties')
-            ->where('xuxedex_id', $request->xuxedex_id)
-            ->get();
- 
-        if ($malalties->isEmpty()) {
+        if (empty($entrada->enfermedad)) {
             return response()->json([
                 'message' => 'Aquest xuxemon no té cap malaltia activa.',
             ], 422);
@@ -78,9 +73,7 @@ class VacunesController extends Controller
  
         // ── Validar compatibilitat vacuna/malaltia ─────────────────────────
         if ($curaEnfermedad !== null) {
-            $teLaMalaltia = $malalties
-                ->where('tipo_enfermedad', $curaEnfermedad)
-                ->isNotEmpty();
+            $teLaMalaltia = $entrada->enfermedad === $curaEnfermedad;
  
             if (!$teLaMalaltia) {
                 return response()->json([
@@ -93,38 +86,25 @@ class VacunesController extends Controller
         // Les vacunes no són apilables → s'elimina l'slot sencer
         $slot->delete();
  
-        // ── Quitar la/les malalties corresponents ──────────────────────────
-        if ($curaEnfermedad === null) {
-            // Inxulina → cura totes les malalties
-            DB::table('malalties')
-                ->where('xuxedex_id', $request->xuxedex_id)
-                ->delete();
- 
-            $malaltiesCurades = $malalties->pluck('tipo_enfermedad')->values();
-        } else {
-            // Xocolatina / Xal de fruites → cura només la malaltia compatible
-            DB::table('malalties')
-                ->where('xuxedex_id', $request->xuxedex_id)
-                ->where('tipo_enfermedad', $curaEnfermedad)
-                ->delete();
- 
-            $malaltiesCurades = collect([$curaEnfermedad]);
-        }
+        // ── Quitar la malaltia del xuxedex ─────────────────────────────────
+        $malaltiaCurada = $entrada->enfermedad;
+        
+        DB::table('xuxedex')
+            ->where('id', $request->xuxedex_id)
+            ->update([
+                'enfermedad' => null,
+                'updated_at' => now(),
+            ]);
  
         // ── Retornar l'estat actualitzat del xuxemon ───────────────────────
-        $malaltiesRestants = DB::table('malalties')
-            ->where('xuxedex_id', $request->xuxedex_id)
-            ->pluck('tipo_enfermedad')
-            ->values();
- 
         return response()->json([
             'message'           => 'Vacuna aplicada correctament.',
             'vacuna'            => $nombreVacuna,
-            'malalties_curades' => $malaltiesCurades,
+            'malalties_curades' => [$malaltiaCurada], // El frontend espera array
             'estat_xuxemon'     => [
                 'xuxedex_id'   => $request->xuxedex_id,
-                'esta_enfermo' => $malaltiesRestants->isNotEmpty(),
-                'malalties'    => $malaltiesRestants,
+                'esta_enfermo' => false,
+                'malalties'    => [], // El frontend espera array
             ],
         ], 200);
     }

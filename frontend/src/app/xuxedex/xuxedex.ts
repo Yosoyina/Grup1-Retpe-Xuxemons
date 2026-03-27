@@ -48,7 +48,7 @@ export class Xuxedex implements OnDestroy {
   private evolucioSub: Subscription | null = null;
 
   get mostrarPaginacio(): boolean {
-    return this.filtroActual === 'Todos';
+    return this.getTotalPagines(this.xuxemons$.getValue()) > 1;
   }
 
   constructor(public xuxemonService: XuxemonService, private router: Router) {
@@ -99,10 +99,6 @@ export class Xuxedex implements OnDestroy {
 
   getPaginats(xuxemons: Xuxemon[]): Xuxemon[] {
     const filtrats = this.getFiltrats(xuxemons);
-    if (!this.mostrarPaginacio) {
-      return filtrats.slice(0, this.itemsPorPagina);
-    }
-
     const inicio = this.paginaActual * this.itemsPorPagina;
     return filtrats.slice(inicio, inicio + this.itemsPorPagina);
   }
@@ -213,12 +209,13 @@ export class Xuxedex implements OnDestroy {
     this.feedCarregant = true;
     this.feedResultat = null;
 
-    this.xuxemonService.feed(this.xuxemonSeleccionado.id, this.xuxemonSeleccionado.xuxedex_id || 0).subscribe({
+    this.xuxemonService.feed(this.xuxemonSeleccionado.id, this.xuxemonSeleccionado.xuxedex_id || 0, this.feedQuantitat).subscribe({
       next: (res) => {
         this.feedResultat = res;
         this.feedCarregant = false;
-        // Recarrega per reflectir la nova malaltia a la targeta
+        // Recarrega per reflectir la nova malaltia a la targeta i el nou inventari
         this.xuxemonService.carregarXuxemons(this.filtroActual);
+        this.inventarioService.cargarInventario();
         // Amaga el toast després de 4 segons
         if (this.feedTimer) clearTimeout(this.feedTimer);
         this.feedTimer = setTimeout(() => {
@@ -272,10 +269,9 @@ export class Xuxedex implements OnDestroy {
   // Pot evolucionar? (no si té Sobredosis, Atracon, o no té prou Xuxa EV)
   potEvolucionar(): boolean {
     if (this.xuxemonSeleccionado?.enfermedad === 'Sobredosis') return false;
-    if (this.xuxemonSeleccionado?.enfermedad === 'Atracon') return false;
     const cost = this.getCostEvolucio();
     const totalEv = this.inventarioService.slots
-      .filter(s => !s.empty && (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase() === 'xuxa ev')
+      .filter(s => !s.empty && (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase() === 'xuxevo')
       .reduce((acc, s) => acc + s.cantidad, 0);
     return totalEv >= cost;
   }
@@ -322,9 +318,10 @@ export class Xuxedex implements OnDestroy {
     this.vacunaError = null;
 
     // inventario_id és la id del slot real del backend, no el slot local
-    // necessitem l'id real de l'item d'inventari → guardat a slot.id quan prové del backend
+    // necessitem l'id real de l'item d'inventari → guardat a slot.inventario_id
+    const inventarioId = this.vacunaSlotSeleccionat.inventario_id ?? this.vacunaSlotSeleccionat.id;
     this.xuxemonService.aplicarVacuna(
-      this.vacunaSlotSeleccionat.id,
+      inventarioId,
       this.xuxemonSeleccionado.xuxedex_id
     ).subscribe({
       next: (res) => {
@@ -416,7 +413,7 @@ export class Xuxedex implements OnDestroy {
       if (s.empty || !s.xuxe) return false;
 
       const xuxeName = (s.xuxe.nom ?? s.xuxe.nombre_xuxes ?? '').trim().toLowerCase();
-      return xuxeName === 'xuxa ev';
+      return xuxeName === 'xuxevo';
     }) ?? null;
   }
 
@@ -444,13 +441,11 @@ export class Xuxedex implements OnDestroy {
 
   // Consumeix una Xuxa EV al backend i desbloqueja la següent etapa
   evolucionar(): void {
-    const slot = this.xuxeEvoSlot ?? this.getXuxeEvo();
     const segurent = this.getSegurentEtapa();
-    if (!slot || !segurent || !this.xuxemonSeleccionado) return;
+    if (!this.potEvolucionar() || !segurent || !this.xuxemonSeleccionado) return;
 
     this.xuxemonService.evolucionar(Number(this.xuxemonSeleccionado.id)).subscribe({
       next: () => {
-        this.inventarioService.EliminarXuxesinv(slot.id);
         this.inventarioService.cargarInventario();
         this.xuxemonService.xuxemons$.next([]);
         this.xuxemonService.carregarXuxemons(this.filtroActual);

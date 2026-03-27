@@ -337,10 +337,6 @@
         <p class="evolucio-bloqueig">
           <span>💊</span> El Xuxemon té <strong>Sobredosis</strong> i no pot evolucionar fins que es curi.
         </p>
-        } @else if (xuxemonSeleccionado?.enfermedad === 'Atracon') {
-        <p class="evolucio-bloqueig">
-          <span>🤢</span> El Xuxemon té <strong>Atracón</strong> i no pot evolucionar fins que es curi.
-        </p>
         } @else if (getSegurentEtapa(); as seguent) {
         @if (potEvolucionar()) {
         <button type="button" class="btn-evolucionar" [ngClass]="getClassTipus(xuxemonSeleccionado!.tipo_elemento)"

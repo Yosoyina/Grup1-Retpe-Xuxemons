@@ -50,6 +50,9 @@ class XuxemonsController extends Controller
             $query->where('xuxemons.tamano', $tamano);
         }
 
+        $query->orderByDesc('xuxedex.esta_capturado')
+              ->orderBy('xuxemons.id');
+
         $xuxemons = $query->get()->map(function ($x) {
             return [
                 'xuxedex_id' => $x->xuxedex_id,
@@ -148,18 +151,6 @@ class XuxemonsController extends Controller
         $xuxemon = Xuxemons::findOrFail($id);
         $userId = $request->user()->id;
 
-        // Comprova si el Xuxemon té alguna malaltia que bloquegi l'evolució
-        $xuxedexEntry = DB::table('xuxedex')
-            ->where('id_usuario', $userId)
-            ->where('id_xuxemon', $xuxemon->id)
-            ->first();
-
-        if ($xuxedexEntry && $xuxedexEntry->enfermedad === 'Atracon') {
-            return response()->json([
-                'message' => 'El xuxemon no pot evolucionar perquè té la malaltia Atracon activa.',
-            ], 422);
-        }
-
         $nextTamano = match ($xuxemon->tamano) {
             'Petit' => 'Mitja',
             'Mitja' => 'Gran',
@@ -174,6 +165,7 @@ class XuxemonsController extends Controller
         $entrada = DB::table('xuxedex')
             ->where('id_usuario', $userId)
             ->where('id_xuxemon', $xuxemon->id)
+            ->where('esta_capturado', true)
             ->first();
 
         // Sobredosis → bloqueja l'evolució
@@ -184,7 +176,7 @@ class XuxemonsController extends Controller
             ], 422);
         }
 
-        // Bajón de azúcar → necessita 3 Xuxa EV en lloc d'1
+        // Bajón de azúcar → necessita 3 XuxEvo en lloc d'1
         $xuxesNecessaries = ($entrada && $entrada->enfermedad === 'Bajon de azucar') ? 3 : 1;
 
         $nextEvolution = Xuxemons::where('tipo_elemento', $xuxemon->tipo_elemento)
@@ -196,27 +188,35 @@ class XuxemonsController extends Controller
             return response()->json(['message' => "No s'ha trobat l'evolució."], 404);
         }
 
-        // Comprova que l'usuari te una Xuxa EV a l'inventari
-        $xuxaEv = DB::table('inventario')
-            ->join('xuxes', 'inventario.xuxe_id', '=', 'xuxes.id')
-            ->where('inventario.user_id', $userId)
-            ->where('xuxes.nombre_xuxes', 'Xuxa EV')
-            ->where('inventario.cantidad', '>=', $xuxesNecessaries)
-            ->select('inventario.id', 'inventario.cantidad')
-            ->first();
+        // Comprova que l'usuari te prous XuxEvo a l'inventari
+        $xuxaEves = \App\Models\Inventario::with('xuxe')
+            ->where('user_id', $userId)
+            ->whereHas('xuxe', function($query) {
+                $query->where('nombre_xuxes', 'XuxEvo');
+            })
+            ->get();
 
-        if (!$xuxaEv) {
+        $totalEves = $xuxaEves->sum('cantidad');
+
+        if ($totalEves < $xuxesNecessaries) {
             return response()->json([
-                'message' => "Necessites {$xuxesNecessaries} Xuxa EV per evolucionar" .
+                'message' => "Necessites {$xuxesNecessaries} XuxEvo per evolucionar" .
                     ($xuxesNecessaries > 1 ? ' (el teu xuxemon té Bajón de Azúcar).' : '.'),
             ], 422);
         }
 
-        // Consumeix les Xuxa EV necessàries
-        if ($xuxaEv->cantidad > $xuxesNecessaries) {
-            DB::table('inventario')->where('id', $xuxaEv->id)->decrement('cantidad', $xuxesNecessaries);
-        } else {
-            DB::table('inventario')->where('id', $xuxaEv->id)->delete();
+        // Consumeix les XuxEvo necessàries
+        $restant = $xuxesNecessaries;
+        foreach ($xuxaEves as $item) {
+            if ($restant <= 0) break;
+            
+            if ($item->cantidad <= $restant) {
+                $restant -= $item->cantidad;
+                $item->delete();
+            } else {
+                $item->decrement('cantidad', $restant);
+                $restant = 0;
+            }
         }
 
         // Elimina l'evolució anterior del xuxedex de l'usuari
@@ -270,8 +270,10 @@ class XuxemonsController extends Controller
     {
         $request->validate([
             'xuxedex_id' => 'required|integer|exists:xuxedex,id',
+            'cantidad'   => 'integer|min:1'
         ]);
 
+        $cantidadAUsar = $request->input('cantidad', 1);
         $userId = $request->user()->id;
         $xuxemon = Xuxemons::findOrFail($id);
 
@@ -308,7 +310,38 @@ class XuxemonsController extends Controller
             ], 422);
         }
 
-        // Tirada aleatòria d'infecció (1–100)
+        // Busca el menjar disponible (apilables) a l'inventari
+        $items = \App\Models\Inventario::with('xuxe')
+            ->where('user_id', $userId)
+            ->whereHas('xuxe', function($query) {
+                $query->where('apilable', true);
+            })
+            ->get();
+
+        $totalMenjar = $items->sum('cantidad');
+        if ($totalMenjar < $cantidadAUsar) {
+            return response()->json([
+                'message' => "No tens prou menjar. Tens {$totalMenjar} i vols utilitzar {$cantidadAUsar}.",
+            ], 422);
+        }
+
+        // Consumeix del primer que trobi fins a arribar a 0
+        $restant = $cantidadAUsar;
+        foreach ($items as $item) {
+            if ($restant <= 0) break;
+            
+            if ($item->cantidad <= $restant) {
+                $restant -= $item->cantidad;
+                $item->delete();
+            } else {
+                $item->decrement('cantidad', $restant);
+                $restant = 0;
+            }
+        }
+
+        // Tirada aleatòria d'infecció (1–100) per cada caramel consumit?
+        // O una sola tirada global per l'acció? Farem una per acció com estava, però amb la probabilitat multiplicada?
+        // Ho deixem igual que estava, 1 tirada, independent de la cantitat
         $roll = rand(1, 100);
 
         if ($roll <= 5) {
@@ -333,7 +366,7 @@ class XuxemonsController extends Controller
             'enfermedad' => $nova,
             'message' => $nova !== null
                 ? "El teu Xuxemon {$xuxemon->nombre_xuxemon} ha agafat {$nova}!"
-                : "{$xuxemon->nombre_xuxemon} ha menjat bé. No ha passat res.",
+                : "{$xuxemon->nombre_xuxemon} ha menjat {$cantidadAUsar} xuxes i està ple d'energia.",
         ], 200);
     }
 

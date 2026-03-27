@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Inventario;
 use App\Models\Xuxemons;
-use App\Models\Malalties;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -24,6 +23,5 @@ class DatabaseSeeder extends Seeder
         $this->call([VacunesSeeder::class]);
         $this->call([UserSeeder::class]);
         $this->call([InventarioSeeder::class]);
-        $this->call([MalaltiesSeeder::class]);
     }
 }
