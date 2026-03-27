@@ -397,13 +397,14 @@
 .placeholder-img {
   display: block;
   width: min(100%, calc(var(--card-image) + 32px));
-  height: auto;
+  height: var(--card-image);
   max-height: calc(100% - 68px);
   margin: 20px auto 4px;
   object-fit: contain;
   object-position: center;
   filter: drop-shadow(0 10px 16px rgba(42, 59, 128, 0.22));
   max-width: 100%;
+  flex-shrink: 0;
 }
 
 .placeholder-img {
@@ -488,7 +489,7 @@
 
 .detalle {
   position: relative;
-  flex: 0 0 clamp(200px, 42%, 300px);
+  flex: 0 0 clamp(220px, 27vh, 330px);
   min-height: 0;
   padding: 16px;
   display: grid;
@@ -503,6 +504,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.75),
     0 16px 28px rgba(18, 30, 75, 0.12);
   overflow: hidden;
+  overflow-y: auto;
 }
 
 .detalle::after {
@@ -1227,6 +1229,29 @@
   font-size: 1.3rem;
 }
 
+@media (min-height: 981px) {
+  :host {
+    /* Target ~400px per card row — matches what both mini-grid and big-grid can show */
+    --card-height: clamp(280px, 36vh, 420px);
+    --card-image: clamp(158px, 21vh, 250px);
+  }
+
+  .container {
+    /* No bottom padding needed; pagination lives in grid area */
+    padding-bottom: 72px;
+  }
+
+  .detalle {
+    /* 22vh (~237px at 1080p) frees enough space so mini-grid rows ≈ big-grid rows */
+    flex: 0 0 clamp(220px, 22vh, 280px);
+  }
+
+  .mini-grid {
+    /* Gap already provides spacing; avoid extra margin competing with flex space */
+    margin-bottom: 0;
+  }
+}
+
 @media (max-width: 1440px) {
   .container,
   .xuxedex-header {
@@ -1802,6 +1827,7 @@
 
 /* ── DETALLE ACCIONS ─────────────────────────────── */
 .detalle-accions {
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -1850,6 +1876,7 @@
 
 /* ── DETALL MALALTIA ─────────────────────────────── */
 .detalle-malaltia {
+  grid-column: 1 / -1;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1871,6 +1898,13 @@
   font-size: 0.9rem;
   color: #c0392b;
   text-transform: capitalize;
+}
+
+.malaltia-desc {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #a93226;
+  opacity: 0.85;
 }
 
 /* ── TOAST FEED ──────────────────────────────────── */
