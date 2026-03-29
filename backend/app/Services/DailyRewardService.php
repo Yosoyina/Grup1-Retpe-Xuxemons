@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Inventario;
+use App\Models\SystemConfig;
 use App\Models\User;
 use App\Models\Xuxes;
 use Carbon\Carbon;
@@ -11,9 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class DailyRewardService
 {
-    private const REWARD_HOUR = 8;
     private const REWARD_TIMEZONE = 'Europe/Madrid';
-    private const DAILY_XUXES = 10;
 
     public function __construct(private XuxedexService $xuxedexService)
     {
@@ -22,13 +21,14 @@ class DailyRewardService
     public function claimFor(User $user): array
     {
         $now = Carbon::now(self::REWARD_TIMEZONE);
-        $availableAt = $now->copy()->startOfDay()->setHour(self::REWARD_HOUR);
+        $rewardHour = (int) SystemConfig::get('xuxes_hora_recompensa', 8);
+        $availableAt = $now->copy()->startOfDay()->setHour($rewardHour);
 
         if ($now->lt($availableAt)) {
             return [
                 'status' => 'not_available_yet',
                 'granted' => false,
-                'message' => 'La recompensa diaria estará disponible a las 08:00.',
+                'message' => "La recompensa diaria estará disponible a las {$rewardHour}:00.",
                 'available_at' => $availableAt->toIso8601String(),
                 'next_available_at' => $availableAt->toIso8601String(),
             ];
@@ -47,33 +47,40 @@ class DailyRewardService
         }
 
         return DB::transaction(function () use ($user, $now, $availableAt) {
-            $rewardXuxes = $this->buildRandomXuxesReward();
+            $dailyXuxes = (int) SystemConfig::get('xuxes_quantitat_diaria', 10);
+            $rewardXuxes = $this->buildRandomXuxesReward($dailyXuxes);
             $xuxesSummary = $this->storeXuxesReward($user->id, $rewardXuxes);
 
             $this->xuxedexService->ensureStarterXuxedex($user->id);
-            $xuxemonReward = $this->unlockRandomSmallXuxemon($user->id);
+
+            // El Xuxemon es dona si l'hora actual supera la seva hora configurada
+            $xuxemonHour = (int) SystemConfig::get('xuxemon_hora_recompensa', 8);
+            $xuxemonAvailable = $now->hour >= $xuxemonHour;
+            $xuxemonReward = $xuxemonAvailable
+                ? $this->unlockRandomSmallXuxemon($user->id)
+                : null;
 
             $user->forceFill([
                 'last_reward_at' => $now->copy()->setTimezone('UTC'),
             ])->save();
 
             return [
-                'status' => 'granted',
-                'granted' => true,
-                'message' => 'Has recibido tu recompensa diaria.',
-                'available_at' => $availableAt->toIso8601String(),
-                'next_available_at' => $availableAt->copy()->addDay()->toIso8601String(),
-                'xuxes' => $xuxesSummary['items'],
-                'xuxes_requested' => self::DAILY_XUXES,
-                'xuxes_added' => $xuxesSummary['added'],
-                'xuxes_discarded' => $xuxesSummary['discarded'],
-                'xuxemon' => $xuxemonReward,
+                'status'           => 'granted',
+                'granted'          => true,
+                'message'          => 'Has recibido tu recompensa diaria.',
+                'available_at'     => $availableAt->toIso8601String(),
+                'next_available_at'=> $availableAt->copy()->addDay()->toIso8601String(),
+                'xuxes'            => $xuxesSummary['items'],
+                'xuxes_requested'  => $dailyXuxes,
+                'xuxes_added'      => $xuxesSummary['added'],
+                'xuxes_discarded'  => $xuxesSummary['discarded'],
+                'xuxemon'          => $xuxemonReward,
                 'xuxemon_unlocked' => $xuxemonReward !== null,
             ];
         });
     }
 
-    private function buildRandomXuxesReward(): Collection
+    private function buildRandomXuxesReward(int $totalXuxes = 10): Collection
     {
         $catalog = Xuxes::query()->get(['id', 'nombre_xuxes', 'imagen', 'apilable']);
 
@@ -81,7 +88,7 @@ class DailyRewardService
             return collect();
         }
 
-        return collect(range(1, self::DAILY_XUXES))
+        return collect(range(1, $totalXuxes))
             ->map(fn () => $catalog->random())
             ->groupBy('id')
             ->map(function ($items) {

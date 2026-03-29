@@ -46,7 +46,8 @@ class InventarioSeeder extends Seeder
             Xuxes::firstOrCreate(['nombre_xuxes' => $data['nombre_xuxes']], $data);
         }
 
-        // Asigna las xuxes a todos los usuarios existentes
+        // Asigna las xuxes a todos los usuarios existentes (COMENTADO PORQUE AHORA SÓLO SE CONSIGUEN POR RECOMPENSAS DIARIAS)
+        /*
         $usuarios = User::all();
 
         foreach ($usuarios as $user) {
@@ -58,5 +59,6 @@ class InventarioSeeder extends Seeder
                 ]);
             }
         }
+        */
     }
 }

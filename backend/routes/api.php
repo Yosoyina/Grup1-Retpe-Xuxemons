@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\XuxemonsController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\VacunesController;
+use App\Http\Controllers\AdminConfigController;
 
 // ── RUTES PUBLIQUES ───────────────────────────────────────
 Route::post('/register', [AuthController::class, 'register']);
@@ -65,6 +66,14 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/inventario', [InventarioController::class, 'store']);
         Route::put('/inventario/{id}', [InventarioController::class, 'update']);
         Route::delete('/inventario/{id}', [InventarioController::class, 'destroy']);
+
+        // ── CONFIGURACIÓ GLOBAL DEL SISTEMA (ADMIN) ──────────────────────
+        Route::get('/config', [AdminConfigController::class, 'index']);
+        Route::put('/config/{clave}', [AdminConfigController::class, 'update']);
+
+        // ── XUXES PER PUJAR NIVELL (ADMIN) ───────────────────────────────
+        Route::get('/xuxemons-nivell', [AdminConfigController::class, 'llistarXuxemonsNivell']);
+        Route::put('/xuxemons-nivell/{id}', [AdminConfigController::class, 'updateXuxesNivell']);
     });
 
 });

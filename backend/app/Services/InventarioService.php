@@ -21,13 +21,8 @@ class InventarioService
             return false;
         }
 
-        foreach ($xuxes as $xuxa) {
-            Inventario::create([
-                'user_id'  => $userId,
-                'xuxe_id'  => $xuxa->id,
-                'cantidad' => $xuxa->apilable ? rand(1, 5) : 1,
-            ]);
-        }
+        // No assignem xuxes aleatòries a l'hora del registre
+        // S'aconsegueixen només amb recompenses diàries.
 
         return true;
     }

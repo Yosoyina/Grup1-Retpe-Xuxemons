@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Xuxemons;
+use App\Models\SystemConfig;
 use App\Services\XuxedexService;
 use Illuminate\Support\Facades\DB;
 
@@ -344,14 +345,18 @@ class XuxemonsController extends Controller
         // Ho deixem igual que estava, 1 tirada, independent de la cantitat
         $roll = rand(1, 100);
 
-        if ($roll <= 5) {
-            $nova = 'Bajon de azucar';   // 1–5  → 5%
-        } elseif ($roll <= 15) {
-            $nova = 'Sobredosis';        // 6–15 → 10%
-        } elseif ($roll <= 30) {
-            $nova = 'Atracon';           // 16–30 → 15%
+        $pBajon      = (int) SystemConfig::get('infeccio_bajon', 5);
+        $pSobredosis = (int) SystemConfig::get('infeccio_sobredosis', 10);
+        $pAtracon    = (int) SystemConfig::get('infeccio_atracon', 15);
+
+        if ($roll <= $pBajon) {
+            $nova = 'Bajon de azucar';
+        } elseif ($roll <= $pBajon + $pSobredosis) {
+            $nova = 'Sobredosis';
+        } elseif ($roll <= $pBajon + $pSobredosis + $pAtracon) {
+            $nova = 'Atracon';
         } else {
-            $nova = null;                // 31–100 → 70% sa
+            $nova = null;
         }
 
         if ($nova !== null) {
