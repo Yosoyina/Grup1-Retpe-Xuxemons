@@ -33,7 +33,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/xuxemons/{id}/evolucionar', [XuxemonsController::class, 'evolucionar']);
     Route::post('/xuxemons/{id}/feed', [XuxemonsController::class, 'feed']);
     Route::post('/xuxemons/{id}/curar', [XuxemonsController::class, 'curar']);
-    Route::post('/xuxemons/{id}/pujar-nivell', [XuxemonsController::class, 'pujarNivell']);
 
     // ── INVENTARIO DEL JUGADOR ───────────────────────────────────
     Route::get('/inventario', [InventarioController::class, 'index']);
@@ -59,7 +58,6 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/xuxemons', [XuxemonsController::class, 'store']);
         Route::put('/xuxemons/{id}', [XuxemonsController::class, 'update']);
         Route::delete('/xuxemons/{id}', [XuxemonsController::class, 'destroy']);
-        Route::put('/xuxemons/{id}/xuxes-per-pujar', [XuxemonsController::class, 'updateXuxesPerPujar']);
 
         // ── INVENTARIO DEL JUGADOR (ADMIN) ───────────────────────────────────
         Route::get('/inventario/items', [InventarioController::class, 'listadosItems']);
