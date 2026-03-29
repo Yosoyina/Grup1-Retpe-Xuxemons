@@ -21,69 +21,69 @@ class DailyRewardService
     public function claimFor(User $user): array
     {
         $now = Carbon::now(self::REWARD_TIMEZONE);
-        $rewardHour = (int) SystemConfig::get('xuxes_hora_recompensa', 8);
-        $availableAt = $now->copy()->startOfDay()->setHour($rewardHour);
+        
+        $xuxesHour = (int) SystemConfig::get('xuxes_hora_recompensa', 8);
+        $xuxemonHour = (int) SystemConfig::get('xuxemon_hora_recompensa', 8);
+        
+        $xuxesAvailableAt = $now->copy()->startOfDay()->setHour($xuxesHour);
+        $xuxemonAvailableAt = $now->copy()->startOfDay()->setHour($xuxemonHour);
 
-        if ($now->lt($availableAt)) {
+        $lastXuxesRewardAt = $user->last_reward_at?->copy()->timezone(self::REWARD_TIMEZONE);
+        $lastXuxemonRewardAt = $user->last_xuxemon_reward_at?->copy()->timezone(self::REWARD_TIMEZONE);
+
+        $canClaimXuxes = $now->greaterThanOrEqualTo($xuxesAvailableAt) && 
+                         (!$lastXuxesRewardAt || $lastXuxesRewardAt->lessThan($xuxesAvailableAt));
+                         
+        $canClaimXuxemon = $now->greaterThanOrEqualTo($xuxemonAvailableAt) && 
+                           (!$lastXuxemonRewardAt || $lastXuxemonRewardAt->lessThan($xuxemonAvailableAt));
+
+        if (!$canClaimXuxes && !$canClaimXuxemon) {
             return [
                 'status' => 'not_available_yet',
                 'granted' => false,
-                'message' => "La recompensa diaria estará disponible a las {$rewardHour}:00.",
-                'available_at' => $availableAt->toIso8601String(),
-                'next_available_at' => $availableAt->toIso8601String(),
+                'message' => 'No hay recompensas disponibles en este momento.'
             ];
         }
 
-        $lastRewardAt = $user->last_reward_at?->copy()->timezone(self::REWARD_TIMEZONE);
-
-        if ($lastRewardAt && $lastRewardAt->greaterThanOrEqualTo($availableAt)) {
-            return [
-                'status' => 'already_claimed',
-                'granted' => false,
-                'message' => 'La recompensa diaria de hoy ya fue recibida.',
-                'available_at' => $availableAt->toIso8601String(),
-                'next_available_at' => $availableAt->copy()->addDay()->toIso8601String(),
+        return DB::transaction(function () use ($user, $now, $canClaimXuxes, $canClaimXuxemon) {
+            $response = [
+                'status' => 'granted',
+                'granted' => true,
+                'message' => 'Has recibido recompensas diarias.'
             ];
-        }
 
-        return DB::transaction(function () use ($user, $now, $availableAt) {
-            $dailyXuxes = (int) SystemConfig::get('xuxes_quantitat_diaria', 10);
-            $rewardXuxes = $this->buildRandomXuxesReward($dailyXuxes);
-            $xuxesSummary = $this->storeXuxesReward($user->id, $rewardXuxes);
+            if ($canClaimXuxes) {
+                $dailyXuxes = (int) SystemConfig::get('xuxes_quantitat_diaria', 10);
+                $rewardXuxes = $this->buildRandomXuxesReward($dailyXuxes);
+                $xuxesSummary = $this->storeXuxesReward($user->id, $rewardXuxes);
+                
+                $response['xuxes'] = $xuxesSummary['items'];
+                $response['xuxes_requested'] = $dailyXuxes;
+                $response['xuxes_added'] = $xuxesSummary['added'];
+                $response['xuxes_discarded'] = $xuxesSummary['discarded'];
+                
+                $user->last_reward_at = $now->copy()->setTimezone('UTC');
+            }
 
-            $this->xuxedexService->ensureStarterXuxedex($user->id);
+            if ($canClaimXuxemon) {
+                $this->xuxedexService->ensureStarterXuxedex($user->id);
+                $xuxemonReward = $this->unlockRandomSmallXuxemon($user->id);
+                
+                $response['xuxemon'] = $xuxemonReward;
+                $response['xuxemon_unlocked'] = $xuxemonReward !== null;
+                
+                $user->last_xuxemon_reward_at = $now->copy()->setTimezone('UTC');
+            }
 
-            // El Xuxemon es dona si l'hora actual supera la seva hora configurada
-            $xuxemonHour = (int) SystemConfig::get('xuxemon_hora_recompensa', 8);
-            $xuxemonAvailable = $now->hour >= $xuxemonHour;
-            $xuxemonReward = $xuxemonAvailable
-                ? $this->unlockRandomSmallXuxemon($user->id)
-                : null;
+            $user->save();
 
-            $user->forceFill([
-                'last_reward_at' => $now->copy()->setTimezone('UTC'),
-            ])->save();
-
-            return [
-                'status'           => 'granted',
-                'granted'          => true,
-                'message'          => 'Has recibido tu recompensa diaria.',
-                'available_at'     => $availableAt->toIso8601String(),
-                'next_available_at'=> $availableAt->copy()->addDay()->toIso8601String(),
-                'xuxes'            => $xuxesSummary['items'],
-                'xuxes_requested'  => $dailyXuxes,
-                'xuxes_added'      => $xuxesSummary['added'],
-                'xuxes_discarded'  => $xuxesSummary['discarded'],
-                'xuxemon'          => $xuxemonReward,
-                'xuxemon_unlocked' => $xuxemonReward !== null,
-            ];
+            return $response;
         });
     }
 
     private function buildRandomXuxesReward(int $totalXuxes = 10): Collection
     {
         $catalog = Xuxes::query()->get(['id', 'nombre_xuxes', 'imagen', 'apilable']);
-
         if ($catalog->isEmpty()) {
             return collect();
         }
@@ -113,7 +113,6 @@ class DailyRewardService
 
         foreach ($rewardXuxes as $rewardItem) {
             $result = $this->addItemToInventory($userId, $rewardItem['id'], $rewardItem['cantidad']);
-
             $items[] = [
                 'id' => $rewardItem['id'],
                 'nombre_xuxes' => $rewardItem['nombre_xuxes'],
