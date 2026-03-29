@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { XuxemonService, Xuxemon } from '../services/xuxemon.service';
+import { AdminConfigService, SystemConfigItem, XuxemonNivell } from '../services/admin-config.service';
 import { finalize } from 'rxjs';
 
 interface UsuarioAdmin {
@@ -50,6 +51,23 @@ export class Admin implements OnInit {
   usuarioInventariId: number | null = null;
   afegindoXuxes = false;
 
+  // Configuració global del sistema
+  configItems: SystemConfigItem[] = [];
+  configEdits: Record<string, number> = {};
+  guardantConfig: Record<string, boolean> = {};
+  configMissatgeExito = '';
+  configMissatgeError = '';
+
+  // Xuxemons nivell (xuxes per pujar)
+  xuxemonsNivell: XuxemonNivell[] = [];
+  xuxesPerPujarEdits: Record<number, number> = {};
+  guardantNivell: Record<number, boolean> = {};
+  nivellMissatgeExito = '';
+  nivellMissatgeError = '';
+
+  // Pestanya activa ('usuaris', 'config', 'xuxemons')
+  pestanyaActiva: string = 'usuaris';
+
   // Getters para filtrar xuxemons por tipo
   get xuxemonsAgua(): Xuxemon[] {
     return this.xuxemons.filter(x => x.tipo_elemento === 'Aigua');
@@ -69,6 +87,7 @@ export class Admin implements OnInit {
   constructor(
     private http: HttpClient,
     private xuxemonService: XuxemonService,
+    private adminConfigService: AdminConfigService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) { }
@@ -77,6 +96,8 @@ export class Admin implements OnInit {
   ngOnInit(): void {
     this.cargarUsuarios();
     this.cargarXuxesDisponibles();
+    this.cargarConfig();
+    this.cargarXuxemonsNivell();
   }
 
   // Al cargar el componente, obtenemos la lista de usuarios
@@ -286,5 +307,118 @@ export class Admin implements OnInit {
           this.cdr.detectChanges();
         }
       });
+  }
+
+  // ── CONFIGURACIÓ GLOBAL ────────────────────────────────────────────────────
+
+  cargarConfig(): void {
+    this.adminConfigService.getConfig().subscribe({
+      next: (items) => {
+        this.configItems = items;
+        items.forEach(item => {
+          this.configEdits[item.clave] = +item.valor;
+        });
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error carregant config', err),
+    });
+  }
+
+  guardarConfig(clave: string): void {
+    const valor = this.configEdits[clave];
+    if (valor === undefined || valor === null) return;
+    this.guardantConfig[clave] = true;
+    this.configMissatgeExito = '';
+    this.configMissatgeError = '';
+
+    this.adminConfigService.updateConfig(clave, valor).pipe(
+      finalize(() => { this.guardantConfig[clave] = false; this.cdr.detectChanges(); })
+    ).subscribe({
+      next: (res) => {
+        this.configMissatgeExito = res.message;
+        const item = this.configItems.find(c => c.clave === clave);
+        if (item) item.valor = String(valor);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.configMissatgeError = err.error?.message ?? err.message ?? 'Error desant la configuració';
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  getConfigLabel(clave: string): string {
+    const labels: Record<string, string> = {
+      xuxes_hora_recompensa: 'Hora recompensa Xuxes (0–23)',
+      xuxes_quantitat_diaria: 'Quantitat diària de Xuxes',
+      xuxemon_hora_recompensa: 'Hora recompensa Xuxemon (0–23)',
+      infeccio_bajon: '% Bajón de Azúcar',
+      infeccio_sobredosis: '% Sobredosis',
+      infeccio_atracon: '% Atracón',
+    };
+    return labels[clave] ?? clave;
+  }
+
+  getConfigMax(clave: string): number {
+    if (clave.startsWith('infeccio_')) return 100;
+    if (clave.includes('hora')) return 23;
+    return 999;
+  }
+
+  // ── XUXEMONS NIVELL ────────────────────────────────────────────────────────
+
+  cargarXuxemonsNivell(): void {
+    this.adminConfigService.getXuxemonsNivell().subscribe({
+      next: (xuxemons) => {
+        this.xuxemonsNivell = xuxemons;
+        xuxemons.forEach(x => {
+          this.xuxesPerPujarEdits[x.id] = x.xuxes_per_pujar;
+        });
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error carregant xuxemons nivell', err),
+    });
+  }
+
+  guardarXuxesPerPujar(xuxemon: XuxemonNivell): void {
+    const valor = this.xuxesPerPujarEdits[xuxemon.id];
+    if (!valor || valor < 1) return;
+    this.guardantNivell[xuxemon.id] = true;
+    this.nivellMissatgeExito = '';
+    this.nivellMissatgeError = '';
+
+    this.adminConfigService.updateXuxesPerPujar(xuxemon.id, valor).pipe(
+      finalize(() => { this.guardantNivell[xuxemon.id] = false; this.cdr.detectChanges(); })
+    ).subscribe({
+      next: (res) => {
+        this.nivellMissatgeExito = res.message;
+        xuxemon.xuxes_per_pujar = res.xuxes_per_pujar;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.nivellMissatgeError = err.error?.message ?? 'Error desant';
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  get xuxemonsNivellPetit(): XuxemonNivell[] {
+    return this.xuxemonsNivell.filter(x => x.tamano === 'Petit');
+  }
+
+  get xuxemonsNivellMitja(): XuxemonNivell[] {
+    return this.xuxemonsNivell.filter(x => x.tamano === 'Mitja');
+  }
+
+  // Canviar la pestanya activa del menú
+  canviarPestanya(pestanya: string): void {
+    this.pestanyaActiva = pestanya;
+    // Netejar missatges globals
+    this.mensajeExito = '';
+    this.mensajeError = '';
+    this.configMissatgeExito = '';
+    this.configMissatgeError = '';
+    this.nivellMissatgeExito = '';
+    this.nivellMissatgeError = '';
   }
 }

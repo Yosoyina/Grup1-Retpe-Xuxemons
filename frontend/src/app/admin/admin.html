@@ -1,17 +1,31 @@
 <div class="admin-wrapper">
   <h1 class="admin-titulo">PANEL ADMINISTRADOR</h1>
 
-  @if (mensajeExito) {
+  <div class="admin-nav">
+    <button class="nav-tab" [class.activa]="pestanyaActiva === 'usuaris'" (click)="canviarPestanya('usuaris')">
+      👥 Gestió d'Usuaris
+    </button>
+    <button class="nav-tab" [class.activa]="pestanyaActiva === 'config'" (click)="canviarPestanya('config')">
+      ⚙️ Configuració Global
+    </button>
+    <button class="nav-tab" [class.activa]="pestanyaActiva === 'xuxemons'" (click)="canviarPestanya('xuxemons')">
+      🌱 Xuxes per Créixer
+    </button>
+  </div>
+
+  @if (mensajeExito && pestanyaActiva === 'usuaris') {
   <div class="mensaje exito">✓ {{ mensajeExito }}</div>
   }
-  @if (mensajeError) {
+  @if (mensajeError && pestanyaActiva === 'usuaris') {
   <div class="mensaje error">✗ {{ mensajeError }}</div>
   }
 
-  <!-- ── SECCIÓ ÚNICA USUARIS ──────────────────────────── -->
-  <div class="seccio">
-    <div class="seccio-header">
-      <span class="seccio-icon">👥</span>
+  <div class="admin-main-layout">
+    @if (pestanyaActiva === 'usuaris') {
+    <!-- SECCIÓ ÚNICA USUARIS -->
+    <div class="seccio seccio-usuaris">
+      <div class="seccio-header">
+        <span class="seccio-icon">👥</span>
       <h2>Gestió d'Usuaris</h2>
       <span class="seccio-badge">{{ usuarios.length }} usuaris</span>
     </div>
@@ -95,8 +109,151 @@
       }
     </div>
   </div>
+  }
 
-  <div class="admin-spacer"></div>
+  @if (pestanyaActiva === 'config') {
+  <!-- ── SECCIÓ CONFIGURACIÓ GLOBAL ───────────────────────────── -->
+  <div class="seccio seccio-config">
+    <div class="seccio-header">
+      <span class="seccio-icon">⚙️</span>
+      <h2>Configuració del Sistema</h2>
+    </div>
+
+    <div class="seccio-body">
+      @if (configMissatgeExito) {
+      <div class="mensaje exito">✓ {{ configMissatgeExito }}</div>
+      }
+      @if (configMissatgeError) {
+      <div class="mensaje error">✗ {{ configMissatgeError }}</div>
+      }
+
+      <div class="config-grid">
+        @for (item of configItems; track item.clave) {
+        <div class="config-row">
+          <div class="config-info">
+            <span class="config-label">{{ getConfigLabel(item.clave) }}</span>
+            @if (item.descripcio) {
+            <span class="config-desc">{{ item.descripcio }}</span>
+            }
+          </div>
+          <div class="config-accio">
+            <input
+              type="number"
+              [(ngModel)]="configEdits[item.clave]"
+              [min]="0"
+              [max]="getConfigMax(item.clave)"
+              class="config-input"
+            >
+            <button
+              class="btn-accio btn-config-save"
+              (click)="guardarConfig(item.clave)"
+              [disabled]="guardantConfig[item.clave]"
+            >
+              {{ guardantConfig[item.clave] ? 'Desant...' : 'Desar' }}
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="config-nota">
+        <strong>Nota:</strong> La suma dels tres percentatges d'infecció no pot superar el 100%.
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (pestanyaActiva === 'xuxemons') {
+  <!-- ── SECCIÓ XUXES PER CRÉIXER ──────────────────────────────── -->
+  <div class="seccio seccio-nivell">
+    <div class="seccio-header">
+      <span class="seccio-icon">🌱</span>
+      <h2>Xuxes per Créixer</h2>
+      <span class="seccio-badge">Petits i Mitja</span>
+    </div>
+
+    <div class="seccio-body">
+      @if (nivellMissatgeExito) {
+      <div class="mensaje exito">✓ {{ nivellMissatgeExito }}</div>
+      }
+      @if (nivellMissatgeError) {
+      <div class="mensaje error">✗ {{ nivellMissatgeError }}</div>
+      }
+
+      @if (xuxemonsNivell.length > 0) {
+      <div class="nivell-taula">
+
+        <div class="nivell-grup-titol">🐣 Xuxemons Petits → Mitja</div>
+        <div class="nivell-grid">
+          @for (x of xuxemonsNivellPetit; track x.id) {
+          <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
+            @if (x.imagen) {
+            <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
+            } @else {
+            <div class="nivell-img-placeholder">🐣</div>
+            }
+            <div class="nivell-nom">{{ x.nombre_xuxemon }}</div>
+            <div class="nivell-tipus">{{ x.tipo_elemento }}</div>
+            <div class="nivell-accio">
+              <input
+                type="number"
+                [(ngModel)]="xuxesPerPujarEdits[x.id]"
+                min="1" max="999"
+                class="qty-input"
+              >
+              <button
+                class="btn-accio btn-config-save"
+                (click)="guardarXuxesPerPujar(x)"
+                [disabled]="guardantNivell[x.id]"
+              >
+                {{ guardantNivell[x.id] ? '...' : '💾' }}
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="nivell-grup-titol">🐥 Xuxemons Mitja → Gran</div>
+        <div class="nivell-grid">
+          @for (x of xuxemonsNivellMitja; track x.id) {
+          <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
+            @if (x.imagen) {
+            <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
+            } @else {
+            <div class="nivell-img-placeholder">🐥</div>
+            }
+            <div class="nivell-nom">{{ x.nombre_xuxemon }}</div>
+            <div class="nivell-tipus">{{ x.tipo_elemento }}</div>
+            <div class="nivell-accio">
+              <input
+                type="number"
+                [(ngModel)]="xuxesPerPujarEdits[x.id]"
+                min="1" max="999"
+                class="qty-input"
+              >
+              <button
+                class="btn-accio btn-config-save"
+                (click)="guardarXuxesPerPujar(x)"
+                [disabled]="guardantNivell[x.id]"
+              >
+                {{ guardantNivell[x.id] ? '...' : '💾' }}
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+
+      </div>
+      } @else {
+      <div class="cargando">
+        <span class="cargando-spinner"></span>
+        Carregant Xuxemons...
+      </div>
+      }
+    </div>
+  </div>
+  }
+  </div> <!-- Fi Admin Main Layout -->
 
   <div class="admin-footer">
     <button class="btn-salir" (click)="salir()">
