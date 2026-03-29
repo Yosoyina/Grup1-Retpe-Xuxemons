@@ -20,6 +20,7 @@ class Xuxemons extends Model
         'descripcio',
         'imagen',
         'evolucion_xuxemon',
+        'xuxes_per_pujar',
     ];
 
     protected function casts(): array
@@ -31,7 +32,7 @@ class Xuxemons extends Model
             'descripcio' => 'string',
             'imagen' => 'string',
             'evolucion_xuxemon' => 'string',
-            'xuxes_nivel',
+            'xuxes_per_pujar' => 'integer',
         ];
     }
 

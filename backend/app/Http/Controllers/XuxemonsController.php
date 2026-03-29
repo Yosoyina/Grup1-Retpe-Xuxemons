@@ -38,6 +38,7 @@ class XuxemonsController extends Controller
                 'xuxemons.tamano',
                 'xuxemons.descripcio',
                 'xuxemons.imagen',
+                'xuxemons.xuxes_per_pujar',
                 'xuxedex.esta_capturado',
                 'xuxedex.enfermedad',
             );
@@ -63,6 +64,7 @@ class XuxemonsController extends Controller
                 'tamano' => $x->esta_capturado ? $x->tamano : '???',
                 'descripcio' => $x->esta_capturado ? $x->descripcio : '',
                 'imagen' => $x->esta_capturado ? $x->imagen : null,
+                'xuxes_per_pujar' => $x->xuxes_per_pujar,
                 'esta_capturado' => (bool) $x->esta_capturado,
                 'bloquejat' => !(bool) $x->esta_capturado,
 
@@ -177,8 +179,10 @@ class XuxemonsController extends Controller
             ], 422);
         }
 
-        // Bajón de azúcar → necessita 3 XuxEvo en lloc d'1
-        $xuxesNecessaries = ($entrada && $entrada->enfermedad === 'Bajon de azucar') ? 3 : 1;
+        $baseCost = $xuxemon->xuxes_per_pujar ?? 1;
+
+        // Bajón de azúcar → necessita més XuxEvo per evolucionar
+        $xuxesNecessaries = ($entrada && $entrada->enfermedad === 'Bajon de azucar') ? $baseCost + 2 : $baseCost;
 
         $nextEvolution = Xuxemons::where('tipo_elemento', $xuxemon->tipo_elemento)
             ->where('evolucion_xuxemon', $xuxemon->evolucion_xuxemon)
@@ -481,6 +485,7 @@ class XuxemonsController extends Controller
                 'xuxemons.tamano',
                 'xuxemons.descripcio',
                 'xuxemons.imagen',
+                'xuxemons.xuxes_per_pujar'
             )
             ->get()
             ->map(function ($x) {
@@ -492,6 +497,7 @@ class XuxemonsController extends Controller
                     'tamano' => $x->tamano,
                     'descripcio' => $x->descripcio,
                     'imagen' => $x->imagen,
+                    'xuxes_per_pujar' => $x->xuxes_per_pujar,
                     'esta_enfermo' => !is_null($x->enfermedad),
                     'enfermedad' => $x->enfermedad,
                 ];

@@ -21,6 +21,7 @@ export interface Xuxemon {
   tamano: string;
   descripcio: string;
   imagen: string | null;
+  xuxes_per_pujar?: number;
   esta_capturado?: boolean;
   bloquejat?: boolean;
   enfermedad?: Enfermedad;

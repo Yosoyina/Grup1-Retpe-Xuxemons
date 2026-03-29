@@ -275,7 +275,7 @@
           <span class="btn-evolucionar-icon">⬆</span>
           Evolucionar a {{ seguent.nombre_xuxemon }}
           <span class="btn-evolucionar-cost">
-            · Xuxa EV (x{{ getCostEvolucio() }})
+            · Xuxa EV ({{ getTotalEvesUsuari() }}/{{ getCostEvolucio() }})
             @if (xuxemonSeleccionado?.enfermedad === 'Bajon de azucar') {
             <span class="cost-malaltia"> +2 per Bajón de azúcar</span>
             }
@@ -283,10 +283,10 @@
         </button>
         } @else {
         <p class="evolucio-sense-xuxe">
+          Necessites <strong>{{ getCostEvolucio() }} Xuxa EV</strong> per evolucionar 
+          (en tens {{ getTotalEvesUsuari() }}).
           @if (xuxemonSeleccionado?.enfermedad === 'Bajon de azucar') {
-          Necessites <strong>3 Xuxa EV</strong> per evolucionar (Bajón de azúcar).
-          } @else {
-          Necessites una <strong>Xuxa EV</strong> a la motxilla per evolucionar.
+          <br><small>Tens un recàrrec de +2 per Bajón de azúcar.</small>
           }
         </p>
         }

@@ -261,22 +261,36 @@ export class Xuxedex implements OnDestroy {
     return enfermedad ? (classes[enfermedad] ?? 'enfermedad-generica') : '';
   }
 
-  // Cost en Xuxa EV per evolucionar (3 si té Bajón de azúcar)
+  // Cost en Xuxa EV per evolucionar (el base + 2 si té Bajón de azúcar)
   getCostEvolucio(): number {
-    return this.xuxemonSeleccionado?.enfermedad === 'Bajon de azucar' ? 3 : 1;
+    const baseCost = this.xuxemonSeleccionado?.xuxes_per_pujar ?? 1;
+    return this.xuxemonSeleccionado?.enfermedad === 'Bajon de azucar' ? baseCost + 2 : baseCost;
   }
 
-  // Pot evolucionar? (no si té Sobredosis, Atracon, o no té prou Xuxa EV)
+  // Quantes Xuxa EV té l'usuari actualment
+  getTotalEvesUsuari(): number {
+    return this.inventarioService.slots
+      .filter(s => !s.empty && (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase() === 'xuxevo')
+      .reduce((acc, s) => acc + s.cantidad, 0);
+  }
+
+  // Pot evolucionar? (no si té Sobredosis o no té prou Xuxa EV)
   potEvolucionar(): boolean {
     if (this.xuxemonSeleccionado?.enfermedad === 'Sobredosis') return false;
     const cost = this.getCostEvolucio();
-    const totalEv = this.inventarioService.slots
-      .filter(s => !s.empty && (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase() === 'xuxevo')
-      .reduce((acc, s) => acc + s.cantidad, 0);
-    return totalEv >= cost;
+    return this.getTotalEvesUsuari() >= cost;
   }
 
   private sincronizarSeleccion(xuxemons: Xuxemon[]): void {
+    // 1. Actualitza l'objecte seleccionat amb les dades més recents
+    if (this.xuxemonSeleccionado) {
+      const fresco = xuxemons.find(x => x.id === this.xuxemonSeleccionado?.id);
+      if (fresco) {
+        this.xuxemonSeleccionado = fresco;
+      }
+    }
+
+    // 2. Comprova si segueix estant visible a la pàgina actual
     const visibles = this.getPaginats(xuxemons);
     if (visibles.length === 0) {
       this.xuxemonSeleccionado = null;
