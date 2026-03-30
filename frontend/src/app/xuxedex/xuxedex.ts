@@ -185,10 +185,10 @@ export class Xuxedex implements OnDestroy {
     if (this.mostrarPanellVacuna) this.mostrarPanellAlimentar = false;
   }
 
-  // Retorna la quantitat màxima de xuxes apilables del inventari
+  // Retorna la quantitat màxima de xuxes apilables del inventari (excepte XuxEvo)
   getMaxFeed(): number {
     return this.inventarioService.slots
-      .filter(s => !s.empty && s.apilable)
+      .filter(s => !s.empty && s.apilable && (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase() !== 'xuxevo')
       .reduce((acc, s) => acc + s.cantidad, 0);
   }
 

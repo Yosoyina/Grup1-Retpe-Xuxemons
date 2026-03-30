@@ -315,11 +315,12 @@ class XuxemonsController extends Controller
             ], 422);
         }
 
-        // Busca el menjar disponible (apilables) a l'inventari
+        // Busca el menjar disponible (apilables, excepte XuxEvo) a l'inventari
         $items = \App\Models\Inventario::with('xuxe')
             ->where('user_id', $userId)
             ->whereHas('xuxe', function($query) {
-                $query->where('apilable', true);
+                $query->where('apilable', true)
+                      ->where('nombre_xuxes', '!=', 'XuxEvo');
             })
             ->get();
 
