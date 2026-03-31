@@ -6,6 +6,8 @@ use App\Http\Controllers\RewardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\XuxemonsController;
 use App\Http\Controllers\InventarioController;
+use App\Http\Controllers\VacunesController;
+use App\Http\Controllers\AdminConfigController;
 
 // ── RUTES PUBLIQUES ───────────────────────────────────────
 Route::post('/register', [AuthController::class, 'register']);
@@ -23,7 +25,6 @@ Route::middleware('auth:api')->group(function () {
 
     // ── XUXEDEX ROUTES ───────────────────────────────────
     Route::get('/xuxedex', [XuxemonsController::class, 'getUserXuxedex']);
-    //Route::apiResource('/xuxemons', XuxemonsController::class);
 
     // ── POKEDEX DE XUXEMONS ───────────────────────────────────
     Route::get('/xuxemons', [XuxemonsController::class, 'index']);
@@ -33,15 +34,18 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/xuxemons/{id}/feed', [XuxemonsController::class, 'feed']);
     Route::post('/xuxemons/{id}/curar', [XuxemonsController::class, 'curar']);
 
-    // ── iNVENTARIO DEL JUGADOR ───────────────────────────────────
-
+    // ── INVENTARIO DEL JUGADOR ───────────────────────────────────
     Route::get('/inventario', [InventarioController::class, 'index']);
     Route::get('/inventario/{id}', [InventarioController::class, 'show']);
     Route::get('/xuxes', [InventarioController::class, 'listXuxes']);
+    Route::post('/inventario/{inventario_id}/alimentar/{xuxedex_id}', [InventarioController::class, 'alimentar']);
+
+    // ── VACUNES ───────────────────────────────────────────
+    Route::post('/vacunes/aplicar', [VacunesController::class, 'aplicar']);
 
     // ── RUTES ADMIN ───────────────────────────────────────
     Route::middleware('admin')->prefix('admin')->group(function () {
- 
+
         // ── USUARIOS ───────────────────────────────────────
         Route::get('/usuarios', [UserController::class, 'listUsers']);
         Route::put('/usuarios/{id}/toggle', [UserController::class, 'toggleActiu']);
@@ -49,17 +53,25 @@ Route::middleware('auth:api')->group(function () {
         // ── POKEDEX DE XUXEMONS ADMIN ───────────────────────────────────
         Route::get('/xuxedex', [XuxemonsController::class, 'getAdminXuxedex']);
         Route::post('/xuxedex', [XuxemonsController::class, 'addXuxemonToUser']);
- 
+
         // ── POKEDEX DE XUXEMONS ADMIN ───────────────────────────────────
         Route::post('/xuxemons', [XuxemonsController::class, 'store']);
         Route::put('/xuxemons/{id}', [XuxemonsController::class, 'update']);
         Route::delete('/xuxemons/{id}', [XuxemonsController::class, 'destroy']);
- 
+
         // ── INVENTARIO DEL JUGADOR (ADMIN) ───────────────────────────────────
         Route::get('/inventario/items', [InventarioController::class, 'listadosItems']);
         Route::post('/inventario', [InventarioController::class, 'store']);
         Route::put('/inventario/{id}', [InventarioController::class, 'update']);
         Route::delete('/inventario/{id}', [InventarioController::class, 'destroy']);
+
+        // ── CONFIGURACIÓ GLOBAL DEL SISTEMA (ADMIN) ──────────────────────
+        Route::get('/config', [AdminConfigController::class, 'index']);
+        Route::put('/config/{clave}', [AdminConfigController::class, 'update']);
+
+        // ── XUXES PER PUJAR NIVELL (ADMIN) ───────────────────────────────
+        Route::get('/xuxemons-nivell', [AdminConfigController::class, 'llistarXuxemonsNivell']);
+        Route::put('/xuxemons-nivell/{id}', [AdminConfigController::class, 'updateXuxesNivell']);
     });
 
 });

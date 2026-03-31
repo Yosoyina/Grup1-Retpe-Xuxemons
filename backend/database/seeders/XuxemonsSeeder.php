@@ -475,6 +475,14 @@ class XuxemonsSeeder extends Seeder
         ];
 
         foreach ($xuxemons as $data) {
+            if (!isset($data['xuxes_per_pujar'])) {
+                $data['xuxes_per_pujar'] = match ($data['tamano']) {
+                    'Petit' => 3,
+                    'Mitja' => 5,
+                    'Gran' => 0,
+                    default => 3,
+                };
+            }
             Xuxemons::create($data);
         }
     }

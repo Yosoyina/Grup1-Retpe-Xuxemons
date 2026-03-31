@@ -20,6 +20,7 @@ export class Inventario implements OnInit, OnDestroy {
   private slotsSub!: Subscription;
 
   slots: Slot[] = [];
+  slotSeleccionat: Slot | null = null;
 
   // Mètodes per gestionar l'inventari i la interacció amb els slots
   ngOnInit(): void {
@@ -64,5 +65,13 @@ export class Inventario implements OnInit, OnDestroy {
   // Mètode per sortir de l'inventari i tornar al menú principal
   sortir(): void {
     this.router.navigate(['/menu-principal']);
+  }
+
+  seleccionar(slot: Slot): void {
+    this.slotSeleccionat = this.slotSeleccionat?.id === slot.id ? null : slot;
+  }
+
+  tancarDetall(): void {
+    this.slotSeleccionat = null;
   }
 }

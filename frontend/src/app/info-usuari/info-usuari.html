@@ -160,11 +160,9 @@
     <div class="modal-exit-avatar">
       <img [src]="getAvatarSrc(usuari.avatar)" [alt]="usuari.nombre" class="modal-avatar-img">
     </div>
-    <div class="modal-icona"></div>
     <h3 class="modal-titol modal-titol-exit">Perfil actualitzat!</h3>
-    <div class="modal-dades">
-    </div>
-    <button class="btn-cancelar btn-tancar-modal" (click)="mostrarModalActualitzat = false">✕ Tancar</button>
+    <p class="modal-exit-subtitol">Els teus canvis s'han desat correctament.</p>
+    <button class="btn-tancar-modal" (click)="mostrarModalActualitzat = false">✕ Tancar</button>
   </div>
 </div>
 }

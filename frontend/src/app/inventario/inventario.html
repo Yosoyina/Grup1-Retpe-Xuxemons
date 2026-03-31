@@ -2,7 +2,7 @@
 
   <!-- Header -->
   <header class="inv-header">
-    <span class="bag-icon"></span>
+    <img class="bag-deco" src="/Moxilla_Inventario.png" alt="Motxilla">
     <h1 class="inv-title">Motxilla</h1>
   </header>
 
@@ -24,7 +24,12 @@
         @for (slot of apilablesFills; track slot.id) {
           <li>
             <div [ngClass]="slotClasses(slot)"
-                 [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad">
+                 [class.slot--selected]="slotSeleccionat?.id === slot.id"
+                 [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad"
+                 role="button"
+                 tabindex="0"
+                 (click)="seleccionar(slot)"
+                 (keydown.enter)="seleccionar(slot)">
 
               <img class="slot-img"
                    [src]="slot.xuxe?.imagen"
@@ -72,7 +77,9 @@
           <li>
             <button type="button"
                     [ngClass]="slotClasses(slot)"
-                    [attr.aria-label]="slot.xuxe?.nom">
+                    [class.slot--selected]="slotSeleccionat?.id === slot.id"
+                    [attr.aria-label]="slot.xuxe?.nom"
+                    (click)="seleccionar(slot)">
 
               <img class="slot-img"
                    [src]="slot.xuxe?.imagen"
@@ -81,9 +88,6 @@
               <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
                 {{ slot.xuxe?.tipus }}
               </span>
-
-              <button class="btn-remove" (click)="removeOne(slot, $event)" aria-label="Eliminar"></button>
-
             </button>
           </li>
         }
@@ -106,6 +110,58 @@
   </div>
 
 </div>
+
+<!-- MODAL DETALL XUXE -->
+@if (slotSeleccionat) {
+<div class="detall-overlay" (click)="tancarDetall()" role="dialog" aria-modal="true"
+  [attr.aria-label]="slotSeleccionat.xuxe?.nom">
+  <div class="detall-modal" (click)="$event.stopPropagation()">
+
+    <button type="button" class="detall-tancar" (click)="tancarDetall()" aria-label="Tancar">✕</button>
+
+    <div class="detall-imatge">
+      @if (slotSeleccionat.xuxe?.imagen) {
+        <img [src]="slotSeleccionat.xuxe!.imagen" [alt]="slotSeleccionat.xuxe?.nom" />
+      } @else {
+        <div class="detall-placeholder">{{ slotSeleccionat.xuxe?.nom?.charAt(0) }}</div>
+      }
+    </div>
+
+    <div class="detall-info">
+      <h2 class="detall-nom">{{ slotSeleccionat.xuxe?.nom }}</h2>
+
+      <hr class="detall-separador" />
+
+      <div class="detall-dades">
+        @if (slotSeleccionat.xuxe?.tipus) {
+          <div class="detall-dada">
+            <span class="detall-dada-label">Tipus</span>
+            <span class="detall-dada-valor"
+                  [ngClass]="'valor--tipus-' + slotSeleccionat.xuxe!.tipus!.toLowerCase()">
+              {{ slotSeleccionat.xuxe?.tipus }}
+            </span>
+          </div>
+        }
+        <div class="detall-dada">
+          <span class="detall-dada-label">Categoria</span>
+          <span class="detall-dada-valor">{{ slotSeleccionat.apilable ? 'Apilable' : 'No apilable' }}</span>
+        </div>
+        @if (slotSeleccionat.apilable) {
+          <div class="detall-dada">
+            <span class="detall-dada-label">Quantitat</span>
+            <span class="detall-dada-valor">{{ slotSeleccionat.cantidad }} / 5</span>
+          </div>
+        }
+      </div>
+
+      @if (slotSeleccionat.xuxe?.descripcio) {
+        <p class="detall-descripcio">{{ slotSeleccionat.xuxe?.descripcio }}</p>
+      }
+    </div>
+
+  </div>
+</div>
+}
 
 <button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menú principal">
   <img src="/Sortir.png" alt="" />

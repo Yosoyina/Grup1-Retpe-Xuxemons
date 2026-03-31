@@ -1,14 +1,15 @@
 import { Component, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { XuxemonService, Xuxemon, EtapaEvoluciones, FeedResult } from '../services/xuxemon.service';
+import { XuxemonService, Xuxemon, EtapaEvoluciones, FeedResult, AplicarVacunaResult } from '../services/xuxemon.service';
 import { InventarioService, Slot } from '../services/inventario.service';
 
 @Component({
   selector: 'app-xuxedex',
   standalone: true,
-  imports: [CommonModule, AsyncPipe],
+  imports: [CommonModule, AsyncPipe, FormsModule],
   templateUrl: './xuxedex.html',
   styleUrl: './xuxedex.css',
 })
@@ -32,12 +33,22 @@ export class Xuxedex implements OnDestroy {
   cinematicaEvolucio = false;
   faseEvolucio = this.faseEvolucioIdle;
   etapaEvolucioObjectiu: EtapaEvoluciones | null = null;
+  mostrarPanellAlimentar = false;
+  mostrarPanellVacuna = false;
 
   // Feed / Infecció
   feedResultat: FeedResult | null = null;
   feedCarregant = false;
+  feedQuantitat = 1;
   private feedTimer: ReturnType<typeof setTimeout> | null = null;
   private evolucioTimers: ReturnType<typeof setTimeout>[] = [];
+
+  // Vacunes
+  vacunaSlotSeleccionat: Slot | null = null;
+  vacunaCarregant = false;
+  vacunaResultat: AplicarVacunaResult | null = null;
+  vacunaError: string | null = null;
+  private vacunaTimer: ReturnType<typeof setTimeout> | null = null;
 
   private inventarioService = inject(InventarioService);
   private cdr = inject(ChangeDetectorRef);
@@ -46,7 +57,7 @@ export class Xuxedex implements OnDestroy {
   private evolucioSub: Subscription | null = null;
 
   get mostrarPaginacio(): boolean {
-    return this.filtroActual === 'Todos';
+    return this.getTotalPagines(this.xuxemons$.getValue()) > 1;
   }
 
   constructor(public xuxemonService: XuxemonService, private router: Router) {
@@ -71,6 +82,7 @@ export class Xuxedex implements OnDestroy {
     this.evolucioSub?.unsubscribe();
     if (this.feedTimer) clearTimeout(this.feedTimer);
     this.clearEvolucioTimers();
+    if (this.vacunaTimer) clearTimeout(this.vacunaTimer);
   }
 
   cambiarFiltro(tipo: string): void {
@@ -78,6 +90,8 @@ export class Xuxedex implements OnDestroy {
     this.filtroMida = 'Tots';
     this.paginaActual = 0;
     this.xuxemonSeleccionado = null;
+    this.mostrarPanellAlimentar = false;
+    this.mostrarPanellVacuna = false;
     this.cerrarEvolucion();
     this.xuxemonService.xuxemons$.next([]);
     this.xuxemonService.carregarXuxemons(tipo);
@@ -95,10 +109,6 @@ export class Xuxedex implements OnDestroy {
 
   getPaginats(xuxemons: Xuxemon[]): Xuxemon[] {
     const filtrats = this.getFiltrats(xuxemons);
-    if (!this.mostrarPaginacio) {
-      return filtrats.slice(0, this.itemsPorPagina);
-    }
-
     const inicio = this.paginaActual * this.itemsPorPagina;
     return filtrats.slice(inicio, inicio + this.itemsPorPagina);
   }
@@ -133,6 +143,11 @@ export class Xuxedex implements OnDestroy {
   seleccionar(xuxemon: Xuxemon): void {
     if (!xuxemon.bloquejat) {
       this.xuxemonSeleccionado = xuxemon;
+      this.vacunaSlotSeleccionat = null;
+      this.vacunaResultat = null;
+      this.vacunaError = null;
+      this.mostrarPanellAlimentar = false;
+      this.mostrarPanellVacuna = false;
       this.cerrarEvolucion();
     }
   }
@@ -168,20 +183,49 @@ export class Xuxedex implements OnDestroy {
     this.router.navigate(['/menu-principal']);
   }
 
+  // ── Panells colapsables ───────────────────────────────────────────
+
+  togglePanellAlimentar(): void {
+    this.mostrarPanellAlimentar = !this.mostrarPanellAlimentar;
+    if (this.mostrarPanellAlimentar) this.mostrarPanellVacuna = false;
+  }
+
+  togglePanellVacuna(): void {
+    this.mostrarPanellVacuna = !this.mostrarPanellVacuna;
+    if (this.mostrarPanellVacuna) this.mostrarPanellAlimentar = false;
+  }
+
+  // Retorna la quantitat màxima de xuxes apilables del inventari
+  getMaxFeed(): number {
+    return this.inventarioService.slots
+      .filter(s => !s.empty && s.apilable)
+      .reduce((acc, s) => acc + s.cantidad, 0);
+  }
+
+  incrementarFeed(): void {
+    if (this.feedQuantitat < this.getMaxFeed()) this.feedQuantitat++;
+  }
+
+  decrementarFeed(): void {
+    if (this.feedQuantitat > 1) this.feedQuantitat--;
+  }
+
   // ── Feed / Infecció ───────────────────────────────────────────────
 
   alimentar(): void {
     if (!this.xuxemonSeleccionado || this.feedCarregant) return;
+    if (this.feedQuantitat < 1) this.feedQuantitat = 1;
 
     this.feedCarregant = true;
     this.feedResultat = null;
 
-    this.xuxemonService.feed(this.xuxemonSeleccionado.id).subscribe({
+    this.xuxemonService.feed(this.xuxemonSeleccionado.id, this.xuxemonSeleccionado.xuxedex_id || 0, this.feedQuantitat).subscribe({
       next: (res) => {
         this.feedResultat = res;
         this.feedCarregant = false;
-        // Recarrega per reflectir la nova malaltia a la targeta
+        // Recarrega per reflectir la nova malaltia a la targeta i el nou inventari
         this.xuxemonService.carregarXuxemons(this.filtroActual);
+        this.inventarioService.cargarInventario();
         // Amaga el toast després de 4 segons
         if (this.feedTimer) clearTimeout(this.feedTimer);
         this.feedTimer = setTimeout(() => {
@@ -217,23 +261,46 @@ export class Xuxedex implements OnDestroy {
     return enfermedad ? (icons[enfermedad] ?? '🤒') : '';
   }
 
-  // Cost en Xuxa EV per evolucionar (3 si té Bajón de azúcar)
-  getCostEvolucio(): number {
-    return this.xuxemonSeleccionado?.enfermedad === 'Bajon de azucar' ? 3 : 1;
+  // Retorna la classe CSS de l'estat visual de la malaltia per diferenciar estats
+  getEnfermedadClass(enfermedad: string | null | undefined): string {
+    const classes: Record<string, string> = {
+      'Bajon de azucar': 'enfermedad-bajon',
+      'Sobredosis':      'enfermedad-sobredosis',
+      'Atracon':         'enfermedad-atracon',
+    };
+    return enfermedad ? (classes[enfermedad] ?? 'enfermedad-generica') : '';
   }
 
-  // Pot evolucionar? (no si té Sobredosis, Atracon, o no té prou Xuxa EV)
+  // Cost en Xuxa EV per evolucionar (el base + 2 si té Bajón de azúcar)
+  getCostEvolucio(): number {
+    const baseCost = this.xuxemonSeleccionado?.xuxes_per_pujar ?? 1;
+    return this.xuxemonSeleccionado?.enfermedad === 'Bajon de azucar' ? baseCost + 2 : baseCost;
+  }
+
+  // Quantes Xuxa EV té l'usuari actualment
+  getTotalEvesUsuari(): number {
+    return this.inventarioService.slots
+      .filter(s => !s.empty && (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase() === 'xuxevo')
+      .reduce((acc, s) => acc + s.cantidad, 0);
+  }
+
+  // Pot evolucionar? (no si té Sobredosis o no té prou Xuxa EV)
   potEvolucionar(): boolean {
     if (this.xuxemonSeleccionado?.enfermedad === 'Sobredosis') return false;
-    if (this.xuxemonSeleccionado?.enfermedad === 'Atracon') return false;
     const cost = this.getCostEvolucio();
-    const totalEv = this.inventarioService.slots
-      .filter(s => !s.empty && (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase() === 'xuxa ev')
-      .reduce((acc, s) => acc + s.cantidad, 0);
-    return totalEv >= cost;
+    return this.getTotalEvesUsuari() >= cost;
   }
 
   private sincronizarSeleccion(xuxemons: Xuxemon[]): void {
+    // 1. Actualitza l'objecte seleccionat amb les dades més recents
+    if (this.xuxemonSeleccionado) {
+      const fresco = xuxemons.find(x => x.id === this.xuxemonSeleccionado?.id);
+      if (fresco) {
+        this.xuxemonSeleccionado = fresco;
+      }
+    }
+
+    // 2. Comprova si segueix estant visible a la pàgina actual
     const visibles = this.getPaginats(xuxemons);
     if (visibles.length === 0) {
       this.xuxemonSeleccionado = null;
@@ -251,7 +318,94 @@ export class Xuxedex implements OnDestroy {
     this.xuxemonSeleccionado = visibles.find((xuxemon) => !xuxemon.bloquejat) ?? null;
   }
 
-  // Metodos de Evoluciones de los Xuxemons
+  // ── Vacunes ───────────────────────────────────────────────────────
+
+  // Vacunes que curen la malaltia actual del xuxemon seleccionat
+  // Xocolatina → Bajon de azucar | Xal de fruites → Atracon | Inxulina → totes
+  getVacunesDisponibles(): Slot[] {
+    const enfermedad = this.xuxemonSeleccionado?.enfermedad ?? null;
+    const VACUNA_CURA_TOT = 'inxulina';
+
+    const VACUNA_PER_MALALTIA: Record<string, string> = {
+      'Bajon de azucar': 'xocolatina',
+      'Atracon':         'xal de fruites',
+      'Sobredosis':      'inxulina',
+    };
+
+    return this.inventarioService.slots.filter(s => {
+      if (s.empty || s.apilable) return false;
+      const nom = (s.xuxe?.nom ?? s.xuxe?.nombre_xuxes ?? '').trim().toLowerCase();
+      if (nom === VACUNA_CURA_TOT) return true;
+      if (!enfermedad) return false;
+      return nom === VACUNA_PER_MALALTIA[enfermedad];
+    });
+  }
+
+  // Selecciona o deselecciona un slot de vacuna
+  seleccionarVacuna(slot: Slot): void {
+    this.vacunaSlotSeleccionat = this.vacunaSlotSeleccionat?.id === slot.id ? null : slot;
+    this.vacunaResultat = null;
+    this.vacunaError = null;
+  }
+
+  // Text que explica què cura cada vacuna
+  getVacunaCuraText(slot: Slot): string {
+    const nom = (slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? '').trim().toLowerCase();
+    const cures: Record<string, string> = {
+      'xocolatina':    'Cura: Bajón de azúcar',
+      'xal de fruites': 'Cura: Atracón',
+      'inxulina':      'Cura: totes les malalties',
+    };
+    return cures[nom] ?? 'Vacuna';
+  }
+
+  // Aplica la vacuna seleccionada al xuxemon seleccionat
+  aplicarVacuna(): void {
+    if (!this.xuxemonSeleccionado || !this.vacunaSlotSeleccionat || this.vacunaCarregant) return;
+    if (!this.xuxemonSeleccionado.xuxedex_id) return;
+
+    this.vacunaCarregant = true;
+    this.vacunaResultat = null;
+    this.vacunaError = null;
+
+    // inventario_id és la id del slot real del backend, no el slot local
+    // necessitem l'id real de l'item d'inventari → guardat a slot.inventario_id
+    const inventarioId = this.vacunaSlotSeleccionat.inventario_id ?? this.vacunaSlotSeleccionat.id;
+    this.xuxemonService.aplicarVacuna(
+      inventarioId,
+      this.xuxemonSeleccionado.xuxedex_id
+    ).subscribe({
+      next: (res) => {
+        this.vacunaResultat = res;
+        this.vacunaCarregant = false;
+        this.vacunaSlotSeleccionat = null;
+
+        // Actualitza l'inventari i recarrega els xuxemons
+        this.inventarioService.cargarInventario();
+        this.xuxemonService.carregarXuxemons(this.filtroActual);
+
+        if (this.vacunaTimer) clearTimeout(this.vacunaTimer);
+        this.vacunaTimer = setTimeout(() => {
+          this.vacunaResultat = null;
+          this.cdr.markForCheck();
+        }, 4000);
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.vacunaError = err.error?.message ?? 'Error en aplicar la vacuna.';
+        this.vacunaCarregant = false;
+
+        if (this.vacunaTimer) clearTimeout(this.vacunaTimer);
+        this.vacunaTimer = setTimeout(() => {
+          this.vacunaError = null;
+          this.cdr.markForCheck();
+        }, 4000);
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  // ── Metodos de Evoluciones de los Xuxemons ────────────────────────
 
   verCadenaEvolucion(): void {
     if (!this.xuxemonSeleccionado) return;
@@ -346,7 +500,7 @@ export class Xuxedex implements OnDestroy {
       if (s.empty || !s.xuxe) return false;
 
       const xuxeName = (s.xuxe.nom ?? s.xuxe.nombre_xuxes ?? '').trim().toLowerCase();
-      return xuxeName === 'xuxa ev';
+      return xuxeName === 'xuxevo';
     }) ?? null;
   }
 

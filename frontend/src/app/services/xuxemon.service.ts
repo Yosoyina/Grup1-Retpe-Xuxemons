@@ -14,12 +14,14 @@ export interface EtapaEvoluciones {
 export type Enfermedad = 'Bajon de azucar' | 'Sobredosis' | 'Atracon' | null;
 
 export interface Xuxemon {
+  xuxedex_id?: number;
   id: number | string;
   nombre_xuxemon: string;
   tipo_elemento: 'Aigua' | 'Terra' | 'Aire';
   tamano: string;
   descripcio: string;
   imagen: string | null;
+  xuxes_per_pujar?: number;
   esta_capturado?: boolean;
   bloquejat?: boolean;
   enfermedad?: Enfermedad;
@@ -30,6 +32,17 @@ export interface FeedResult {
   enfermedad: Enfermedad;
   message: string;
   bloquejat?: boolean;
+}
+
+export interface AplicarVacunaResult {
+  message: string;
+  vacuna: string;
+  malalties_curades: string[];
+  estat_xuxemon: {
+    xuxedex_id: number;
+    esta_enfermo: boolean;
+    malalties: string[];
+  };
 }
 
 @Injectable({
@@ -105,8 +118,16 @@ export class XuxemonService {
   }
 
   // Alimenta un Xuxemon i pot provocar una infecció
-  feed(id: number | string): Observable<FeedResult> {
-    return this.http.post<FeedResult>(`http://localhost:8000/api/xuxemons/${id}/feed`, {});
+  feed(id: number | string, xuxedex_id: number, cantidad: number = 1): Observable<FeedResult> {
+    return this.http.post<FeedResult>(`http://localhost:8000/api/xuxemons/${id}/feed`, { xuxedex_id, cantidad });
+  }
+
+  // Aplica una vacuna de l'inventari a un xuxemon per curar la seva malaltia
+  aplicarVacuna(inventario_id: number, xuxedex_id: number): Observable<AplicarVacunaResult> {
+    return this.http.post<AplicarVacunaResult>(`http://localhost:8000/api/vacunes/aplicar`, {
+      inventario_id,
+      xuxedex_id,
+    });
   }
 
 }

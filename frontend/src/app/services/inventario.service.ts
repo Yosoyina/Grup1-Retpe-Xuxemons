@@ -14,10 +14,12 @@ export interface Xuxes {
   tipus?: Tipus;
   mida?: Mida;
   apilable: boolean;
+  descripcio?: string;
 }
 
 export interface Slot {
   id: number;
+  inventario_id?: number; // ← afegim l'ID real de l'inventari
   apilable: boolean;
   empty: boolean;
   xuxe?: Xuxes;
@@ -83,6 +85,7 @@ export class InventarioService {
 
             slots[index] = {
               id: index,
+              inventario_id: item.id,
               apilable: true,
               empty: false,
               xuxe: normalizedXuxe,
@@ -103,6 +106,7 @@ export class InventarioService {
 
             slots[APILABLE_SLOTS + index] = {
               id: APILABLE_SLOTS + index,
+              inventario_id: item.id,
               apilable: false,
               empty: false,
               xuxe: normalizedXuxe,

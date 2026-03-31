@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Inventario;
 use App\Models\Xuxemons;
@@ -175,4 +177,81 @@ class InventarioController extends Controller
         return response()->json($xuxes, 200);
     }
 
+     // ── ALIMENTAR UN XUXEMON ───────────────────────────────────
+    
+    public function alimentar(Request $request, int $inventari_id, int $xuxedex_id)
+    {
+        $userId = Auth::guard('api')->user()->id;
+
+        $request->validate([
+            'cantidad' => 'required|integer|min:1',
+        ]);
+
+        $cantidadAUsar = $request->input('cantidad');
+
+        $item = Inventario::with('xuxe')->findOrFail($inventari_id);
+ 
+        if ($item->user_id !== $userId) {
+            return response()->json(['message' => 'No autoritzat'], 403);
+        }
+ 
+        // Comprova que l'ítem és una xuxe (apilable) y no una vacuna
+        if (!$item->xuxe->apilable) {
+            return response()->json([
+                'message' => 'Aquest ítem no és comida i no es pot usar per alimentar.',
+            ], 422);
+        }
+
+        // Validar xuxes suficients
+        if ($item->cantidad < $cantidadAUsar) {
+            return response()->json([
+                'message'            => "No tens prou xuxes. Tens {$item->cantidad} i necessites {$cantidadAUsar}.",
+                'cantidad_available' => $item->cantidad,
+            ], 422);
+        }
+
+        // Comprova que el xuxemon pertany al jugador
+        $entrada = DB::table('xuxedex')
+            ->where('id', $xuxedex_id)
+            ->where('id_usuario', $userId)
+            ->where('esta_capturado', true)
+            ->first();
+ 
+        if (!$entrada) {
+            return response()->json([
+                'message' => 'Xuxemon no trobat al teu xuxedex.',
+            ], 404);
+        }
+ 
+        // ── BLOQUEIG INVENTARI ( ENFERMETAT ATRACÓN ) ──────────────────────────────────────────────────
+        $Atracon = DB::table('malalties')
+            ->where('xuxedex_id', $xuxedex_id)
+            ->where('tipo_enfermedad', 'Atracon')
+            ->exists();
+ 
+        if ($Atracon) {
+            return response()->json([
+                'message' => 'No pots alimentar aquest xuxemon: té la malaltia "Atracón" activa. Cura\'l primer amb una vacuna.',
+            ], 422);
+        }
+ 
+        // Consumeix la xuxe i calcula la quantitat restant
+        $cantidadAbans = $item->cantidad;
+
+        if ($item->cantidad > $cantidadAUsar) {
+            $item->decrement('cantidad', $cantidadAUsar);
+            $cantidadRestant = $cantidadAbans - $cantidadAUsar;
+        } else {
+            $item->delete();
+            $cantidadRestant = 0;
+        }
+
+        return response()->json([
+            'message'          => 'Xuxemon alimentat correctament.',
+            'xuxe_id'          => $item->xuxe_id,
+            'cantidad_abans'   => $cantidadAbans,
+            'cantidad_usada'   => $cantidadAUsar,
+            'cantidad_restant' => $cantidadRestant,
+        ], 200);
+    }
 }

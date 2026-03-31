@@ -17,25 +17,25 @@ class InventarioSeeder extends Seeder
     {
         $xuxes = [
             [
-                'nombre_xuxes' => 'Xuxa de Foc',
+                'nombre_xuxes' => 'Cura Xuxe',
                 'descripcio'   => 'Una xuxa ardent que escalfa la motxilla.',
                 'imagen'       => 'Imatges/Xuxes/CuraXuxe.png',
                 'apilable'     => true,
             ],
             [
-                'nombre_xuxes' => "Xuxa d'Aigua",
+                'nombre_xuxes' => "Xucolate",
                 'descripcio'   => 'Una xuxa fresca i refrescant.',
                 'imagen'       => 'Imatges/Xuxes/Xucolate.png',
                 'apilable'     => true,
             ],
             [
-                'nombre_xuxes' => 'Xuxa de Terra',
+                'nombre_xuxes' => 'Soda Prime',
                 'descripcio'   => 'Una xuxa sòlida com una roca.',
                 'imagen'       => 'Imatges/Xuxes/SodaPrime.png',
                 'apilable'     => true,
             ],
             [
-                'nombre_xuxes' => 'Xuxa EV',
+                'nombre_xuxes' => 'XuxEvo',
                 'descripcio'   => 'Xuxe para evolucionar els teus xuxemons.',
                 'imagen'       => 'Imatges/Xuxes/XuxEvos.png',
                 'apilable'     => true,
@@ -46,7 +46,8 @@ class InventarioSeeder extends Seeder
             Xuxes::firstOrCreate(['nombre_xuxes' => $data['nombre_xuxes']], $data);
         }
 
-        // Asigna las xuxes a todos los usuarios existentes
+        // Asigna las xuxes a todos los usuarios existentes (COMENTADO PORQUE AHORA SÓLO SE CONSIGUEN POR RECOMPENSAS DIARIAS)
+        /*
         $usuarios = User::all();
 
         foreach ($usuarios as $user) {
@@ -58,5 +59,6 @@ class InventarioSeeder extends Seeder
                 ]);
             }
         }
+        */
     }
 }
