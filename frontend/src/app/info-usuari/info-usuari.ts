@@ -168,10 +168,12 @@ export class InfoUsuari {
 
     navigator.clipboard.writeText(texto).then(() => {
       this.copiado = true;
+      this.cdr.detectChanges(); // Força a Angular a mostrar el tick al moment
 
       setTimeout(() => {
         this.copiado = false;
-      }, 1200);
+        this.cdr.detectChanges(); // Torna a posar l'icona normal
+      }, 2000); // 2 segons perquè doni temps a veure'l (abans estava a 5 ms)
     });
   }
 } 

@@ -199,7 +199,7 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, .16);
 
   transform: none !important;
-  transition: filter .12s ease;
+  transition: filter .1s ease;
 }
 
 /* ===== ICONES DINS BOTONS ===== */
