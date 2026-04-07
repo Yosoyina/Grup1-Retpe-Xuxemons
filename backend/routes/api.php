@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\XuxemonsController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\VacunesController;
+use App\Http\Controllers\PeticionesAmistadController;
 
 // ── RUTES PUBLIQUES ───────────────────────────────────────
 Route::post('/register', [AuthController::class, 'register']);
@@ -42,6 +43,14 @@ Route::middleware('auth:api')->group(function () {
 
     // ── VACUNES ───────────────────────────────────────────
     Route::post('/vacunes/aplicar', [VacunesController::class, 'aplicar']);
+
+    // ── AMIGOS ────────────────────────────────────────────
+    Route::post('/amigos/peticion', [PeticionesAmistadController::class, 'enviarPeticion']);
+    Route::post('/amigos/peticion/{id}/aceptar', [PeticionesAmistadController::class, 'aceptarPeticion']);
+    Route::post('/amigos/peticion/{id}/rechazar', [PeticionesAmistadController::class, 'rechazarPeticion']);
+    Route::get('/amigos/peticiones-pendientes', [PeticionesAmistadController::class, 'peticionesPendientes']);
+    Route::get('/amigos', [PeticionesAmistadController::class, 'listarAmigos']);
+    Route::delete('/amigos/{friendId}', [PeticionesAmistadController::class, 'eliminarAmigo']);
 
     // ── RUTES ADMIN ───────────────────────────────────────
     Route::middleware('admin')->prefix('admin')->group(function () {
