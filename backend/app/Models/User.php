@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Services\XuxedexService;
+use App\Models\Peticiones_amistad;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -80,4 +81,28 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Xuxemons::class, 'user_id');
     }
 
+    // ── Sistema de amigos ─────────────────────────────────────
+
+    /* Solicitudes que este usuario ha enviado */
+    public function sentRequests()
+    {
+        return $this->hasMany(Peticiones_amistad::class, 'id_remitente');
+    }
+
+    /* Solicitudes que este usuario ha recibido */
+    public function receivedRequests()
+    {
+        return $this->hasMany(Peticiones_amistad::class, 'id_destinatario');
+    }
+
+    /* Lista de amigos (relación bidireccional) */
+    public function friends()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'friends',
+            'user_id',
+            'friend_id'
+        );
+    }
 }
