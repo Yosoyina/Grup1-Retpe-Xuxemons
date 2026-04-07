@@ -17,12 +17,12 @@ class Peticiones_amistad extends Model
         'estado',
     ];
 
-    public function sender(): BelongsTo
+    public function remitente(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_remitente');
     }
 
-    public function receiver(): BelongsTo
+    public function destinatario(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_destinatario');
     }

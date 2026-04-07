@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class AmigosController extends Controller
 {
-
     public function crearPeticion(User $remitente, int $destinatarioId): Peticiones_amistad
     {
         if ($remitente->id === $destinatarioId) {
@@ -61,8 +60,8 @@ class AmigosController extends Controller
 
             // Amistad bidireccional
             Amigos::insert([
-                ['user_id' => $request->id_remitente,   'id_amigo' => $request->id_destinatario, 'created_at' => now(), 'updated_at' => now()],
-                ['user_id' => $request->id_destinatario,  'id_amigo' => $request->id_remitente,  'created_at' => now(), 'updated_at' => now()],
+                ['user_id' => $request->id_remitente, 'id_amigo' => $request->id_destinatario, 'created_at' => now(), 'updated_at' => now()],
+                ['user_id' => $request->id_destinatario, 'id_amigo' => $request->id_remitente,  'created_at' => now(), 'updated_at' => now()],
             ]);
         });
     }
@@ -79,7 +78,7 @@ class AmigosController extends Controller
 
     public function listarPendientes(User $user)
     {
-        return Peticiones_amistad::with('sender')
+        return Peticiones_amistad::with('remitente')
             ->where('id_destinatario', $user->id)
             ->where('estado', 'pendiente')
             ->latest()
@@ -96,6 +95,4 @@ class AmigosController extends Controller
         Amigos::where('user_id', $user->id)->where('id_amigo', $friendId)->delete();
         Amigos::where('user_id', $friendId)->where('id_amigo', $user->id)->delete();
     }
-    
-
 }

@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\Amigos;
-use App\Models\Peticiones_amistad;
 use Illuminate\Http\JsonResponse;
 
 class PeticionesAmistadController extends Controller
