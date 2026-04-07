@@ -1,41 +1,41 @@
 <!-- menu-principal.component.html -->
 <div class="menu-general-container">
+  @if (hasRewardHistory) {
+  <button class="btn-reward-history" type="button" (click)="openRewardModal()" aria-label="Ver recompensa diaria">
+    <img src="/regalo.png" alt="Recompensa diaria">
+  </button>
+  }
+
   <h1 class="titulo-general">MENÚ PRINCIPAL</h1>
 
   <nav class="menu-grid-container" aria-label="Menú principal">
     <div class="menu-grid">
 
-      <!-- XUXEDEX -->
       <button class="btn-menu" routerLink="/xuxedex">
         <img src="/Xuxedex.png" alt="Xuxedex" />
         <span>XUXEDEX</span>
       </button>
 
-      <!-- MOTXILLA -->
       <button class="btn-menu" routerLink="/inventario">
         <img src="/Moxilla.png" alt="Motxilla" />
         <span>MOTXILLA</span>
       </button>
 
-      <!-- AMICS -->
       <button class="btn-menu" routerLink="/amics">
         <img src="/Amics.png" alt="Amics" />
         <span>AMICS</span>
       </button>
 
-      <!-- BATALLA -->
       <button class="btn-menu" routerLink="/batalla">
         <img src="/Batalla.png" alt="Batalla" />
         <span>BATALLA</span>
       </button>
 
-      <!-- XAT -->
       <button class="btn-menu" routerLink="/xat">
         <img src="/Xat.png" alt="Xat" />
         <span>XAT</span>
       </button>
 
-      <!-- INFO USUARIO -->
       <button class="btn-menu" routerLink="/info-usuari">
         <img src="/Perfil.png" alt="Perfil" />
         <span>PERFIL</span>
@@ -44,9 +44,7 @@
     </div>
   </nav>
 
-  <!-- SORTIR -->
   <div class="menu-footer">
-    <!-- ADMIN (solo visible si es admin) -->
     @if ((authService.usuari$ | async)?.role === 'admin') {
       <button class="btn-admin" routerLink="/admin">
         <img src="/admin.png" alt="Admin" />
@@ -65,16 +63,9 @@
 <div class="reward-modal-overlay" (click)="closeRewardModal()">
   <div class="reward-modal" (click)="$event.stopPropagation()">
     <div class="reward-badge">Recompensa diaria</div>
-    <h2>Has recibido tu premio de hoy</h2>
-    @if (dailyReward.xuxemon) {
-    <p class="reward-text">
-      Hoy te han tocado {{ dailyReward.xuxes_added }} xuxes y un Xuxemon pequeño nuevo.
-    </p>
-    } @else {
-    <p class="reward-text">
-      Hoy te han tocado {{ dailyReward.xuxes_added }} xuxes. No hay Xuxemon nuevo porque ya tienes todos los pequeños desbloqueados.
-    </p>
-    }
+    <p class="reward-countdown">Próxima recompensa en <strong>{{ countdownText }}</strong></p>
+    <h2>{{ rewardModalTitle }}</h2>
+    <p class="reward-text">{{ rewardModalMessage }}</p>
 
     <div class="reward-section">
       <h3>Xuxes obtenidas</h3>
@@ -113,7 +104,13 @@
     </p>
     }
 
-    <button class="reward-close-button" (click)="closeRewardModal()">Continuar</button>
+    <button class="reward-close-button" (click)="closeRewardModal()">
+      @if (dailyReward.status === 'already_claimed') {
+      Cerrar
+      } @else {
+      Continuar
+      }
+    </button>
   </div>
 </div>
 }
