@@ -34,18 +34,18 @@ class AmigosController extends Controller
             $q->where('id_remitente', $remitente->id)->where('id_destinatario', $destinatarioId);
         })->orWhere(function ($q) use ($remitente, $destinatarioId) {
             $q->where('id_remitente', $destinatarioId)->where('id_destinatario', $remitente->id);
-        })->whereIn('estado', ['pending', 'accepted'])->first();
+        })->whereIn('estado', ['pendiente', 'aceptado'])->first();
 
         if ($existing) {
             throw ValidationException::withMessages([
-                'receiver_id' => ['Ya existe una solicitud pendiente o ya sois amigos.'],
+                'destinatarioId' => ['Ya existe una solicitud pendiente o ya sois amigos.'],
             ]);
         }
 
         return Peticiones_amistad::create([
             'id_remitente'   => $remitente->id,
             'id_destinatario' => $destinatarioId,
-            'estado'      => 'pending',
+            'estado'      => 'pendiente',
         ]);
     }
 
@@ -53,11 +53,11 @@ class AmigosController extends Controller
     {
         $request = Peticiones_amistad::where('id', $requestId)
             ->where('id_destinatario', $user->id)
-            ->where('estado', 'pending')
+            ->where('estado', 'pendiente')
             ->firstOrFail();
 
         DB::transaction(function () use ($request) {
-            $request->update(['estado' => 'accepted']);
+            $request->update(['estado' => 'aceptado']);
 
             // Amistad bidireccional
             Amigos::insert([
@@ -71,17 +71,17 @@ class AmigosController extends Controller
     {
         $request = Peticiones_amistad::where('id', $requestId)
             ->where('id_destinatario', $user->id)
-            ->where('estado', 'pending')
+            ->where('estado', 'pendiente')
             ->firstOrFail();
 
-        $request->update(['estado' => 'rejected']);
+        $request->update(['estado' => 'rechazado']);
     }
 
     public function listarPendientes(User $user)
     {
         return Peticiones_amistad::with('sender')
             ->where('id_destinatario', $user->id)
-            ->where('estado', 'pending')
+            ->where('estado', 'pendiente')
             ->latest()
             ->get();
     }
