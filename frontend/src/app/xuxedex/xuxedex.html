@@ -126,17 +126,6 @@
         </div>
         }
 
-        <div class="detalle-accions">
-          <button type="button" class="btn-evolucio" [ngClass]="getClassTipus(xuxemonSeleccionado.tipo_elemento)"
-            (click)="verCadenaEvolucion()">Evolucio</button>
-
-          <button type="button" class="btn-alimentar"
-            [disabled]="feedCarregant || xuxemonSeleccionado.enfermedad === 'Atracon'"
-            [title]="xuxemonSeleccionado.enfermedad === 'Atracon' ? 'No pot menjar (Atracon)' : 'Alimentar'"
-            (click)="alimentar()">
-            {{ feedCarregant ? '🍬...' : '🍬 Alimentar' }}
-          </button>
-        </div>
       </div>
 
       <div class="detalle-visual">
