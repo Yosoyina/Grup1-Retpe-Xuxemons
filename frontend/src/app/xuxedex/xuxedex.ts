@@ -28,6 +28,15 @@ export class Xuxedex implements OnDestroy {
   mostrarPanellAlimentar = false;
   mostrarPanellVacuna = false;
 
+  // Animació evolució
+  mostrarAnimacioEvolucio = false;
+  evoFase2 = false;
+  evoImagenBefore = '';
+  evoNomBefore = '';
+  evoImagenAfter = '';
+  evoNomAfter = '';
+  private evoTimer: ReturnType<typeof setTimeout> | null = null;
+
   // Feed / Infecció
   feedResultat: FeedResult | null = null;
   feedCarregant = false;
@@ -73,6 +82,7 @@ export class Xuxedex implements OnDestroy {
     this.evolucioSub?.unsubscribe();
     if (this.feedTimer) clearTimeout(this.feedTimer);
     if (this.vacunaTimer) clearTimeout(this.vacunaTimer);
+    if (this.evoTimer) clearTimeout(this.evoTimer);
   }
 
   cambiarFiltro(tipo: string): void {
@@ -485,18 +495,42 @@ export class Xuxedex implements OnDestroy {
     const segurent = this.getSegurentEtapa();
     if (!this.potEvolucionar() || !segurent || !this.xuxemonSeleccionado) return;
 
+    // Prepara les dades de l'animació
+    this.evoImagenBefore = this.xuxemonSeleccionado.imagen ?? '';
+    this.evoNomBefore = this.xuxemonSeleccionado.nombre_xuxemon;
+    this.evoImagenAfter = segurent.imagen ?? '';
+    this.evoNomAfter = segurent.nombre_xuxemon;
+    this.evoFase2 = false;
+    this.mostrarAnimacioEvolucio = true;
+    this.mostrarEvolucion = false;
+    this.cdr.markForCheck();
+
     this.xuxemonService.evolucionar(Number(this.xuxemonSeleccionado.id)).subscribe({
       next: () => {
         this.inventarioService.cargarInventario();
         this.xuxemonService.xuxemons$.next([]);
         this.xuxemonService.carregarXuxemons(this.filtroActual);
-        this.cerrarEvolucion();
+        // Mostra la fase de revelació després del sacsejament
+        if (this.evoTimer) clearTimeout(this.evoTimer);
+        this.evoTimer = setTimeout(() => {
+          this.evoFase2 = true;
+          this.cdr.markForCheck();
+        }, 1800);
         this.cdr.markForCheck();
       },
       error: (err) => {
+        this.mostrarAnimacioEvolucio = false;
+        this.mostrarEvolucion = true;
         this.errorEvolucion = err.error?.message ?? "Error al evolucionar.";
         this.cdr.markForCheck();
       },
     });
+  }
+
+  acabarAnimacio(): void {
+    this.mostrarAnimacioEvolucio = false;
+    this.evoFase2 = false;
+    if (this.evoTimer) clearTimeout(this.evoTimer);
+    this.cdr.markForCheck();
   }
 }
