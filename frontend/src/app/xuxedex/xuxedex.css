@@ -307,138 +307,128 @@
   grid-auto-rows: minmax(var(--card-height), 1fr);
 }
 
+/* ========= XUXEMON CARD ========= */
+
 .xuxemon-card {
-  width: 100%;
-  min-height: 0;
-  height: 100%;
-  padding: 16px 14px 64px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 3px solid var(--yellow);
-  border-radius: var(--radius-card);
-  background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.65), transparent 46%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(241, 245, 252, 0.96));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.78),
-    0 14px 30px rgba(22, 34, 88, 0.12);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.xuxemon-card[role="button"] {
   cursor: pointer;
-  outline: none;
+  border-radius: var(--radius-card) !important;
+  border: 3px solid rgba(255, 214, 0, 0.45) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(243,247,255,0.98)) !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  overflow: hidden;
+  padding: 0;
 }
 
-.xuxemon-card[role="button"]:hover,
-.xuxemon-card[role="button"]:focus-visible,
-.xuxemon-card.selected {
+.xuxemon-card:hover {
   transform: translateY(-4px);
+  box-shadow: var(--shadow-hover) !important;
+  border-color: rgba(255, 212, 0, 0.75) !important;
+}
+
+.xuxemon-card[aria-pressed="true"] {
+  border-color: var(--yellow) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.82),
-    0 18px 34px rgba(22, 34, 88, 0.18);
+    0 0 0 3px rgba(255, 212, 0, 0.45),
+    var(--shadow-md) !important;
 }
 
-.xuxemon-card[role="button"]:focus-visible {
-  border-color: #ffd84f;
+/* Àrea imatge — creix per omplir l'espai disponible */
+.card-img-area {
+  flex: 1 1 auto;
+  min-height: clamp(100px, 12vh, 160px);
+  background: linear-gradient(160deg, #eef2ff, #e4ebff);
+  transition: background 0.2s ease;
+  border-radius: calc(var(--radius-card) - 3px) calc(var(--radius-card) - 3px) 0 0;
 }
 
-.xuxemon-card.selected {
-  border-color: #ffd84f;
+.xuxemon-card.type-agua  .card-img-area { background: linear-gradient(160deg, #ddf0ff, #bfe1ff); }
+.xuxemon-card.type-tierra .card-img-area { background: linear-gradient(160deg, #ddf5e2, #c0ecca); }
+.xuxemon-card.type-aire  .card-img-area { background: linear-gradient(160deg, #eeeaff, #ddd4ff); }
+
+/* Cos de la card — fix, no creix */
+.xuxemon-card .card-body {
+  flex: 0 0 auto;
+  padding: 8px 10px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.xuxemon-card.mida-petit {
-  background:
-    radial-gradient(circle at top, rgba(135, 213, 255, 0.32), transparent 42%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(235, 246, 255, 0.98));
-}
-
-.xuxemon-card.mida-mitja {
-  background:
-    radial-gradient(circle at top, rgba(156, 236, 156, 0.3), transparent 42%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(239, 252, 238, 0.98));
-}
-
-.xuxemon-card.mida-gran {
-  background:
-    radial-gradient(circle at top, rgba(255, 209, 145, 0.34), transparent 42%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 245, 231, 0.98));
-}
-
-.card-badge {
+/* Badge de tipus — cercle amb emoji al cantonell superior esquerre */
+.xuxemon-card .card-badge {
   position: absolute;
-  top: -10px;
-  left: -10px;
-  width: 46px;
-  height: 46px;
+  top: 8px;
+  left: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,246,252,0.98));
+  border: 3px solid var(--yellow);
+  box-shadow: var(--shadow-md);
   display: grid;
   place-items: center;
-  border: 3px solid var(--yellow);
-  border-radius: 50%;
-  background: linear-gradient(180deg, #ffffff, #eef4ff);
-  box-shadow: 0 10px 16px rgba(18, 30, 75, 0.14);
   z-index: 2;
 }
 
-.lock-badge::before {
-  content: '?';
-  font-size: 1.75rem;
-  font-weight: 800;
+.xuxemon-card .card-badge::before {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* Nom */
+.xuxemon-card .card-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--ink);
+  margin: 0;
+  display: inline-block;
+  background: #fff;
+  border: 2.5px solid var(--yellow);
+  border-radius: 999px;
+  padding: 3px 14px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 6px rgba(255, 212, 0, 0.18);
 }
 
-.xuxemon-card img,
-.placeholder-img {
-  display: block;
-  width: min(100%, calc(var(--card-image) + 32px));
-  height: var(--card-image);
-  max-height: calc(100% - 68px);
-  margin: 20px auto 4px;
-  object-fit: contain;
-  object-position: center;
-  filter: drop-shadow(0 10px 16px rgba(42, 59, 128, 0.22));
-  max-width: 100%;
-  flex-shrink: 0;
+/* Card bloqueig */
+.xuxemon-card.bloquejat {
+  border-color: rgba(180, 190, 210, 0.45) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.80), rgba(232,236,242,0.94)) !important;
+  box-shadow: 0 8px 18px rgba(18,30,75,0.08) !important;
+  cursor: default;
 }
 
+/* Lock badge (pastilla del tipus per a cards bloquejades) */
+.lock-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(150,160,190,0.5);
+  z-index: 2;
+}
+
+/* Bloqueig text */
+.bloqueig-text {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin: 4px 0 0;
+}
+
+/* Placeholder (sense imatge) */
 .placeholder-img {
   display: grid;
   place-items: center;
   color: var(--blue);
   font-size: 3.4rem;
   font-weight: 800;
-}
-
-.xuxemon-card h2,
-.xuxemon-card h3,
-.bloqueig-text {
-  position: absolute;
-  left: 50%;
-  bottom: 12px;
-  transform: translateX(-50%);
-  min-width: 144px;
-  max-width: calc(100% - 28px);
-  margin: 0;
-  padding: 10px 18px;
-  border: 3px solid var(--yellow);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
-  text-align: center;
-  color: #151515;
-  font-family: 'Fredoka', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1;
-  box-shadow: 0 8px 14px rgba(18, 30, 75, 0.12);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .bloquejat {
@@ -1346,8 +1336,6 @@
   .tipus-filtros { margin-bottom: 10px; }
   .mides, .mini-grid { margin-bottom: 12px; }
   .panel-dreta .big-grid { flex: 1; height: 100%; grid-template-rows: repeat(2, minmax(0,1fr)); grid-auto-rows: unset; }
-  .xuxemon-card { padding: 14px 14px 56px; }
-  .xuxemon-card h2, .bloqueig-text { bottom: 10px; min-width: 124px; padding: 8px 14px; font-size: .92rem; }
   .bloqueig-icona { width: 104px; height: 104px; }
   .bloqueig-icona::before { top: 12px; width: 54px; height: 42px; border-width: 8px; }
   .bloqueig-icona::after { top: 40px; width: 76px; height: 56px; }
@@ -1373,14 +1361,9 @@
   .filter-todos .filter-icon::before { font-size: .8rem; }
   .size-button { min-width: 84px; height: 36px; padding: 0 12px; border-width: 3px; font-size: .88rem; }
   .mini-grid, .big-grid { gap: 10px; }
-  .xuxemon-card { padding: 10px 12px 46px; border-radius: 26px; }
-  .card-badge { top: -8px; left: -8px; width: 38px; height: 38px; border-width: 2px; }
-  .type-agua .filter-icon::before, .card-badge.type-agua::before,
-  .type-tierra .filter-icon::before, .card-badge.type-tierra::before,
-  .type-aire .filter-icon::before, .card-badge.type-aire::before { font-size: 1.55rem; }
-  .lock-badge::before { font-size: 1.4rem; }
-  .xuxemon-card img, .placeholder-img { margin: 4px auto 6px; max-height: calc(100% - 64px); }
-  .xuxemon-card h2, .bloqueig-text { bottom: 8px; min-width: 108px; padding: 7px 12px; border-width: 2px; font-size: .84rem; }
+  .type-agua .filter-icon::before,
+  .type-tierra .filter-icon::before,
+  .type-aire .filter-icon::before { font-size: 1.55rem; }
   .bloqueig-icona { width: 82px; height: 82px; }
   .bloqueig-icona::before { top: 10px; width: 42px; height: 30px; border-width: 7px; }
   .bloqueig-icona::after { top: 30px; width: 60px; height: 44px; border-width: 5px; }
@@ -1402,8 +1385,6 @@
   .filter-button { width: 46px; height: 46px; }
   .size-button { min-width: 76px; height: 32px; font-size: .8rem; }
   .mini-grid, .big-grid { gap: 8px; }
-  .xuxemon-card { padding: 8px 10px 40px; }
-  .xuxemon-card h2, .bloqueig-text { min-width: 96px; padding: 6px 10px; font-size: .76rem; }
   .bloqueig-icona { width: 66px; height: 66px; }
   .bloqueig-icona::before { width: 34px; height: 24px; }
   .bloqueig-icona::after { width: 50px; height: 36px; }
@@ -1455,8 +1436,6 @@
   .filter-button { width: 58px; height: 58px; }
   .size-button { min-width: 92px; height: 42px; padding: 0 14px; font-size: .94rem; }
   .mini-grid, .big-grid { grid-template-rows: none; grid-auto-rows: 260px; }
-  .xuxemon-card { padding: 18px 12px 70px; }
-  .xuxemon-card img, .placeholder-img { width: min(100%, 156px); height: 156px; }
   .detalle { padding: 16px; }
   .detalle-texto > p { font-size: 1rem; }
   .paginacion button, .paginacion span { min-width: 128px; min-height: 46px; font-size: .92rem; }
@@ -1475,16 +1454,7 @@
   gap: 8px;
 }
 
-/* Badges i malalties */
-.enfermedad-badge {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  font-size: 1.1rem;
-  line-height: 1;
-  z-index: 2;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
-}
+/* .enfermedad-badge — ara gestionat per Bootstrap .badge .position-absolute */
 
 /* ── DETALL MALALTIA ─────────────────────────────── */
 .detalle-malaltia {
@@ -1655,36 +1625,7 @@
 .vacunes-selector-modal::-webkit-scrollbar-thumb { background: var(--yellow); border-radius: 999px; }
 .vacunes-selector-modal::-webkit-scrollbar-track { background: transparent; }
 
-.vacuna-slot-modal {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 12px 16px;
-  border: 3px solid rgba(245, 196, 0, 0.5);
-  border-radius: 20px;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(243, 246, 252, 0.96));
-  box-shadow: 0 4px 12px rgba(22, 34, 88, 0.08);
-  cursor: pointer;
-  text-align: left;
-  font-family: 'Fredoka', sans-serif;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-}
-
-.vacuna-slot-modal:hover { transform: translateY(-2px); border-color: var(--yellow); box-shadow: 0 8px 20px rgba(22,34,88,.13); background: linear-gradient(135deg,#fffdf0,#fffbde); }
-.vacuna-slot-modal.selected { border-color: var(--yellow); background: linear-gradient(135deg,#fffbe6,#fff5c0); box-shadow: 0 8px 20px rgba(22,34,88,.13), 0 0 0 2px rgba(245,196,0,.35); }
-
-.vacuna-slot-img { flex-shrink: 0; width: 56px; height: 56px; border-radius: 14px; background: rgba(255,255,255,.9); border: 2px solid rgba(245,196,0,.4); display: grid; place-items: center; box-shadow: 0 4px 10px rgba(22,34,88,.1); }
-.vacuna-slot-img img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(42,59,128,.18)); }
-.vacuna-slot-img .vacuna-emoji { font-size: 1.8rem; line-height: 1; }
-.vacuna-slot-nom { flex: 1; font-size: 1rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
-.vacuna-slot-cura { display: block; font-size: .75rem; font-weight: 600; color: var(--muted); margin-top: 2px; line-height: 1.2; }
-.vacuna-slot-modal .vacuna-slot-nom { display: flex; flex-direction: column; }
-.vacuna-slot-check { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); color: var(--blue-deep); font-size: 1rem; font-weight: 900; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(245,196,0,.4); animation: checkIn .18s ease; }
-@keyframes checkIn { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+/* .vacuna-slot-modal — ara gestionat per Bootstrap .card .flex-row */
 
 /* Panell quantitat */
 .alimentar-controls-modal { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 22px 20px 20px; border-radius: 24px; background: rgba(255,255,255,.65); border: 1px solid rgba(32,63,152,.09); box-shadow: inset 0 1px 0 rgba(255,255,255,.85); }

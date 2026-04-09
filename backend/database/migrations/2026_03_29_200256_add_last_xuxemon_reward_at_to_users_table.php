@@ -9,14 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('last_xuxemon_reward_at')->nullable()->after('last_reward_at');
+            $table->timestamp('ultima_recompensa_xuxemon_at')->nullable()->after('ultima_recompensa_at');
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('last_xuxemon_reward_at');
+            $table->dropColumn('ultima_recompensa_xuxemon_at');
         });
     }
 };

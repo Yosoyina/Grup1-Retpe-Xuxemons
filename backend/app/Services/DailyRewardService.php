@@ -26,16 +26,21 @@ class DailyRewardService
         $xuxemonHour = (int) SystemConfig::get('xuxemon_hora_recompensa', 8);
         
         $xuxesAvailableAt = $now->copy()->startOfDay()->setHour($xuxesHour);
+        if ($now->lessThan($xuxesAvailableAt)) {
+            $xuxesAvailableAt->subDay();
+        }
+
         $xuxemonAvailableAt = $now->copy()->startOfDay()->setHour($xuxemonHour);
+        if ($now->lessThan($xuxemonAvailableAt)) {
+            $xuxemonAvailableAt->subDay();
+        }
 
-        $lastXuxesRewardAt = $user->last_reward_at?->copy()->timezone(self::REWARD_TIMEZONE);
-        $lastXuxemonRewardAt = $user->last_xuxemon_reward_at?->copy()->timezone(self::REWARD_TIMEZONE);
+        $lastXuxesRewardAt = $user->ultima_recompensa_at?->copy()->timezone(self::REWARD_TIMEZONE);
+        $lastXuxemonRewardAt = $user->ultima_recompensa_xuxemon_at?->copy()->timezone(self::REWARD_TIMEZONE);
 
-        $canClaimXuxes = $now->greaterThanOrEqualTo($xuxesAvailableAt) && 
-                         (!$lastXuxesRewardAt || $lastXuxesRewardAt->lessThan($xuxesAvailableAt));
+        $canClaimXuxes = !$lastXuxesRewardAt || $lastXuxesRewardAt->lessThan($xuxesAvailableAt);
                          
-        $canClaimXuxemon = $now->greaterThanOrEqualTo($xuxemonAvailableAt) && 
-                           (!$lastXuxemonRewardAt || $lastXuxemonRewardAt->lessThan($xuxemonAvailableAt));
+        $canClaimXuxemon = !$lastXuxemonRewardAt || $lastXuxemonRewardAt->lessThan($xuxemonAvailableAt);
 
         if (!$canClaimXuxes && !$canClaimXuxemon) {
             return [
@@ -62,7 +67,7 @@ class DailyRewardService
                 $response['xuxes_added'] = $xuxesSummary['added'];
                 $response['xuxes_discarded'] = $xuxesSummary['discarded'];
                 
-                $user->last_reward_at = $now->copy()->setTimezone('UTC');
+                $user->ultima_recompensa_at = $now->copy()->setTimezone('UTC');
             }
 
             if ($canClaimXuxemon) {
@@ -72,7 +77,7 @@ class DailyRewardService
                 $response['xuxemon'] = $xuxemonReward;
                 $response['xuxemon_unlocked'] = $xuxemonReward !== null;
                 
-                $user->last_xuxemon_reward_at = $now->copy()->setTimezone('UTC');
+                $user->ultima_recompensa_xuxemon_at = $now->copy()->setTimezone('UTC');
             }
 
             $user->save();

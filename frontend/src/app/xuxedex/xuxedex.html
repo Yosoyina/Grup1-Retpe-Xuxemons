@@ -72,28 +72,40 @@
       @if (xuxemon.bloquejat) {
       <div class="xuxemon-card bloquejat" [ngClass]="getClassMida(xuxemon.tamano)" role="listitem"
         aria-label="Xuxemon bloquejat">
-        <div class="card-badge lock-badge" aria-hidden="true"></div>
         <div class="bloqueig-icona" aria-hidden="true"></div>
         <p class="bloqueig-text">???</p>
       </div>
       } @else {
-      <button type="button" class="xuxemon-card" role="listitem"
-        [class.selected]="xuxemonSeleccionado?.id === xuxemon.id"
+      <button type="button"
+        class="card h-100 text-decoration-none text-center xuxemon-card" role="listitem"
         [ngClass]="[getClassTipus(xuxemon.tipo_elemento), getClassMida(xuxemon.tamano)]"
         [attr.aria-pressed]="xuxemonSeleccionado?.id === xuxemon.id"
-        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento" (click)="seleccionar(xuxemon)">
-        <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
-        @if (xuxemon.enfermedad) {
-        <div class="enfermedad-badge" [ngClass]="getEnfermedadClass(xuxemon.enfermedad)" [title]="xuxemon.enfermedad">
-          {{ getEnfermedadIcon(xuxemon.enfermedad) }}
+        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento"
+        (click)="seleccionar(xuxemon)">
+
+        <div class="card-img-area position-relative w-100 d-flex align-items-center justify-content-center">
+
+          <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
+
+          @if (xuxemon.enfermedad) {
+          <div class="position-absolute top-0 end-0 m-2 badge bg-danger rounded-pill enfermedad-badge"
+               [ngClass]="getEnfermedadClass(xuxemon.enfermedad)"
+               [title]="xuxemon.enfermedad"
+               style="z-index: 2;">
+            {{ getEnfermedadIcon(xuxemon.enfermedad) }}
+          </div>
+          }
+
+          @if (xuxemon.imagen) {
+          <img [src]="xuxemon.imagen" class="img-fluid p-2" [alt]="xuxemon.nombre_xuxemon" style="object-fit: contain; max-height: 100%;">
+          } @else {
+          <div class="placeholder-img" aria-hidden="true">{{ xuxemon.nombre_xuxemon.charAt(0) }}</div>
+          }
         </div>
-        }
-        @if (xuxemon.imagen) {
-        <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
-        } @else {
-        <div class="placeholder-img" aria-hidden="true">{{ xuxemon.nombre_xuxemon.charAt(0) }}</div>
-        }
-        <h3>{{ xuxemon.nombre_xuxemon }}</h3>
+
+        <div class="card-body p-2 w-100">
+          <h6 class="card-title">{{ xuxemon.nombre_xuxemon }}</h6>
+        </div>
       </button>
       }
       }
@@ -175,28 +187,40 @@
       @if (xuxemon.bloquejat) {
       <div class="xuxemon-card bloquejat" [ngClass]="getClassMida(xuxemon.tamano)" role="listitem"
         aria-label="Xuxemon bloquejat">
-        <div class="card-badge lock-badge" aria-hidden="true"></div>
         <div class="bloqueig-icona" aria-hidden="true"></div>
         <p class="bloqueig-text">???</p>
       </div>
       } @else {
-      <button type="button" class="xuxemon-card" role="listitem"
-        [class.selected]="xuxemonSeleccionado?.id === xuxemon.id"
+      <button type="button"
+        class="card h-100 text-decoration-none text-center xuxemon-card" role="listitem"
         [ngClass]="[getClassTipus(xuxemon.tipo_elemento), getClassMida(xuxemon.tamano)]"
         [attr.aria-pressed]="xuxemonSeleccionado?.id === xuxemon.id"
-        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento" (click)="seleccionar(xuxemon)">
-        <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
-        @if (xuxemon.enfermedad) {
-        <div class="enfermedad-badge" [ngClass]="getEnfermedadClass(xuxemon.enfermedad)" [title]="xuxemon.enfermedad">
-          {{ getEnfermedadIcon(xuxemon.enfermedad) }}
+        [attr.aria-label]="xuxemon.nombre_xuxemon + ' - ' + xuxemon.tipo_elemento"
+        (click)="seleccionar(xuxemon)">
+
+        <div class="card-img-area position-relative w-100 d-flex align-items-center justify-content-center">
+
+          <div class="card-badge" [ngClass]="getClassTipus(xuxemon.tipo_elemento)" aria-hidden="true"></div>
+
+          @if (xuxemon.enfermedad) {
+          <div class="position-absolute top-0 end-0 m-2 badge bg-danger rounded-pill enfermedad-badge"
+               [ngClass]="getEnfermedadClass(xuxemon.enfermedad)"
+               [title]="xuxemon.enfermedad"
+               style="z-index: 2;">
+            {{ getEnfermedadIcon(xuxemon.enfermedad) }}
+          </div>
+          }
+
+          @if (xuxemon.imagen) {
+          <img [src]="xuxemon.imagen" class="img-fluid p-2" [alt]="xuxemon.nombre_xuxemon" style="object-fit: contain; max-height: 100%;">
+          } @else {
+          <div class="placeholder-img" aria-hidden="true">{{ xuxemon.nombre_xuxemon.charAt(0) }}</div>
+          }
         </div>
-        }
-        @if (xuxemon.imagen) {
-        <img [src]="xuxemon.imagen" [alt]="xuxemon.nombre_xuxemon">
-        } @else {
-        <div class="placeholder-img" aria-hidden="true">{{ xuxemon.nombre_xuxemon.charAt(0) }}</div>
-        }
-        <h3>{{ xuxemon.nombre_xuxemon }}</h3>
+
+        <div class="card-body p-2 w-100">
+          <h6 class="card-title">{{ xuxemon.nombre_xuxemon }}</h6>
+        </div>
       </button>
       }
       }
