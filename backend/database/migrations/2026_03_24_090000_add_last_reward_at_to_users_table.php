@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('ultima_recompensa_at')->nullable()->after('actiu');
+            $table->timestamp('last_reward_at')->nullable()->after('actiu');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('ultima_recompensa_at');
+            $table->dropColumn('last_reward_at');
         });
     }
 };
