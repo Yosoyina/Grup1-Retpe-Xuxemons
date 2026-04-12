@@ -548,8 +548,8 @@ export class Xuxedex implements OnDestroy {
     // Prepara les dades de l'animació
     this.evoImagenBefore = this.xuxemonSeleccionado.imagen ?? '';
     this.evoNomBefore = this.xuxemonSeleccionado.nombre_xuxemon;
-    this.evoImagenAfter = segurent.imagen ?? '';
-    this.evoNomAfter = segurent.nombre_xuxemon;
+    this.evoImagenAfter = seguent.imagen ?? '';
+    this.evoNomAfter = seguent.nombre_xuxemon;
     this.evoFase2 = false;
     this.mostrarAnimacioEvolucio = true;
     this.mostrarEvolucion = false;
@@ -582,5 +582,23 @@ export class Xuxedex implements OnDestroy {
     this.evoFase2 = false;
     if (this.evoTimer) clearTimeout(this.evoTimer);
     this.cdr.markForCheck();
+  }
+
+  private clearEvolucioTimers(): void {
+    this.evolucioTimers.forEach(t => clearTimeout(t));
+    this.evolucioTimers = [];
+  }
+
+  private resetEvolucioCinematica(): void {
+    this.cinematicaEvolucio = false;
+    this.faseEvolucio = this.faseEvolucioIdle;
+    this.etapaEvolucioObjectiu = null;
+    this.clearEvolucioTimers();
+  }
+
+  private startEvolucioCinematica(etapa: EtapaEvoluciones): void {
+    this.cinematicaEvolucio = true;
+    this.etapaEvolucioObjectiu = etapa;
+    this.faseEvolucio = this.faseEvolucioIntro;
   }
 }
