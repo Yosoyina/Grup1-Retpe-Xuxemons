@@ -1,31 +1,29 @@
-/* ===== MOTXILLA / INVENTARIO ===== */
-
+﻿/* ── HOST ────────────────────────────────────────── */
 :host {
   display: block;
   min-height: 100dvh;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* ===== WRAPPER ===== */
 .motxilla-wrapper {
+  --yellow:  rgba(255, 214, 0, .95);
+  --text:    #1f2a44;
+  --pill:    999px;
+
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-
   justify-content: flex-start;
   padding: clamp(10px, 2vh, 22px) 12px 80px;
-
   background-image: url('/Fondo-Principal.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   position: relative;
   overflow: hidden;
 }
 
-/* overlay suave — igual que menu-principal */
 .motxilla-wrapper::before {
   content: "";
   position: absolute;
@@ -36,7 +34,7 @@
   pointer-events: none;
 }
 
-/* ===== HEADER ===== */
+/* ── HEADER ──────────────────────────────────────── */
 .inv-header {
   position: relative;
   z-index: 2;
@@ -47,7 +45,6 @@
   margin: 0 0 16px;
 }
 
-/* Motxilla — icona al header amb animació flotant */
 .bag-deco {
   width: 140px;
   height: 140px;
@@ -58,12 +55,10 @@
 }
 
 @keyframes bagFloat {
-  0%   { transform: translateY(0)     rotate(-4deg); }
-  50%  { transform: translateY(-8px)  rotate(4deg);  }
-  100% { transform: translateY(0)     rotate(-4deg); }
+  0%, 100% { transform: translateY(0)    rotate(-4deg); }
+  50%       { transform: translateY(-8px) rotate(4deg); }
 }
 
-/* Titulo — mismo estilo que .titulo-general */
 .inv-title {
   margin: 0;
   font-family: 'Fredoka', sans-serif;
@@ -74,25 +69,10 @@
   color: #FFD400;
   -webkit-text-stroke: 7px #1E2A78;
   paint-order: stroke fill;
-  text-shadow:
-    0 8px 0 rgba(30, 42, 120, .40),
-    0 16px 28px rgba(0, 0, 0, .28);
+  text-shadow: 0 8px 0 rgba(30, 42, 120, .40), 0 16px 28px rgba(0, 0, 0, .28);
 }
 
-/* ===== GRID DE SLOTS ===== */
-.slots-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.slots-grid li {
-  margin: 0;
-  padding: 0;
-}
+/* ── ALERTA PLENA ────────────────────────────────── */
 .alert-full {
   position: relative;
   z-index: 2;
@@ -100,7 +80,7 @@
   margin-bottom: 16px;
   padding: 14px 22px;
   background: rgba(220, 38, 38, .88);
-  border: 4px solid rgba(255, 214, 0, .95);
+  border: 4px solid var(--yellow);
   border-radius: 22px;
   color: #fff;
   font-weight: 900;
@@ -109,7 +89,7 @@
   box-shadow: 0 12px 22px rgba(0, 0, 0, .20);
 }
 
-/* ===== PANELLS — mismo contenedor que .menu-grid-container ===== */
+/* ── PANELLS ─────────────────────────────────────── */
 .panels-row {
   position: relative;
   z-index: 2;
@@ -119,10 +99,9 @@
   gap: 24px;
 }
 
-/* Cada panel — mismo estilo que .menu-grid-container */
 .panel {
   background: rgba(255, 255, 255, .80);
-  border: 6px solid rgba(255, 214, 0, .95);
+  border: 6px solid var(--yellow);
   border-radius: 30px;
   box-shadow: 0 22px 55px rgba(0, 0, 0, .26);
   padding: 28px;
@@ -131,7 +110,7 @@
   gap: 20px;
 }
 
-/* ===== GRID DE SLOTS ===== */
+/* ── SLOTS GRID ──────────────────────────────────── */
 .slots-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -141,45 +120,32 @@
   padding: 0;
 }
 
-.slots-grid li {
-  margin: 0;
-  padding: 0;
-}
+.slots-grid li { margin: 0; padding: 0; }
 
-/* Slot — mismo estilo que .btn-menu */
 .slot {
   appearance: none;
   border: none;
   cursor: pointer;
   width: 100%;
   aspect-ratio: 1;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   border-radius: 22px;
   background: rgba(255, 255, 255, .80);
-  border: 4px solid rgba(255, 214, 0, .95);
+  border: 4px solid var(--yellow);
   box-shadow: 0 12px 22px rgba(0, 0, 0, .16);
-
   position: relative;
   overflow: hidden;
   transition: transform .12s ease, box-shadow .12s ease;
 }
 
-.slot-img {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-}
+.slot-img { width: 72px; height: 72px; object-fit: contain; }
 
 .slot:hover:not(.slot--empty) {
   transform: translateY(-2px);
-  box-shadow:
-    0 18px 30px rgba(0, 0, 0, .20),
-    0 0 0 5px rgba(255, 214, 0, .18);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, .20), 0 0 0 5px rgba(255, 214, 0, .18);
 }
 
 .slot--empty {
@@ -189,16 +155,18 @@
   box-shadow: none;
 }
 
-.slot--filled {
-  background: rgba(255, 255, 255, .80);
+.slot--selected {
+  border-color: #1E2A78;
+  box-shadow: 0 0 0 4px rgba(30, 42, 120, .22), 0 18px 30px rgba(0, 0, 0, .20);
+  transform: translateY(-3px);
 }
 
-/* ===== CONTENIDO SLOT ===== */
+/* ── SLOT CONTADOR ───────────────────────────────── */
 .slot-count {
   position: absolute;
   bottom: 4px;
   right: 4px;
-  background: #1f2a44;
+  background: var(--text);
   color: #fff;
   font-weight: 900;
   font-size: 0.72rem;
@@ -211,6 +179,7 @@
 .slot-count--high { background: #d97706; }
 .slot-count--max  { background: #dc2626; }
 
+/* ── BADGE TIPUS ─────────────────────────────────── */
 .badge {
   position: absolute;
   top: 4px;
@@ -228,7 +197,7 @@
 .badge--terra { background: #92400e; }
 .badge--aire  { background: #9333ea; }
 
-/* ===== PANEL FOOTER ===== */
+/* ── PANEL FOOTER ────────────────────────────────── */
 .panel-footer {
   display: flex;
   align-items: center;
@@ -240,7 +209,7 @@
 .panel-label {
   font-weight: 900;
   font-size: 1.1rem;
-  color: #1f2a44;
+  color: var(--text);
   text-transform: uppercase;
   letter-spacing: .05em;
 }
@@ -248,75 +217,42 @@
 .panel-count {
   font-weight: 700;
   font-size: 1.05rem;
-  color: #1f2a44;
+  color: var(--text);
   background: rgba(255, 214, 0, .30);
   padding: 3px 12px;
-  border-radius: 999px;
+  border-radius: var(--pill);
   border: 2px solid rgba(255, 214, 0, .80);
 }
 
-/* ===== BOTÓ SORTIR — mismo que .btn-sortir del menu ===== */
+/* ── BOTO SORTIR ─────────────────────────────────── */
 .sortir-btn {
   position: fixed;
-  bottom: 20px;
+  bottom: 18px;
   right: 22px;
   z-index: 9999;
-
   display: flex;
   align-items: center;
-  gap: 10px;
-
+  justify-content: center;
+  gap: 8px;
   padding: 18px 44px;
   border-radius: 999px;
-
   background: #e46b5f;
-  border: 5px solid rgba(0, 0, 0, .88);
-
+  border: 5px solid rgba(0, 0, 0, .82);
   color: #101010;
-  font-family: inherit;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   font-weight: 900;
   font-size: 1.12rem;
   letter-spacing: .06em;
   text-transform: uppercase;
   cursor: pointer;
-
-  box-shadow:
-    0 16px 28px rgba(0, 0, 0, .28),
-    inset 0 2px 0 rgba(255, 255, 255, .35);
-
-  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  box-shadow: 0 16px 28px rgba(0, 0, 0, .28), inset 0 2px 0 rgba(255, 255, 255, .35);
+  transition: filter .12s ease, opacity .12s ease, background-color .12s ease;
 }
 
-.sortir-btn:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 22px 34px rgba(0, 0, 0, .32),
-    inset 0 2px 0 rgba(255, 255, 255, .38);
-  filter: saturate(1.06);
-}
+.sortir-btn img { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; pointer-events: none; }
+.sortir-btn:hover { filter: brightness(1.06); }
 
-.sortir-btn:active {
-  transform: translateY(0) scale(.99);
-}
-
-.sortir-btn img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  flex-shrink: 0;
-  pointer-events: none;
-}
-
-/* ===== SLOT SELECCIONAT ===== */
-.slot--selected {
-  border-color: #1E2A78;
-  box-shadow:
-    0 0 0 4px rgba(30, 42, 120, .22),
-    0 18px 30px rgba(0, 0, 0, .20);
-  transform: translateY(-3px);
-}
-
-/* ===== MODAL DETALL XUXE ===== */
+/* ── MODAL DETALL ────────────────────────────────── */
 .detall-overlay {
   position: fixed;
   inset: 0;
@@ -337,7 +273,7 @@
 
 @keyframes modalIn {
   from { opacity: 0; transform: scale(.92) translateY(14px); }
-  to   { opacity: 1; transform: scale(1)   translateY(0); }
+  to   { opacity: 1; transform: scale(1)   translateY(0);    }
 }
 
 .detall-modal {
@@ -347,7 +283,7 @@
   background:
     linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.08)),
     rgba(224, 233, 247, 0.97);
-  border: 4px solid rgba(255, 214, 0, .95);
+  border: 4px solid var(--yellow);
   border-radius: 36px;
   box-shadow: 0 26px 54px rgba(9, 20, 60, .28);
   backdrop-filter: blur(12px);
@@ -375,10 +311,10 @@
   height: 40px;
   display: grid;
   place-items: center;
-  border: 3px solid rgba(255, 214, 0, .95);
+  border: 3px solid var(--yellow);
   border-radius: 50%;
   background: linear-gradient(180deg, #fff, #f3f6fc);
-  color: #1f2a44;
+  color: var(--text);
   font-size: 1rem;
   font-weight: 800;
   cursor: pointer;
@@ -386,10 +322,7 @@
   transition: transform .14s ease, background .14s ease;
 }
 
-.detall-tancar:hover {
-  transform: scale(1.1);
-  background: #FFD400;
-}
+.detall-tancar:hover { transform: scale(1.1); background: #FFD400; }
 
 .detall-imatge {
   width: 150px;
@@ -412,11 +345,7 @@
   filter: drop-shadow(0 8px 14px rgba(42, 59, 128, .22));
 }
 
-.detall-placeholder {
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: #1E2A78;
-}
+.detall-placeholder { font-size: 3.5rem; font-weight: 800; color: #1E2A78; }
 
 .detall-info {
   width: 100%;
@@ -432,25 +361,13 @@
   font-family: 'Fredoka', sans-serif;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   font-weight: 800;
-  color: #1f2a44;
+  color: var(--text);
   letter-spacing: .03em;
-  text-align: center;
 }
 
-.detall-separador {
-  width: 100%;
-  height: 5px;
-  background: #FFD400;
-  border: none;
-  margin: 0;
-  border-radius: 999px;
-}
+.detall-separador { width: 100%; height: 5px; background: #FFD400; border: none; margin: 0; border-radius: var(--pill); }
 
-.detall-dades {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+.detall-dades { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
 .detall-dada {
   display: flex;
@@ -463,19 +380,8 @@
   box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
 }
 
-.detall-dada-label {
-  font-size: 0.68rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: #7a8299;
-}
-
-.detall-dada-valor {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #1f2a44;
-}
+.detall-dada-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #7a8299; }
+.detall-dada-valor { font-size: 0.95rem; font-weight: 700; color: var(--text); }
 
 .detall-dada-valor.valor--tipus-aigua { color: #2563eb; }
 .detall-dada-valor.valor--tipus-terra { color: #92400e; }
@@ -487,7 +393,7 @@
   background: linear-gradient(180deg, rgba(255,250,219,.92), rgba(255,244,191,.82));
   border: 2px solid rgba(255, 214, 0, .50);
   border-radius: 18px;
-  color: #1f2a44;
+  color: var(--text);
   font-size: 0.95rem;
   line-height: 1.55;
   text-align: left;
@@ -505,37 +411,18 @@
   margin-bottom: 4px;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ── RESPONSIVE ──────────────────────────────────── */
 @media (max-width: 900px) {
-  .panels-row {
-    grid-template-columns: 1fr;
-    width: min(680px, 96vw);
-  }
+  .panels-row { grid-template-columns: 1fr; width: min(680px, 96vw); }
 }
 
 @media (max-width: 720px) {
-  .inv-title {
-    font-size: clamp(34px, 9vw, 52px);
-    -webkit-text-stroke: 5px #1E2A78;
-  }
-
-  .slots-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  .inv-title  { font-size: clamp(34px, 9vw, 52px); -webkit-text-stroke: 5px #1E2A78; }
+  .slots-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (max-width: 480px) {
-  .slots-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .panel {
-    padding: 14px;
-    border-radius: 24px;
-  }
-
-  .sortir-btn {
-    padding: 13px 28px;
-    font-size: 15px;
-  }
+  .slots-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panel      { padding: 14px; border-radius: 24px; }
+  .sortir-btn { padding: 13px 28px; font-size: 15px; }
 }
