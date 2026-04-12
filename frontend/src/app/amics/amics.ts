@@ -146,6 +146,24 @@ export class Amics implements OnDestroy {
     return '/Imatges/Xuxemons/' + avatar;
   }
 
+  cercar(): void {
+    const q = (this.cercaBusqueda.value ?? '').trim();
+    if (q.length < 3) return;
+    this.cercant = true;
+    this.cdr.markForCheck();
+    this.amicsService.cercarUsuaris(q).subscribe({
+      next: (resultats) => {
+        this.resultatsCerca = resultats;
+        this.cercant = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.cercant = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
   sortir(): void {
     this.router.navigate(['/menu-principal']);
   }
