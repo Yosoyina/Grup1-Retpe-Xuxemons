@@ -14,11 +14,6 @@ import { InventarioService, Slot } from '../services/inventario.service';
   styleUrl: './xuxedex.css',
 })
 export class Xuxedex implements OnDestroy {
-  readonly faseEvolucioIdle = 'idle';
-  readonly faseEvolucioIntro = 'intro';
-  readonly faseEvolucioCharging = 'charging';
-  readonly faseEvolucioFlash = 'flash';
-  readonly faseEvolucioReveal = 'reveal';
   paginaActual = 0;
   itemsPorPagina = 6;
   filtroActual = 'Todos';
@@ -30,9 +25,6 @@ export class Xuxedex implements OnDestroy {
   cargarEvolucion = false;
   errorEvolucion: string | null = null;
   xuxeEvoSlot: Slot | null = null;
-  cinematicaEvolucio = false;
-  faseEvolucio = this.faseEvolucioIdle;
-  etapaEvolucioObjectiu: EtapaEvoluciones | null = null;
   mostrarPanellAlimentar = false;
   mostrarPanellVacuna = false;
 
@@ -50,7 +42,6 @@ export class Xuxedex implements OnDestroy {
   feedCarregant = false;
   feedQuantitat = 1;
   private feedTimer: ReturnType<typeof setTimeout> | null = null;
-  private evolucioTimers: ReturnType<typeof setTimeout>[] = [];
 
   // Vacunes
   vacunaSlotSeleccionat: Slot | null = null;
@@ -90,7 +81,6 @@ export class Xuxedex implements OnDestroy {
     this.slotsSub.unsubscribe();
     this.evolucioSub?.unsubscribe();
     if (this.feedTimer) clearTimeout(this.feedTimer);
-    this.clearEvolucioTimers();
     if (this.vacunaTimer) clearTimeout(this.vacunaTimer);
     if (this.evoTimer) clearTimeout(this.evoTimer);
   }
@@ -265,8 +255,8 @@ export class Xuxedex implements OnDestroy {
   getEnfermedadIcon(enfermedad: string | null | undefined): string {
     const icons: Record<string, string> = {
       'Bajon de azucar': '🍭',
-      'Sobredosis':      '💊',
-      'Atracon':         '🤢',
+      'Sobredosis': '💊',
+      'Atracon': '🤢',
     };
     return enfermedad ? (icons[enfermedad] ?? '🤒') : '';
   }
@@ -275,8 +265,8 @@ export class Xuxedex implements OnDestroy {
   getEnfermedadClass(enfermedad: string | null | undefined): string {
     const classes: Record<string, string> = {
       'Bajon de azucar': 'enfermedad-bajon',
-      'Sobredosis':      'enfermedad-sobredosis',
-      'Atracon':         'enfermedad-atracon',
+      'Sobredosis': 'enfermedad-sobredosis',
+      'Atracon': 'enfermedad-atracon',
     };
     return enfermedad ? (classes[enfermedad] ?? 'enfermedad-generica') : '';
   }
@@ -338,8 +328,8 @@ export class Xuxedex implements OnDestroy {
 
     const VACUNA_PER_MALALTIA: Record<string, string> = {
       'Bajon de azucar': 'xocolatina',
-      'Atracon':         'xal de fruites',
-      'Sobredosis':      'inxulina',
+      'Atracon': 'xal de fruites',
+      'Sobredosis': 'inxulina',
     };
 
     return this.inventarioService.slots.filter(s => {
@@ -362,9 +352,9 @@ export class Xuxedex implements OnDestroy {
   getVacunaCuraText(slot: Slot): string {
     const nom = (slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? '').trim().toLowerCase();
     const cures: Record<string, string> = {
-      'xocolatina':    'Cura: Bajón de azúcar',
+      'xocolatina': 'Cura: Bajón de azúcar',
       'xal de fruites': 'Cura: Atracón',
-      'inxulina':      'Cura: totes les malalties',
+      'inxulina': 'Cura: totes les malalties',
     };
     return cures[nom] ?? 'Vacuna';
   }
@@ -441,14 +431,12 @@ export class Xuxedex implements OnDestroy {
   }
 
   cerrarEvolucion(): void {
-    if (this.cinematicaEvolucio) return;
     this.evolucioSub?.unsubscribe();
     this.evolucioSub = null;
     this.mostrarEvolucion = false;
     this.cargarEvolucion = false;
     this.cadenaEvolucio = [];
     this.errorEvolucion = null;
-    this.resetEvolucioCinematica();
   }
 
   getCadenaEvolucioNormalitzada(): EtapaEvoluciones[] {
@@ -466,40 +454,6 @@ export class Xuxedex implements OnDestroy {
     }
 
     return etapa.tamano === this.xuxemonSeleccionado.tamano;
-  }
-
-  getSpriteCinematica(): string | null {
-    if (this.faseEvolucio === this.faseEvolucioReveal) {
-      return this.etapaEvolucioObjectiu?.imagen ?? null;
-    }
-
-    return this.xuxemonSeleccionado?.imagen ?? null;
-  }
-
-  getNomCinematica(): string {
-    if (this.faseEvolucio === this.faseEvolucioReveal) {
-      return this.etapaEvolucioObjectiu?.nombre_xuxemon ?? '';
-    }
-
-    return this.xuxemonSeleccionado?.nombre_xuxemon ?? '';
-  }
-
-  getMissatgeCinematica(): string {
-    if (!this.xuxemonSeleccionado) return '';
-
-    if (this.faseEvolucio === this.faseEvolucioReveal && this.etapaEvolucioObjectiu) {
-      return `${this.xuxemonSeleccionado.nombre_xuxemon} ha evolucionat a ${this.etapaEvolucioObjectiu.nombre_xuxemon}!`;
-    }
-
-    if (this.faseEvolucio === this.faseEvolucioFlash) {
-      return 'L energia esta desbordant...';
-    }
-
-    if (this.faseEvolucio === this.faseEvolucioCharging) {
-      return `${this.xuxemonSeleccionado.nombre_xuxemon} esta carregant energia...`;
-    }
-
-    return 'La transformacio esta a punt de comencar...';
   }
 
   // ── Evolució ─────────────────────────────────────────────────────
@@ -538,18 +492,14 @@ export class Xuxedex implements OnDestroy {
 
   // Consumeix una Xuxa EV al backend i desbloqueja la següent etapa
   evolucionar(): void {
-    const slot = this.xuxeEvoSlot ?? this.getXuxeEvo();
-    const seguent = this.getSegurentEtapa();
-    if (!slot || !seguent || !this.xuxemonSeleccionado || this.cinematicaEvolucio) return;
-
-    this.errorEvolucion = null;
-    this.startEvolucioCinematica(seguent);
+    const segurent = this.getSegurentEtapa();
+    if (!this.potEvolucionar() || !segurent || !this.xuxemonSeleccionado) return;
 
     // Prepara les dades de l'animació
     this.evoImagenBefore = this.xuxemonSeleccionado.imagen ?? '';
     this.evoNomBefore = this.xuxemonSeleccionado.nombre_xuxemon;
-    this.evoImagenAfter = seguent.imagen ?? '';
-    this.evoNomAfter = seguent.nombre_xuxemon;
+    this.evoImagenAfter = segurent.imagen ?? '';
+    this.evoNomAfter = segurent.nombre_xuxemon;
     this.evoFase2 = false;
     this.mostrarAnimacioEvolucio = true;
     this.mostrarEvolucion = false;
@@ -582,23 +532,5 @@ export class Xuxedex implements OnDestroy {
     this.evoFase2 = false;
     if (this.evoTimer) clearTimeout(this.evoTimer);
     this.cdr.markForCheck();
-  }
-
-  private clearEvolucioTimers(): void {
-    this.evolucioTimers.forEach(t => clearTimeout(t));
-    this.evolucioTimers = [];
-  }
-
-  private resetEvolucioCinematica(): void {
-    this.cinematicaEvolucio = false;
-    this.faseEvolucio = this.faseEvolucioIdle;
-    this.etapaEvolucioObjectiu = null;
-    this.clearEvolucioTimers();
-  }
-
-  private startEvolucioCinematica(etapa: EtapaEvoluciones): void {
-    this.cinematicaEvolucio = true;
-    this.etapaEvolucioObjectiu = etapa;
-    this.faseEvolucio = this.faseEvolucioIntro;
   }
 }
