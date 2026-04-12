@@ -4,7 +4,9 @@
 
 <!-- TOAST FEED -->
 @if (feedResultat) {
-<div class="feed-toast" [class.toast-infectat]="feedResultat.infectat" [class.toast-bloquejat]="feedResultat.bloquejat"
+<div class="feed-toast"
+  [class.toast-infectat]="feedResultat.infectat"
+  [class.toast-bloquejat]="feedResultat.bloquejat"
   [class.toast-ok]="!feedResultat.infectat && !feedResultat.bloquejat">
   <span class="toast-icon">
     @if (feedResultat.bloquejat) { 🚫 }
@@ -115,11 +117,11 @@
           <span class="malaltia-nom">{{ xuxemonSeleccionado.enfermedad }}</span>
           <span class="malaltia-desc">
             @if (xuxemonSeleccionado.enfermedad === 'Atracon') {
-            · No pot menjar
+              · No pot menjar
             } @else if (xuxemonSeleccionado.enfermedad === 'Bajon de azucar') {
-            · +2 Xuxa EV per evolucionar
+              · +2 Xuxa EV per evolucionar
             } @else if (xuxemonSeleccionado.enfermedad === 'Sobredosis') {
-            · No pot evolucionar
+              · No pot evolucionar
             }
           </span>
         </div>
@@ -146,7 +148,8 @@
           🍬 Alimentar
         </button>
 
-        <button type="button" class="btn-accio btn-accio-vacuna" (click)="togglePanellVacuna()">
+        <button type="button" class="btn-accio btn-accio-vacuna"
+          (click)="togglePanellVacuna()">
           💉 Aplicar vacuna
         </button>
       </div>
@@ -325,7 +328,7 @@
         </button>
         } @else {
         <p class="evolucio-sense-xuxe">
-          Necessites <strong>{{ getCostEvolucio() }} Xuxa EV</strong> per evolucionar
+          Necessites <strong>{{ getCostEvolucio() }} Xuxa EV</strong> per evolucionar 
           (en tens {{ getTotalEvesUsuari() }}).
           @if (xuxemonSeleccionado?.enfermedad === 'Bajon de azucar') {
           <br><small>Tens un recàrrec de +2 per Bajón de azúcar.</small>
@@ -376,16 +379,16 @@
     <div class="alimentar-controls alimentar-controls-modal">
       <span class="alimentar-label">Quantitat:</span>
       <div class="alimentar-quantitat-wrapper">
-        <button type="button" class="qty-btn" (click)="decrementarFeed()"
-          [disabled]="feedQuantitat <= 1 || feedCarregant">−</button>
+        <button type="button" class="qty-btn" (click)="decrementarFeed()" [disabled]="feedQuantitat <= 1 || feedCarregant">−</button>
         <span class="qty-valor">{{ feedQuantitat }}</span>
-        <button type="button" class="qty-btn" (click)="incrementarFeed()"
-          [disabled]="feedQuantitat >= getMaxFeed() || feedCarregant">+</button>
+        <button type="button" class="qty-btn" (click)="incrementarFeed()" [disabled]="feedQuantitat >= getMaxFeed() || feedCarregant">+</button>
       </div>
       <span class="qty-stock">/ {{ getMaxFeed() }} disponibles</span>
     </div>
     <div class="accio-modal-footer">
-      <button type="button" class="btn-modal-confirmar" [disabled]="feedCarregant" (click)="alimentar()">
+      <button type="button" class="btn-modal-confirmar"
+        [disabled]="feedCarregant"
+        (click)="alimentar()">
         {{ feedCarregant ? '🍬 Alimentant...' : '🍬 Confirmar' }}
       </button>
     </div>
@@ -415,8 +418,7 @@
     <div class="vacunes-no-disponibles">
       <span class="vacunes-no-disp-icon">🛒</span>
       <p>No tens cap vacuna adequada a l'inventari.</p>
-      <span class="vacunes-no-disp-sub">Necessites: <strong>{{ getEnfermedadIcon(xuxemonSeleccionado.enfermedad) }} {{
-          xuxemonSeleccionado.enfermedad }}</strong></span>
+      <span class="vacunes-no-disp-sub">Necessites: <strong>{{ getEnfermedadIcon(xuxemonSeleccionado.enfermedad) }} {{ xuxemonSeleccionado.enfermedad }}</strong></span>
     </div>
     } @else {
     <div class="vacuna-malaltia-badge" [ngClass]="getEnfermedadClass(xuxemonSeleccionado.enfermedad)">
@@ -425,7 +427,10 @@
     </div>
     <div class="vacunes-selector-modal" role="group" aria-label="Selecciona una vacuna">
       @for (slot of getVacunesDisponibles(); track slot.id) {
-      <button type="button" class="vacuna-slot-modal" [class.selected]="vacunaSlotSeleccionat?.id === slot.id"
+      <button
+        type="button"
+        class="vacuna-slot-modal"
+        [class.selected]="vacunaSlotSeleccionat?.id === slot.id"
         (click)="seleccionarVacuna(slot)">
         <div class="vacuna-slot-img">
           @if (slot.xuxe?.imagen) {
@@ -443,7 +448,10 @@
       }
     </div>
     <div class="accio-modal-footer">
-      <button type="button" class="btn-modal-confirmar" [disabled]="!vacunaSlotSeleccionat || vacunaCarregant"
+      <button
+        type="button"
+        class="btn-modal-confirmar"
+        [disabled]="!vacunaSlotSeleccionat || vacunaCarregant"
         (click)="aplicarVacuna()">
         {{ vacunaCarregant ? '💉 Aplicant...' : '💉 Confirmar vacuna' }}
       </button>

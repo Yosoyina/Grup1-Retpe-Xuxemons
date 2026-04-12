@@ -255,8 +255,8 @@ export class Xuxedex implements OnDestroy {
   getEnfermedadIcon(enfermedad: string | null | undefined): string {
     const icons: Record<string, string> = {
       'Bajon de azucar': '🍭',
-      'Sobredosis': '💊',
-      'Atracon': '🤢',
+      'Sobredosis':      '💊',
+      'Atracon':         '🤢',
     };
     return enfermedad ? (icons[enfermedad] ?? '🤒') : '';
   }
@@ -265,8 +265,8 @@ export class Xuxedex implements OnDestroy {
   getEnfermedadClass(enfermedad: string | null | undefined): string {
     const classes: Record<string, string> = {
       'Bajon de azucar': 'enfermedad-bajon',
-      'Sobredosis': 'enfermedad-sobredosis',
-      'Atracon': 'enfermedad-atracon',
+      'Sobredosis':      'enfermedad-sobredosis',
+      'Atracon':         'enfermedad-atracon',
     };
     return enfermedad ? (classes[enfermedad] ?? 'enfermedad-generica') : '';
   }
@@ -328,8 +328,8 @@ export class Xuxedex implements OnDestroy {
 
     const VACUNA_PER_MALALTIA: Record<string, string> = {
       'Bajon de azucar': 'xocolatina',
-      'Atracon': 'xal de fruites',
-      'Sobredosis': 'inxulina',
+      'Atracon':         'xal de fruites',
+      'Sobredosis':      'inxulina',
     };
 
     return this.inventarioService.slots.filter(s => {
@@ -352,9 +352,9 @@ export class Xuxedex implements OnDestroy {
   getVacunaCuraText(slot: Slot): string {
     const nom = (slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? '').trim().toLowerCase();
     const cures: Record<string, string> = {
-      'xocolatina': 'Cura: Bajón de azúcar',
+      'xocolatina':    'Cura: Bajón de azúcar',
       'xal de fruites': 'Cura: Atracón',
-      'inxulina': 'Cura: totes les malalties',
+      'inxulina':      'Cura: totes les malalties',
     };
     return cures[nom] ?? 'Vacuna';
   }
