@@ -25,6 +25,9 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/profile', [UserController::class, 'eliminarUsuario']);
     Route::post('/reward', [RewardController::class, 'claim']);
 
+    // ── CERCA USUARIS ──────────────────────────────────────────────────────
+    Route::get('/users/search', [UserController::class, 'search']);
+
     // ── XUXEDEX ROUTES ───────────────────────────────────
     Route::get('/xuxedex', [XuxemonsController::class, 'getUserXuxedex']);
 

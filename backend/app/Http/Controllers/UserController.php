@@ -78,7 +78,27 @@ class UserController extends Controller
             'message' => 'Compte inhabilitat correctament',
         ]);
     }
+    // ── CERCA D'USUARIS PER ID ──────────────────────────────────────────
 
+    public function search(Request $request)
+    {
+        $q = trim($request->query('q', ''));
+
+        if (strlen($q) < 3) {
+            return response()->json([]);
+        }
+
+        $currentUser = $request->user();
+
+        $users = \App\Models\User::select('id', 'nombre', 'apellidos', 'id_jugador', 'avatar')
+            ->where('id', '!=', $currentUser->id)
+            ->where('actiu', true)
+            ->where('id_jugador', 'like', '%' . $q . '%')
+            ->limit(10)
+            ->get();
+
+        return response()->json($users);
+    }
     // ── LIST USERS (ADMIN) ────────────────────────────────
 
     public function listUsers()

@@ -100,9 +100,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(
             User::class,
-            'friends',
+            'amigos',
             'user_id',
-            'friend_id'
+            'id_amigo'
         );
     }
 }
