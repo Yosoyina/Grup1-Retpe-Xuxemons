@@ -70,6 +70,11 @@ export class AuthService {
     );
   }
 
+  // Retorna el valor actual de l'usuari sense fer cap petició HTTP
+  getUsuariActual(): any {
+    return this.usuariActual.getValue();
+  }
+
   // Comprobacion de si el usuario está autenticado
   Autentificacion(): boolean {
     return !!localStorage.getItem('token');

@@ -8,9 +8,7 @@
         <input id="nombre" type="text" formControlName="nombre" placeholder="El teu nom">
 
         @if (isFieldInvalid('nombre')) {
-        <span style="color: red;">
-            {{ getErrorMessage('nombre') }}
-        </span>
+          <span class="missatge-error">{{ getErrorMessage('nombre') }}</span>
         }
     </div>
 
@@ -20,9 +18,7 @@
         <input id="apellidos" type="text" formControlName="apellidos" placeholder="Els teus cognoms">
 
         @if (isFieldInvalid('apellidos')) {
-        <span style="color: red;">
-            {{ getErrorMessage('apellidos') }}
-        </span>
+          <span class="missatge-error">{{ getErrorMessage('apellidos') }}</span>
         }
     </div>
 
@@ -32,9 +28,7 @@
         <input id="email" type="email" formControlName="email" placeholder="correu@exemple.com">
 
         @if (isFieldInvalid('email')) {
-        <span style="color: red;">
-            {{ getErrorMessage('email') }}
-        </span>
+          <span class="missatge-error">{{ getErrorMessage('email') }}</span>
         }
     </div>
 
@@ -44,9 +38,7 @@
         <input id="password" type="password" formControlName="password" placeholder="Minim 6 caracters">
 
         @if (isFieldInvalid('password')) {
-        <span style="color: red;">
-            {{ getErrorMessage('password') }}
-        </span>
+          <span class="missatge-error">{{ getErrorMessage('password') }}</span>
         }
     </div>
 
@@ -57,9 +49,7 @@
             placeholder="Repeteix la contrasenya">
 
         @if (isFieldInvalid('password_confirmation')) {
-        <span style="color: red;">
-            {{ getErrorMessage('password_confirmation') }}
-        </span>
+          <span class="missatge-error">{{ getErrorMessage('password_confirmation') }}</span>
         }
     </div>
 
@@ -69,23 +59,17 @@
     registerForm.errors?.['contrasenyesDiferents'] &&
     submitted
     ) {
-    <span style="color: red;">
-        Les contrasenyes no coincideixen
-    </span>
+    <span class="missatge-error">Les contrasenyes no coincideixen</span>
     }
 
     <!-- missatge d'error que ve del backend -->
     @if (errorMessage) {
-    <span style="color: red;">
-        {{ errorMessage }}
-    </span>
+    <span class="missatge-error">{{ errorMessage }}</span>
     }
 
     <!-- missatge d'exit amb l'ID de jugador generat -->
     @if (successMessage) {
-    <span style="color: green;">
-        {{ successMessage }}
-    </span>
+    <span class="missatge-exit">{{ successMessage }}</span>
     }
 
       <p>Ja tens conta? <a routerLink="/login">Login</a></p>

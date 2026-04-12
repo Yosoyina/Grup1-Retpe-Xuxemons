@@ -36,6 +36,15 @@ export class Xuxedex implements OnDestroy {
   mostrarPanellAlimentar = false;
   mostrarPanellVacuna = false;
 
+  // Animació evolució
+  mostrarAnimacioEvolucio = false;
+  evoFase2 = false;
+  evoImagenBefore = '';
+  evoNomBefore = '';
+  evoImagenAfter = '';
+  evoNomAfter = '';
+  private evoTimer: ReturnType<typeof setTimeout> | null = null;
+
   // Feed / Infecció
   feedResultat: FeedResult | null = null;
   feedCarregant = false;
@@ -83,6 +92,7 @@ export class Xuxedex implements OnDestroy {
     if (this.feedTimer) clearTimeout(this.feedTimer);
     this.clearEvolucioTimers();
     if (this.vacunaTimer) clearTimeout(this.vacunaTimer);
+    if (this.evoTimer) clearTimeout(this.evoTimer);
   }
 
   cambiarFiltro(tipo: string): void {
@@ -535,73 +545,42 @@ export class Xuxedex implements OnDestroy {
     this.errorEvolucion = null;
     this.startEvolucioCinematica(seguent);
 
+    // Prepara les dades de l'animació
+    this.evoImagenBefore = this.xuxemonSeleccionado.imagen ?? '';
+    this.evoNomBefore = this.xuxemonSeleccionado.nombre_xuxemon;
+    this.evoImagenAfter = segurent.imagen ?? '';
+    this.evoNomAfter = segurent.nombre_xuxemon;
+    this.evoFase2 = false;
+    this.mostrarAnimacioEvolucio = true;
+    this.mostrarEvolucion = false;
+    this.cdr.markForCheck();
+
     this.xuxemonService.evolucionar(Number(this.xuxemonSeleccionado.id)).subscribe({
       next: () => {
-        this.playEvolucioResolve(slot.id);
+        this.inventarioService.cargarInventario();
+        this.xuxemonService.xuxemons$.next([]);
+        this.xuxemonService.carregarXuxemons(this.filtroActual);
+        // Mostra la fase de revelació després del sacsejament
+        if (this.evoTimer) clearTimeout(this.evoTimer);
+        this.evoTimer = setTimeout(() => {
+          this.evoFase2 = true;
+          this.cdr.markForCheck();
+        }, 1800);
+        this.cdr.markForCheck();
       },
       error: (err) => {
-        this.resetEvolucioCinematica();
+        this.mostrarAnimacioEvolucio = false;
+        this.mostrarEvolucion = true;
         this.errorEvolucion = err.error?.message ?? "Error al evolucionar.";
         this.cdr.markForCheck();
       },
     });
   }
 
-  private startEvolucioCinematica(seguent: EtapaEvoluciones): void {
-    this.clearEvolucioTimers();
-    this.cinematicaEvolucio = true;
-    this.etapaEvolucioObjectiu = seguent;
-    this.faseEvolucio = this.faseEvolucioIntro;
+  acabarAnimacio(): void {
+    this.mostrarAnimacioEvolucio = false;
+    this.evoFase2 = false;
+    if (this.evoTimer) clearTimeout(this.evoTimer);
     this.cdr.markForCheck();
-
-    this.scheduleEvolucioStep(() => {
-      this.faseEvolucio = this.faseEvolucioCharging;
-      this.cdr.markForCheck();
-    }, 220);
-  }
-
-  private playEvolucioResolve(slotId: number): void {
-    this.scheduleEvolucioStep(() => {
-      this.faseEvolucio = this.faseEvolucioFlash;
-      this.cdr.markForCheck();
-    }, 1050);
-
-    this.scheduleEvolucioStep(() => {
-      this.faseEvolucio = this.faseEvolucioReveal;
-      this.cdr.markForCheck();
-    }, 1450);
-
-    this.scheduleEvolucioStep(() => {
-      this.inventarioService.EliminarXuxesinv(slotId);
-      this.inventarioService.cargarInventario();
-      this.xuxemonService.xuxemons$.next([]);
-      this.xuxemonService.carregarXuxemons(this.filtroActual);
-    }, 2100);
-
-    this.scheduleEvolucioStep(() => {
-      this.resetEvolucioCinematica();
-      this.mostrarEvolucion = false;
-      this.cargarEvolucion = false;
-      this.cadenaEvolucio = [];
-      this.errorEvolucion = null;
-      this.cdr.markForCheck();
-    }, 6900);
-  }
-
-  private scheduleEvolucioStep(callback: () => void, delay: number): void {
-    const timer = setTimeout(callback, delay);
-    this.evolucioTimers.push(timer);
-  }
-
-  private clearEvolucioTimers(): void {
-    this.evolucioTimers.forEach((timer) => clearTimeout(timer));
-    this.evolucioTimers = [];
-  }
-
-  private resetEvolucioCinematica(): void {
-    this.clearEvolucioTimers();
-    this.cinematicaEvolucio = false;
-    this.faseEvolucio = this.faseEvolucioIdle;
-    this.etapaEvolucioObjectiu = null;
   }
 }

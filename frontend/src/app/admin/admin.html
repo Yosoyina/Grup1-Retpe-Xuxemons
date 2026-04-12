@@ -26,9 +26,9 @@
     <div class="seccio seccio-usuaris">
       <div class="seccio-header">
         <span class="seccio-icon">👥</span>
-      <h2>Gestió d'Usuaris</h2>
-      <span class="seccio-badge">{{ usuarios.length }} usuaris</span>
-    </div>
+        <h2>Gestió d'Usuaris</h2>
+        <span class="seccio-badge">{{ usuarios.length }} usuaris</span>
+      </div>
 
     <div class="seccio-body">
       @if (cargandoUsuarios) {
@@ -345,7 +345,10 @@
       </div>
 
       @if (cargandoXuxemons) {
-      <div class="cargando">Cargando...</div>
+      <div class="cargando">
+        <span class="cargando-spinner"></span>
+        Carregant...
+      </div>
       }
 
       @if (!cargandoXuxemons) {

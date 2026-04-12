@@ -1,93 +1,71 @@
-/* ===== LOGIN (sin scroll + responsive) ===== */
+﻿/* ── HOST + VARIABLES ────────────────────────────── */
+:host {
+  --yellow:       rgba(255, 208, 0, .95);
+  --yellow-focus: rgba(255, 204, 0, .26);
+  --font-ui:      Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --pill:         999px;
 
-:host{
   min-height: 100dvh;
   height: 100dvh;
   width: 100%;
   overflow: hidden;
-
   display: grid;
   place-items: center;
-
-  background-image: url("/Login-Fondo.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50% 12%;
-  background-color: #0b2d84;
-
-  position: relative;
-  isolation: isolate;
-
+  background: url("/Login-Fondo.png") 50% 12% / cover no-repeat #0b2d84;
   padding: clamp(12px, 2.5vh, 28px) 16px;
   box-sizing: border-box;
-
-  /* Base */
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: var(--font-ui);
+  position: relative;
+  isolation: isolate;
 }
 
-/* Capa blanca (equivalente a “imagen blanca” al 8%) */
-:host::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: rgba(255,255,255,.08); /* 8% */
-  z-index:-2; /* encima del fondo, debajo del radial */
-}
-
-/* Tu overlay radial */
-:host::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: radial-gradient(
-    circle at 50% 40%,
-    rgba(255,255,255,.10),
-    rgba(255,255,255,.04) 55%,
-    rgba(0,0,0,.08) 100%
-  );
-  z-index:-1;
-}
-
-/* ocultamos h1 (tu fondo ya tiene el título grande) */
-h1{
+:host::after {
+  content: "";
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+  inset: 0;
+  background: rgba(255, 255, 255, .08);
+  z-index: -2;
+}
+
+:host::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.10), rgba(255,255,255,.04) 55%, rgba(0,0,0,.08) 100%);
+  z-index: -1;
+}
+
+/* ── H1 OCULT (accessibilitat) ───────────────────── */
+h1 {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
   overflow: hidden;
   clip: rect(0,0,0,0);
   white-space: nowrap;
   border: 0;
 }
 
-/* Card */
-form{
+/* ── FORMULARI ───────────────────────────────────── */
+form {
   width: min(560px, 92vw);
   padding: clamp(18px, 2.2vh, 26px) clamp(16px, 2.2vw, 26px) clamp(16px, 2vh, 22px);
   border-radius: 26px;
   box-sizing: border-box;
-
-  background: rgba(255,255,255,.58);
-  border: 4px solid rgba(255, 208, 0, .95);
-
-  box-shadow:
-    0 18px 40px rgba(0,0,0,.26),
-    inset 0 0 0 1px rgba(255,255,255,.60);
-
+  background: rgba(255, 255, 255, .58);
+  border: 4px solid var(--yellow);
+  box-shadow: 0 18px 40px rgba(0,0,0,.26), inset 0 0 0 1px rgba(255,255,255,.60);
   backdrop-filter: blur(12px);
-
   max-height: calc(100dvh - 40px);
   overflow: hidden;
 }
 
-form > div{ margin-bottom: 14px; }
+form > div { margin-bottom: 14px; }
 
-/* Labels ocultos */
-label{
+/* ── LABELS OCULTS (accessibilitat) ─────────────── */
+label {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: 1px; height: 1px;
   margin: -1px;
   overflow: hidden;
   clip: rect(0,0,0,0);
@@ -95,100 +73,66 @@ label{
   border: 0;
 }
 
-/* Inputs */
-input{
+/* ── INPUTS ──────────────────────────────────────── */
+input {
   width: 100%;
   height: 52px;
   padding: 0 18px;
-  border-radius: 999px;
+  border-radius: var(--pill);
   box-sizing: border-box;
-
-  background: rgba(255,255,255,.86);
-  border: 3px solid rgba(255, 208, 0, .98);
-
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: rgba(255, 255, 255, .86);
+  border: 3px solid var(--yellow);
+  font-family: var(--font-ui);
   font-size: 16px;
-  font-weight: 400;
   color: #1c1c1c;
-
   outline: none;
-  transition: box-shadow .18s ease, border-color .18s ease, transform .08s ease;
+  transition: box-shadow .18s ease, border-color .18s ease;
 }
 
-input::placeholder{
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 400;
-  color: rgba(40,40,40,.55);
-}
+input::placeholder { color: rgba(40, 40, 40, .55); }
+input:focus { border-color: #ffcc00; box-shadow: 0 0 0 6px var(--yellow-focus); }
 
-input:focus{
-  border-color: #ffcc00;
-  box-shadow: 0 0 0 6px rgba(255, 204, 0, .26);
-}
-
-/* Errores y mensajes (backend/success) */
-form span{
+/* ── MISSATGES ───────────────────────────────────── */
+.missatge-error,
+.missatge-exit {
   display: block;
   margin-top: 4px;
   font-size: 12px;
   line-height: 1.2;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* Contenedor del texto */
-p{
-  margin: 8px 0 4px;
-  font-size: 14px;
-  color: #2b2b2b;
-}
+.missatge-error { color: #dc2626; }
+.missatge-exit  { color: #16a34a; }
 
-/* Link sin morado */
-p a{
-  color: #2b2b2b;
-  text-decoration: none;
-  font-weight: 600;
-}
+/* ── LINK REGISTRE ───────────────────────────────── */
+p { margin: 8px 0 4px; font-size: 14px; color: #2b2b2b; }
+p a { color: #2b2b2b; text-decoration: none; font-weight: 600; }
+p a:hover { text-decoration: underline; }
 
-p a:hover{
-  text-decoration: underline; /* quítalo si no lo quieres */
-}
-
-/* Botón */
-button[type="submit"]{
+/* ── BOTO SUBMIT ─────────────────────────────────── */
+button[type="submit"] {
   width: 100%;
   height: 56px;
   margin-top: 8px;
-
   border: none;
-  border-radius: 999px;
-
+  border-radius: var(--pill);
   background: #ffd21f;
   color: #111;
-
-  font-family: "Grandstander", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: var(--font-ui);
   font-weight: 800;
   font-size: 16px;
   letter-spacing: .8px;
   text-transform: uppercase;
-
   box-shadow: 0 14px 26px rgba(0,0,0,.22);
   cursor: pointer;
-  transition: transform .08s ease, filter .15s ease, opacity .15s ease;
+  transition: transform .08s ease, filter .15s ease;
 }
 
-button[type="submit"]:hover{
-  filter: brightness(1.03);
-  transform: translateY(-1px);
-}
-button[type="submit"]:active{ transform: translateY(0) scale(.99); }
-button[disabled]{ opacity: .65; cursor: not-allowed; box-shadow: none; }
+button[type="submit"]:hover  { filter: brightness(1.03); transform: translateY(-1px); }
+button[type="submit"]:active { transform: translateY(0) scale(.99); }
+button[disabled]             { opacity: .65; cursor: not-allowed; box-shadow: none; }
 
-@media (max-width: 520px){
-  :host{
-    background-image: url("/23.png");
-
-    background-size: cover;        /* mantiene la pantalla llena */
-    background-position: 50% 6%;   /* sube el título */
-    background-repeat: no-repeat;
-  }
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 520px) {
+  :host { background-image: url("/23.png"); background-position: 50% 6%; }
 }

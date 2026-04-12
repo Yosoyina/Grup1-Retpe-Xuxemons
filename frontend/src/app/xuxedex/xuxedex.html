@@ -217,6 +217,51 @@
   }
   }
 
+  @if (mostrarAnimacioEvolucio) {
+  <div class="evo-overlay">
+    <div class="evo-scene">
+      <div class="evo-aura-ring"></div>
+      <div class="evo-wave-ring"></div>
+      <div class="evo-wave-ring evo-wave-2"></div>
+      <div class="evo-rays">
+        <span class="evo-ray"></span>
+        <span class="evo-ray"></span>
+        <span class="evo-ray"></span>
+        <span class="evo-ray"></span>
+        <span class="evo-ray"></span>
+        <span class="evo-ray"></span>
+        <span class="evo-ray"></span>
+        <span class="evo-ray"></span>
+      </div>
+      <div class="evo-sparks">
+        <span class="evo-spark"></span>
+        <span class="evo-spark"></span>
+        <span class="evo-spark"></span>
+        <span class="evo-spark"></span>
+        <span class="evo-spark"></span>
+        <span class="evo-spark"></span>
+        <span class="evo-spark"></span>
+      </div>
+      @if (!evoFase2) {
+      <div class="evo-img-before evo-shaking">
+        <img [src]="evoImagenBefore" [alt]="evoNomBefore">
+      </div>
+      } @else {
+      <div class="evo-flash-circle"></div>
+      <div class="evo-img-after">
+        <img [src]="evoImagenAfter" [alt]="evoNomAfter">
+      </div>
+      }
+    </div>
+    @if (!evoFase2) {
+    <p class="evo-nom-text">Evolucionant...</p>
+    } @else {
+    <p class="evo-nom-reveal">{{ evoNomAfter }}</p>
+    <button class="evo-continue-btn" (click)="acabarAnimacio()">Continuar ▶</button>
+    }
+  </div>
+  }
+
   @if (mostrarEvolucion) {
   <div class="evolucio-overlay" (click)="cerrarEvolucion()">
     <div class="evolucio-modal" (click)="$event.stopPropagation()"
@@ -353,10 +398,12 @@
   </div>
   }
 
-  <button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menu principal">
+  @if (!mostrarAnimacioEvolucio) {
+  <button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menú principal">
     <img src="/Sortir.png" alt="" />
     SORTIR
   </button>
+  }
 </div>
 
 

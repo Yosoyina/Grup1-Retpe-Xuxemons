@@ -13,7 +13,7 @@
     />
 
     @if (isFieldInvalid('id_jugador')) {
-      <span style="color: red;">Aquest camp es obligatori</span>
+      <span class="missatge-error">Aquest camp és obligatori</span>
     }
   </div>
 
@@ -28,18 +28,18 @@
     />
 
     @if (isFieldInvalid('password')) {
-      <span style="color: red;">Aquest camp es obligatori</span>
+      <span class="missatge-error">Aquest camp és obligatori</span>
     }
   </div>
 
   <!-- missatge d'error que ve del backend -->
   @if (errorMessage) {
-    <span style="color: red;">{{ errorMessage }}</span>
+    <span class="missatge-error">{{ errorMessage }}</span>
   }
 
   <!-- missatge d'exit -->
   @if (successMessage) {
-    <span style="color: green;">{{ successMessage }}</span>
+    <span class="missatge-exit">{{ successMessage }}</span>
   }
 
   <p>No tens conta? <a routerLink="/registrar">Registrat.</a></p>

@@ -1,315 +1,218 @@
-/* ===== REGISTER (sin scroll + responsive) ===== */
+﻿/* ── HOST + VARIABLES ────────────────────────────── */
+:host {
+  --yellow:       rgba(255, 208, 0, .95);
+  --yellow-focus: rgba(255, 204, 0, .26);
+  --ink:          #1f2a44;
+  --ink-dark:     #1E2A78;
+  --pill:         999px;
+  --font-ui:      Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 
-:host{
   min-height: 100dvh;
   height: 100dvh;
   width: 100%;
   overflow: hidden;
-
   display: grid;
   place-items: center;
-
-  background-image: url("/Registre-Fondo.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50% 12%;
-  background-color: #0b2d84;
-
-  position: relative;
-  isolation: isolate;
-
+  background: url("/Registre-Fondo.png") 50% 12% / cover no-repeat #0b2d84;
   padding: clamp(12px, 2.5vh, 28px) 16px;
   box-sizing: border-box;
-
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: var(--font-ui);
+  position: relative;
+  isolation: isolate;
 }
 
-:host::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: radial-gradient(
-    circle at 50% 40%,
-    rgba(255,255,255,.10),
-    rgba(255,255,255,.04) 55%,
-    rgba(0,0,0,.08) 100%
-  );
-  z-index:-1;
+:host::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.10), rgba(255,255,255,.04) 55%, rgba(0,0,0,.08) 100%);
+  z-index: -1;
 }
 
-/* ocultamos h1 (tu fondo ya tiene el título grande) */
-h1{
-  position:absolute;
-  width:1px;
-  height:1px;
-  padding:0;
-  margin:-1px;
-  overflow:hidden;
-  clip:rect(0,0,0,0);
-  white-space:nowrap;
-  border:0;
+/* ── H1 OCULT (accessibilitat) ───────────────────── */
+h1 {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* Card */
-form{
+/* ── FORMULARI ───────────────────────────────────── */
+form {
   width: min(560px, 92vw);
   padding: clamp(18px, 2.2vh, 26px) clamp(16px, 2.2vw, 26px) clamp(16px, 2vh, 22px);
   border-radius: 26px;
   box-sizing: border-box;
-
-  background: rgba(255,255,255,.58);
-  border: 4px solid rgba(255, 208, 0, .95);
-
-  box-shadow:
-    0 18px 40px rgba(0,0,0,.26),
-    inset 0 0 0 1px rgba(255,255,255,.60);
-
+  background: rgba(255, 255, 255, .58);
+  border: 4px solid var(--yellow);
+  box-shadow: 0 18px 40px rgba(0,0,0,.26), inset 0 0 0 1px rgba(255,255,255,.60);
   backdrop-filter: blur(12px);
-
-  /* sin scroll */
   max-height: calc(100dvh - 40px);
   overflow: hidden;
 }
 
-form > div{ margin-bottom: 14px; }
+form > div { margin-bottom: 14px; }
 
-/* Labels ocultos */
-label{
-  position:absolute;
-  width:1px;
-  height:1px;
-  margin:-1px;
-  overflow:hidden;
-  clip:rect(0,0,0,0);
-  white-space:nowrap;
-  border:0;
+/* ── LABELS OCULTS (accessibilitat) ─────────────── */
+label {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* Inputs */
-input{
+/* ── INPUTS ──────────────────────────────────────── */
+input {
   width: 100%;
   height: 52px;
   padding: 0 18px;
-  border-radius: 999px;
+  border-radius: var(--pill);
   box-sizing: border-box;
-
-  background: rgba(255,255,255,.86);
-  border: 3px solid rgba(255, 208, 0, .98);
-
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: rgba(255, 255, 255, .86);
+  border: 3px solid var(--yellow);
+  font-family: var(--font-ui);
   font-size: 16px;
-  font-weight: 400;
   color: #1c1c1c;
-
   outline: none;
   transition: box-shadow .18s ease, border-color .18s ease;
 }
 
-input::placeholder{
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 400;
-  color: rgba(40,40,40,.55);
-}
+input::placeholder { color: rgba(40, 40, 40, .55); }
+input:focus { border-color: #ffcc00; box-shadow: 0 0 0 6px var(--yellow-focus); }
 
-input:focus{
-  border-color: #ffcc00;
-  box-shadow: 0 0 0 6px rgba(255, 204, 0, .26);
-}
-
-/* Errores / mensajes */
-form span{
-  display:block;
+/* ── MISSATGES ERROR / EXIT ──────────────────────── */
+.missatge-error,
+.missatge-exit {
+  display: block;
   margin-top: 4px;
   font-size: 12px;
   line-height: 1.2;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* Texto inferior + link */
-p{
-  margin: 8px 0 4px;
-  font-size: 14px;
-  color: #2b2b2b;
-}
+.missatge-error { color: #dc2626; }
+.missatge-exit  { color: #16a34a; }
 
-p a{
-  color: #2b2b2b;
-  text-decoration: none;
-  font-weight: 600;
-}
+/* ── LINK LOGIN ──────────────────────────────────── */
+p { margin: 8px 0 4px; font-size: 14px; color: #2b2b2b; }
+p a { color: #2b2b2b; text-decoration: none; font-weight: 600; }
+p a:hover { text-decoration: underline; }
 
-p a:hover{ text-decoration: underline; }
-
-/* Botón */
-button[type="submit"]{
+/* ── BOTO SUBMIT ─────────────────────────────────── */
+button[type="submit"] {
   width: 100%;
   height: 56px;
   margin-top: 8px;
-
   border: none;
-  border-radius: 999px;
-
+  border-radius: var(--pill);
   background: #ffd21f;
   color: #111;
-
-  font-family: "Grandstander", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: var(--font-ui);
   font-weight: 800;
   font-size: 16px;
   letter-spacing: .8px;
   text-transform: uppercase;
-
   box-shadow: 0 14px 26px rgba(0,0,0,.22);
   cursor: pointer;
-  transition: filter .15s ease, opacity .15s ease;
+  transition: filter .15s ease;
 }
 
-button[type="submit"]:hover{
-  filter: brightness(1.03);
+button[type="submit"]:hover  { filter: brightness(1.03); }
+button[type="submit"]:active { filter: brightness(.98); }
+button[disabled]             { opacity: .65; cursor: not-allowed; box-shadow: none; }
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 520px) {
+  :host { background-image: url("/Fondo-Registre-Responsive.png"); background-position: 50% 6%; padding: 14px; }
 }
 
-button[type="submit"]:active{
-  filter: brightness(.98);
-}
-
-button[disabled]{
-  opacity: .65;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* ===== REGISTER – IMAGEN MÓVIL (igual que LOGIN) ===== */
-@media (max-width: 520px){
-  :host{
-    background-image: url("/Fondo-Registre-Responsive.png"); /* <-- tu imagen móvil */
-
-    background-size: cover;        /* pantalla llena */
-    background-position: 50% 6%;   /* sube el título (ajusta 4%-10% si quieres) */
-    background-repeat: no-repeat;
-
-    background-color: #0b2d84;     /* por si acaso */
-    padding: 14px 14px;            /* opcional, ganas espacio */
-  }
-}
-
-/* ===== OVERLAY ===== */
-.modal-overlay{
+/* ── MODAL OVERLAY ───────────────────────────────── */
+.modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(15, 25, 60, 0.55);
   backdrop-filter: blur(6px);
 }
 
-/* ===== MODAL ===== */
-.modal{
+/* ── MODAL ───────────────────────────────────────── */
+.modal {
   width: min(520px, 92vw);
   padding: 32px 28px;
-
   border-radius: 28px;
-  background: rgba(255,255,255,.85);
+  background: rgba(255, 255, 255, .85);
   border: 6px solid #FFD400;
-
   box-shadow: 0 30px 70px rgba(0,0,0,.35);
-
-  text-align:center;
+  text-align: center;
 }
 
-/* ===== TÍTULO ===== */
-.modal h2{
-  font-family: "Grandstander", system-ui, sans-serif;
+.modal h2 {
+  font-family: var(--font-ui);
   font-size: clamp(26px, 3vw, 34px);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: .03em;
-
   color: #ffd200;
-
   -webkit-text-stroke: 5px rgba(25, 40, 95, .95);
   paint-order: stroke fill;
-
   margin-bottom: 14px;
 }
 
-/* ===== TEXTO ===== */
-.modal p{
-  font-size: 17px;
-  font-weight: 600;
-  color:#1f2a44;
-  margin-bottom: 8px;
-}
+.modal p { font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
 
-/* ===== CAJA ID ===== */
-.id-box{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+/* ── CAIXA ID ────────────────────────────────────── */
+.id-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
-
-  background: rgba(255,255,255,.85);
+  background: rgba(255, 255, 255, .85);
   border: 3px solid #FFD400;
   border-radius: 14px;
-
   padding: 12px 16px;
   margin-bottom: 12px;
 }
 
-.id-box strong{
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  color:#1E2A78;
-}
+.id-box strong { font-size: 22px; font-weight: 900; letter-spacing: .08em; color: var(--ink-dark); }
 
-/* ===== BOTÓN COPIAR ===== */
-.btn-copy{
-  border:none;
-  cursor:pointer;
-
-  background:#FFD400;
-  border-radius:10px;
-  padding:6px 10px;
-
-  font-size:16px;
-
+/* ── BOTO COPIAR ─────────────────────────────────── */
+.btn-copy {
+  border: none;
+  cursor: pointer;
+  background: #FFD400;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 16px;
   transition: transform .1s ease;
 }
 
-.btn-copy:hover{ transform: scale(1.1); }
+.btn-copy:hover { transform: scale(1.1); }
 
-/* ===== FEEDBACK ===== */
-.copy-feedback{
-  display:block;
-  font-size:14px;
-  font-weight:600;
-  color:#28a745;
-  margin-bottom: 16px;
-}
+/* ── FEEDBACK COPIAT ─────────────────────────────── */
+.copy-feedback { display: block; font-size: 14px; font-weight: 600; color: #16a34a; margin-bottom: 16px; }
 
-/* ===== BOTÓN LOGIN ===== */
-.btn-login{
-  border:none;
-  cursor:pointer;
-
+/* ── BOTO ANAR AL LOGIN ──────────────────────────── */
+.btn-login {
+  border: none;
+  cursor: pointer;
   padding: 14px 30px;
-  border-radius: 999px;
-
+  border-radius: var(--pill);
   background: #5bc16a;
-  border: 3px solid rgba(0,0,0,.85);
-
+  border: 3px solid rgba(0, 0, 0, .85);
+  font-family: var(--font-ui);
   font-weight: 900;
   letter-spacing: .05em;
   text-transform: uppercase;
-
-  box-shadow:
-    0 16px 28px rgba(0,0,0,.28),
-    inset 0 2px 0 rgba(255,255,255,.35);
-
+  box-shadow: 0 16px 28px rgba(0,0,0,.28), inset 0 2px 0 rgba(255,255,255,.35);
   transition: transform .12s ease;
 }
 
-.btn-login:hover{ transform: translateY(-2px); }
+.btn-login:hover { transform: translateY(-2px); }
