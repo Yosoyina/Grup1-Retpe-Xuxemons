@@ -9,6 +9,7 @@ import { noAuthGuard } from './guards/no-auth-guard';
 import { Xuxedex } from './xuxedex/xuxedex';
 import { Admin } from './admin/admin';
 import { adminGuard } from './guards/admin-guard';
+import { Amics } from './amics/amics';
 
 export const routes: Routes = [
   {
@@ -55,6 +56,11 @@ export const routes: Routes = [
         path: 'inventario',
         title: 'Inventario',
         component: Inventario,
+      },
+      {
+        path: 'amics',
+        title: 'Amics',
+        component: Amics,
       },
       {
         path: 'admin',
