@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@700;800&display=swap');
+
+/* ── HOST + VARIABLES ─────────────────────────────── */
+:host {
+  display: block;
+  min-height: 100dvh;
+
+  --yellow:    #FFD400;
+  --yellow-2:  rgba(255, 214, 0, .98);
+  --ink:       rgba(0, 0, 0, .82);
+  --blue-deep: #1E2A78;
+  --pill:      999px;
+  --font-ui:   Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  --btn-verd:    #4caf50;
+  --btn-vermell: #e74c3c;
+}
+
+/* ── ACCESSIBILITAT ───────────────────────────────── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0;
+  margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* ── MISSATGES GLOBALS ────────────────────────────── */
+.msg {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 10px 28px;
+  border-radius: var(--pill);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: .95rem;
+  white-space: nowrap;
+}
+.msg-exit  { background: #d4f5d4; color: #1a6e1a; border: 2px solid #7dc47d; }
+.msg-error { background: #fde8e8; color: #8b1c1c; border: 2px solid #e08080; }
+
+/* ── PAGINA ───────────────────────────────────────── */
+.pagina {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(16px, 2.5vw, 36px) 16px clamp(100px, 10vh, 140px);
+  background-image: url('/Fondo-Principal.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  font-family: var(--font-ui);
+}
+
+.pagina::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255,255,255,.18), rgba(255,255,255,0) 58%),
+    linear-gradient(to bottom, rgba(10,20,60,.18), rgba(10,20,60,.06));
+  pointer-events: none;
+}
+
+/* ── TÍTOL ────────────────────────────────────────── */
+.titol {
+  position: relative;
+  z-index: 2;
+  margin: 0 0 clamp(16px, 2vw, 26px);
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  font-size: clamp(48px, 6.5vw, 96px);
+  line-height: .95;
+  color: var(--yellow);
+  -webkit-text-stroke: clamp(5px, .75vw, 8px) var(--blue-deep);
+  paint-order: stroke fill;
+  text-shadow: 0 10px 0 rgba(30,42,120,.35), 0 18px 30px rgba(0,0,0,.26);
+  text-align: center;
+}
+
+/* ── CONTENIDOR PRINCIPAL ─────────────────────────── */
+.amics-container {
+  position: relative;
+  z-index: 2;
+  width: min(1200px, 94vw);
+  background: rgba(255, 255, 255, .88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 32px;
+  border: 5px solid var(--yellow);
+  box-shadow: 0 28px 62px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.7);
+  padding: clamp(18px, 2.4vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 22px);
+}
+
+/* ── BARRA DE CERCA ───────────────────────────────── */
+.cerca-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.cerca-input {
+  flex: 1;
+  padding: 14px 22px;
+  border-radius: var(--pill);
+  border: 3px solid rgba(30,42,120,.2);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
+  background: rgba(255,255,255,.95);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.cerca-input:focus {
+  border-color: var(--blue-deep);
+  box-shadow: 0 0 0 3px rgba(30,42,120,.12);
+}
+
+.btn-cercar {
+  padding: 14px 32px;
+  border-radius: var(--pill);
+  border: 4px solid var(--blue-deep);
+  background: var(--yellow);
+  color: var(--blue-deep);
+  font-family: var(--font-ui);
+  font-weight: 900;
+  font-size: 1rem;
+  letter-spacing: .06em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform .12s, filter .12s;
+  white-space: nowrap;
+}
+
+.btn-cercar:hover { transform: translateY(-2px); filter: saturate(1.1); }
+.btn-cercar:active { transform: translateY(0); }
+
+/* ── SPINNER ──────────────────────────────────────── */
+.spinner {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 3px solid rgba(30,42,120,.2);
+  border-top-color: var(--blue-deep);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── GRID DUES COLUMNES ───────────────────────────── */
+.amics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(14px, 2vw, 22px);
+  align-items: start;
+}
+
+/* ── SECCIONS ─────────────────────────────────────── */
+.seccio {
+  background: rgba(230, 238, 255, .45);
+  border-radius: 22px;
+  border: 2px solid rgba(30,42,120,.12);
+  overflow: hidden;
+}
+
+.columna-esq {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.6vw, 18px);
+}
+
+/* ── CAPÇALERA SECCIÓ ─────────────────────────────── */
+.seccio-titol {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 18px;
+  background: rgba(30,42,120,.1);
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: clamp(.78rem, 1.1vw, .92rem);
+  letter-spacing: .05em;
+  color: var(--blue-deep);
+  text-transform: uppercase;
+}
+
+.badge-num {
+  margin-left: auto;
+  background: var(--yellow);
+  border: 3px solid var(--blue-deep);
+  color: var(--blue-deep);
+  font-weight: 900;
+  font-size: .8rem;
+  min-width: 26px;
+  height: 26px;
+  border-radius: var(--pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 7px;
+}
+
+/* ── LLISTA CARDS ─────────────────────────────────── */
+.llista-cards {
+  list-style: none;
+  margin: 0;
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.seccio-amics .llista-cards {
+  max-height: 500px;
+}
+
+.card-buit {
+  padding: 20px;
+  text-align: center;
+  color: #7a849a;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+/* ── CARD USUARI / PETICIONS ──────────────────────── */
+.card-usuari,
+.card-amic {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.85);
+  border: 2px solid rgba(30,42,120,.1);
+  transition: background .13s;
+}
+
+.card-usuari:hover,
+.card-amic:hover { background: rgba(255,212,0,.1); }
+
+.card-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--yellow-2);
+  flex-shrink: 0;
+  background: #e8eeff;
+}
+
+.card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-info strong {
+  display: block;
+  font-size: .85rem;
+  font-weight: 800;
+  color: #1b2237;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── BOTONS ACCIONS ───────────────────────────────── */
+.card-accions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.btn-enviar-sol,
+.btn-acceptar,
+.btn-cancellar,
+.btn-eliminar {
+  padding: 7px 13px;
+  border-radius: var(--pill);
+  border: 3px solid var(--ink);
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: .75rem;
+  letter-spacing: .03em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform .12s, filter .12s;
+}
+
+.btn-enviar-sol { background: var(--btn-verd);    color: #fff; }
+.btn-acceptar   { background: var(--btn-verd);    color: #fff; }
+.btn-cancellar  { background: var(--btn-vermell); color: #fff; }
+.btn-eliminar   { background: var(--btn-vermell); color: #fff; }
+
+.btn-enviar-sol:hover,
+.btn-acceptar:hover,
+.btn-cancellar:hover,
+.btn-eliminar:hover { transform: translateY(-1px); filter: saturate(1.1); }
+
+.btn-enviar-sol:active,
+.btn-acceptar:active,
+.btn-cancellar:active,
+.btn-eliminar:active { transform: translateY(0); }
+
+.badge-ja-amic {
+  font-size: .75rem;
+  font-weight: 700;
+  color: #3d7a3d;
+  background: #d4f5d4;
+  border: 2px solid #7dc47d;
+  padding: 5px 11px;
+  border-radius: var(--pill);
+}
+
+/* ── CARD AMIC ────────────────────────────────── */
+.card-amic {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.amic-botons {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.amic-botons-fila2 {
+  display: flex;
+  gap: 6px;
+}
+
+/* ── CONFIRMACIÓ ELIMINAR ─────────────────────────── */
+.confirmacio-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.confirmacio-text {
+  font-size: .8rem;
+  font-weight: 700;
+  color: #8b1c1c;
+}
+
+.btn-confirmar-si,
+.btn-confirmar-no {
+  padding: 6px 13px;
+  border-radius: var(--pill);
+  border: 3px solid var(--ink);
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: .75rem;
+  cursor: pointer;
+  transition: transform .12s;
+}
+
+.btn-confirmar-si { background: var(--btn-vermell); color: #fff; }
+.btn-confirmar-no { background: #eee; color: #333; }
+.btn-confirmar-si:hover,
+.btn-confirmar-no:hover { transform: translateY(-1px); }
+
+/* ── BOTÓ SORTIR ──────────────────────────────────── */
+.sortir-btn {
+  position: fixed;
+  right: 22px;
+  bottom: 18px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 44px;
+  border-radius: var(--pill);
+  background: #e46b5f;
+  border: 5px solid var(--ink);
+  color: #101010;
+  font-family: var(--font-ui);
+  font-weight: 900;
+  font-size: 1.12rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 16px 28px rgba(0,0,0,.28), inset 0 2px 0 rgba(255,255,255,.35);
+  transition: transform .12s, box-shadow .12s, filter .12s;
+}
+.sortir-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 34px rgba(0,0,0,.32), inset 0 2px 0 rgba(255,255,255,.38);
+  filter: saturate(1.06);
+}
+.sortir-btn:active { transform: translateY(0) scale(.99); }
+.sortir-btn img { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; pointer-events: none; }
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media (max-width: 860px) {
+  .amics-grid { grid-template-columns: 1fr; }
+  .seccio-amics .llista-cards { max-height: 300px; }
+}
+
+@media (max-width: 480px) {
+  .sortir-btn { right: 12px; bottom: 12px; padding: 12px 26px; font-size: 15px; }
+  .btn-cercar { padding: 12px 18px; font-size: .85rem; }
+  .btn-enviar-sol { font-size: .68rem; padding: 6px 8px; }
+}
+

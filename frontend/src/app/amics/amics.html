@@ -1,0 +1,169 @@
+<!-- ── MISSATGES GLOBALS ──────────────────────────── -->
+@if (missatgeExit) {
+<div class="msg msg-exit" role="alert" aria-live="polite">✔ {{ missatgeExit }}</div>
+}
+@if (missatgeError) {
+<div class="msg msg-error" role="alert" aria-live="polite">✖ {{ missatgeError }}</div>
+}
+
+<div class="pagina">
+
+  <h1 class="titol">AMICS</h1>
+
+  <!-- ── CONTENIDOR PRINCIPAL ──────────────────────── -->
+  <div class="amics-container">
+
+    <!-- ── BARRA DE CERCA ──────────────────────────── -->
+    <div class="cerca-bar">
+      <label for="cerca-input" class="sr-only">Cerca per ID de jugador</label>
+      <input
+        id="cerca-input"
+        type="search"
+        class="cerca-input"
+        placeholder="Cerca per ID..."
+        [formControl]="cercaBusqueda"
+        autocomplete="off"
+        aria-label="Cerca per ID de jugador"
+        (keydown.enter)="cercar()"
+      />
+      <button type="button" class="btn-cercar" (click)="cercar()" aria-label="Cercar jugadors">
+        @if (cercant) {
+          <span class="spinner" aria-hidden="true"></span>
+        } @else {
+          CERCAR
+        }
+      </button>
+    </div>
+
+    <!-- ── DOS COLUMNES ───────────────────────────── -->
+    <div class="amics-grid">
+
+      <!-- COLUMNA ESQUERRA: cercats + peticions rebudes -->
+      <div class="columna-esq">
+
+        <!-- Sol·licituds enviades (resultats cerca) -->
+        <section class="seccio" aria-label="Sol·licituds d'amistat">
+          <h2 class="seccio-titol">SOL·LICITUDS D'AMISTAT</h2>
+
+          <ul class="llista-cards" aria-live="polite">
+            @if ((cercaBusqueda.value?.trim()?.length ?? 0) < 3 && resultatsCerca.length === 0) {
+            <li class="card-buit">Escriu almenys 3 caràcters per cercar.</li>
+            }
+            @if ((cercaBusqueda.value?.trim()?.length ?? 0) >= 3 && !cercant && resultatsCerca.length === 0) {
+            <li class="card-buit">Cap jugador trobat.</li>
+            }
+            @for (usuari of resultatsCerca; track usuari.id) {
+            <li class="card-usuari">
+              <img [src]="getAvatarSrc(usuari.avatar)" [alt]="usuari.nombre" class="card-avatar">
+              <div class="card-info">
+                <strong>{{ usuari.nombre | uppercase }} – {{ usuari.id_jugador }}</strong>
+              </div>
+              <div class="card-accions">
+                @if (esAmic(usuari.id)) {
+                <span class="badge-ja-amic">Ja és amic</span>
+                } @else {
+                <button
+                  type="button"
+                  class="btn-enviar-sol"
+                  (click)="enviarPeticio(usuari)"
+                  aria-label="Enviar sol·licitud d'amistat a {{ usuari.nombre }}">
+                  👥 ENVIA SOL·LICITUD D'AMISTAT
+                </button>
+                }
+              </div>
+            </li>
+            }
+          </ul>
+        </section>
+
+        <!-- Sol·licituds rebudes -->
+        <section class="seccio" aria-label="Sol·licituds d'amistat rebudes">
+          <h2 class="seccio-titol">
+            SOL·LICITUDS D'AMISTAT REBUDES
+            @if (peticionsRebudes.length > 0) {
+            <span class="badge-num" aria-label="{{ peticionsRebudes.length }} sol·licituds pendents">{{ peticionsRebudes.length }}</span>
+            }
+          </h2>
+
+          <ul class="llista-cards">
+            @if (peticionsRebudes.length === 0) {
+            <li class="card-buit">No tens sol·licituds pendents.</li>
+            }
+            @for (peticio of peticionsRebudes; track peticio.id) {
+            <li class="card-usuari">
+              <img [src]="getAvatarSrc(peticio.remitente.avatar)" [alt]="peticio.remitente.nombre" class="card-avatar">
+              <div class="card-info">
+                <strong>{{ peticio.remitente.nombre | uppercase }} – {{ peticio.remitente.id_jugador }}</strong>
+              </div>
+              <div class="card-accions">
+                <button
+                  type="button"
+                  class="btn-acceptar"
+                  (click)="acceptarPeticio(peticio)"
+                  aria-label="Acceptar sol·licitud d'amistat de {{ peticio.remitente.nombre }}">
+                  ✔ ACCEPTAR
+                </button>
+                <button
+                  type="button"
+                  class="btn-cancellar"
+                  (click)="rebutjarPeticio(peticio)"
+                  aria-label="Rebutjar sol·licitud de {{ peticio.remitente.nombre }}">
+                  ✖ CANCEL·LAR
+                </button>
+              </div>
+            </li>
+            }
+          </ul>
+        </section>
+
+      </div>
+
+      <!-- COLUMNA DRETA: llista d'amics -->
+      <div class="columna-dre">
+
+        <section class="seccio seccio-amics" aria-label="Els meus amics">
+          <h2 class="seccio-titol">
+            ELS MEUS AMICS
+            <span class="badge-num" aria-label="{{ amics.length }} amics">{{ amics.length }}</span>
+          </h2>
+
+          <ul class="llista-cards">
+            @if (amics.length === 0) {
+            <li class="card-buit">Encara no tens cap amic. Cerca'n un!</li>
+            }
+            @for (amic of amics; track amic.id) {
+            <li class="card-amic">
+              <img [src]="getAvatarSrc(amic.avatar)" [alt]="amic.nombre" class="card-avatar">
+              <div class="card-info">
+                <strong>{{ amic.nombre | uppercase }} – {{ amic.id_jugador }}</strong>
+              </div>
+              <div class="amic-botons">
+                @if (confirmantEliminar === amic.id) {
+                <div class="confirmacio-row">
+                  <span class="confirmacio-text">Segur?</span>
+                  <button type="button" class="btn-confirmar-si" (click)="eliminarAmic(amic)" aria-label="Confirmar eliminació de {{ amic.nombre }}">Sí</button>
+                  <button type="button" class="btn-confirmar-no" (click)="cancelarEliminar()" aria-label="Cancel·lar">No</button>
+                </div>
+                } @else {
+                <button type="button" class="btn-eliminar" (click)="confirmarEliminar(amic.id)" aria-label="Eliminar {{ amic.nombre }} de la llista d'amics">
+                  🗑 ELIMINAR
+                </button>
+                }
+              </div>
+            </li>
+            }
+          </ul>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── BOTÓ SORTIR ──────────────────────────────────── -->
+<button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menú principal">
+  <img src="/Sortir.png" alt="" />
+  SORTIR
+</button>
+
