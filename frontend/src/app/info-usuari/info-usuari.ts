@@ -63,7 +63,19 @@ export class InfoUsuari {
 
   // Inyectamos los servicios necesarios en el constructor
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {
-    // carreguem les dades de l'usuari al crear el component
+
+    // 1. Mostrar dades de la caché immediatament (sense esperar HTTP)
+    const usuariCached = this.authService.getUsuariActual();
+    if (usuariCached) {
+      this.usuari = usuariCached;
+      this.editForm.patchValue({
+        nombre: this.usuari.nombre,
+        apellidos: this.usuari.apellidos,
+        email: this.usuari.email,
+      });
+    }
+
+    // 2. Refresca les dades del servidor en segon pla
     this.authService.getPerfil().subscribe({
       next: (response: any) => {
         this.usuari = response.user;
@@ -75,7 +87,9 @@ export class InfoUsuari {
         this.cdr.detectChanges();
       },
       error: () => {
-        this.router.navigate(['/login']);
+        if (!this.usuari) {
+          this.router.navigate(['/login']);
+        }
       }
     });
   }
