@@ -47,10 +47,11 @@ class User extends Authenticatable implements JWTSubject
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'actiu' => 'boolean',
-            'last_reward_at' => 'datetime',
+            'email_verified_at'            => 'datetime',
+            'password'                      => 'hashed',
+            'actiu'                         => 'boolean',
+            'ultima_recompensa_at'          => 'datetime',
+            'ultima_recompensa_xuxemon_at'  => 'datetime',
         ];
     }
 
