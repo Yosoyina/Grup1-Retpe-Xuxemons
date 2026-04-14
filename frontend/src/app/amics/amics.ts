@@ -12,43 +12,58 @@ import { AmicsService, Amic, PeticioAmistat } from '../services/amics.service';
   styleUrl: './amics.css',
 })
 export class Amics implements OnDestroy {
-
   cercaBusqueda = new FormControl('');
   resultatsCerca: Amic[] = [];
   cercant = false;
 
   amics: Amic[] = [];
+  amicsVisibles: Amic[] = [];
   peticionsRebudes: PeticioAmistat[] = [];
 
   missatgeExit = '';
   missatgeError = '';
 
   confirmantEliminar: number | null = null;
+  amicNouId: number | null = null;
+  amicEliminantId: number | null = null;
 
+  private amicPendentAnimacioId: number | null = null;
   private subs: Subscription[] = [];
+  private timeoutAnimacioEntrada: ReturnType<typeof setTimeout> | null = null;
+  private timeoutAnimacioSortida: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private amicsService: AmicsService,
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {
-    // carrega inicial
     this.amicsService.carregarAmics();
     this.amicsService.carregarPeticionsRebudes();
 
-    // subscripcions als BehaviorSubjects
     this.subs.push(
-      this.amicsService.amics.subscribe(a => {
-        this.amics = a;
+      this.amicsService.amics.subscribe(amics => {
+        const idsAbans = new Set(this.amics.map(amic => amic.id));
+
+        this.amics = amics;
+        this.amicsVisibles = amics.filter(amic => amic.id !== this.amicEliminantId);
+
+        if (
+          this.amicPendentAnimacioId !== null &&
+          !idsAbans.has(this.amicPendentAnimacioId) &&
+          amics.some(amic => amic.id === this.amicPendentAnimacioId)
+        ) {
+          this.activarAnimacioNouAmic(this.amicPendentAnimacioId);
+          this.amicPendentAnimacioId = null;
+        }
+
         this.cdr.markForCheck();
       }),
-      this.amicsService.peticionsRebudes.subscribe(p => {
-        this.peticionsRebudes = p;
+      this.amicsService.peticionsRebudes.subscribe(peticions => {
+        this.peticionsRebudes = peticions;
         this.cdr.markForCheck();
       }),
     );
 
-    // cerca amb debounce de 300ms i mínim 3 caràcters
     this.subs.push(
       this.cercaBusqueda.valueChanges.pipe(
         debounceTime(300),
@@ -60,7 +75,7 @@ export class Amics implements OnDestroy {
           return this.amicsService.cercarUsuaris(q!.trim());
         }),
       ).subscribe({
-        next: (resultats) => {
+        next: resultats => {
           this.resultatsCerca = resultats;
           this.cercant = false;
           this.cdr.markForCheck();
@@ -72,7 +87,6 @@ export class Amics implements OnDestroy {
       })
     );
 
-    // quan el camp es buida o té menys de 3 caràcters, neteja resultats
     this.subs.push(
       this.cercaBusqueda.valueChanges.pipe(
         filter(q => (q ?? '').trim().length < 3),
@@ -84,42 +98,47 @@ export class Amics implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subs.forEach(s => s.unsubscribe());
+    this.subs.forEach(sub => sub.unsubscribe());
+    if (this.timeoutAnimacioEntrada) clearTimeout(this.timeoutAnimacioEntrada);
+    if (this.timeoutAnimacioSortida) clearTimeout(this.timeoutAnimacioSortida);
   }
 
-  // retorna si ja som amics amb un usuari
   esAmic(id: number): boolean {
-    return this.amics.some(a => a.id === id);
+    return this.amics.some(amic => amic.id === id);
   }
 
-  // retorna si ja hi ha una petició pendent amb un usuari
   peticioPendent(id: number): boolean {
-    return this.peticionsRebudes.some(p => p.remitente.id === id);
+    return this.peticionsRebudes.some(peticio => peticio.remitente.id === id);
   }
 
   enviarPeticio(destinatari: Amic): void {
     this.amicsService.enviarPeticio(destinatari.id).subscribe({
       next: () => {
-        this.mostrarExit(`Sol·licitud enviada a ${destinatari.nombre}!`);
+        this.mostrarExit(`Solicitud enviada a ${destinatari.nombre}!`);
         this.amicsService.carregarPeticionsRebudes();
       },
-      error: (err) => {
-        this.mostrarError(err.error?.errors?.destinatarioId?.[0] ?? err.error?.message ?? 'Error en enviar la sol·licitud.');
+      error: err => {
+        this.mostrarError(err.error?.errors?.destinatarioId?.[0] ?? err.error?.message ?? 'Error al enviar la solicitud.');
       },
     });
   }
 
   acceptarPeticio(peticio: PeticioAmistat): void {
+    this.amicPendentAnimacioId = peticio.remitente.id;
+
     this.amicsService.acceptarPeticio(peticio.id).subscribe({
-      next: () => this.mostrarExit(`${peticio.remitente.nombre} ara és amic teu!`),
-      error: () => this.mostrarError('Error en acceptar la sol·licitud.'),
+      next: () => this.mostrarExit(`${peticio.remitente.nombre} ahora es amigo tuyo!`),
+      error: () => {
+        this.amicPendentAnimacioId = null;
+        this.mostrarError('Error al aceptar la solicitud.');
+      },
     });
   }
 
   rebutjarPeticio(peticio: PeticioAmistat): void {
     this.amicsService.rebutjarPeticio(peticio.id).subscribe({
-      next: () => this.mostrarExit('Sol·licitud rebutjada.'),
-      error: () => this.mostrarError('Error en rebutjar la sol·licitud.'),
+      next: () => this.mostrarExit('Solicitud rechazada.'),
+      error: () => this.mostrarError('Error al rechazar la solicitud.'),
     });
   }
 
@@ -132,13 +151,30 @@ export class Amics implements OnDestroy {
   }
 
   eliminarAmic(amic: Amic): void {
-    this.amicsService.eliminarAmic(amic.id).subscribe({
-      next: () => {
-        this.confirmantEliminar = null;
-        this.mostrarExit(`${amic.nombre} eliminat de la llista d'amics.`);
-      },
-      error: () => this.mostrarError('Error en eliminar l\'amic.'),
-    });
+    if (this.amicEliminantId !== null) return;
+
+    this.confirmantEliminar = null;
+    this.amicEliminantId = amic.id;
+    this.cdr.markForCheck();
+
+    if (this.timeoutAnimacioSortida) clearTimeout(this.timeoutAnimacioSortida);
+    this.timeoutAnimacioSortida = setTimeout(() => {
+      this.amicsVisibles = this.amicsVisibles.filter(item => item.id !== amic.id);
+      this.cdr.markForCheck();
+
+      this.amicsService.eliminarAmic(amic.id).subscribe({
+        next: () => {
+          this.amicEliminantId = null;
+          this.mostrarExit(`${amic.nombre} eliminado de la lista de amigos.`);
+        },
+        error: () => {
+          this.amicEliminantId = null;
+          this.amicsVisibles = [...this.amics];
+          this.mostrarError('Error al eliminar el amigo.');
+          this.cdr.markForCheck();
+        },
+      });
+    }, 420);
   }
 
   getAvatarSrc(avatar: string | null): string {
@@ -149,10 +185,12 @@ export class Amics implements OnDestroy {
   cercar(): void {
     const q = (this.cercaBusqueda.value ?? '').trim();
     if (q.length < 3) return;
+
     this.cercant = true;
     this.cdr.markForCheck();
+
     this.amicsService.cercarUsuaris(q).subscribe({
-      next: (resultats) => {
+      next: resultats => {
         this.resultatsCerca = resultats;
         this.cercant = false;
         this.cdr.markForCheck();
@@ -168,17 +206,41 @@ export class Amics implements OnDestroy {
     this.router.navigate(['/menu-principal']);
   }
 
+  esAmicNou(id: number): boolean {
+    return this.amicNouId === id;
+  }
+
+  estaEliminantAmic(id: number): boolean {
+    return this.amicEliminantId === id;
+  }
+
   private mostrarExit(msg: string): void {
     this.missatgeExit = msg;
     this.missatgeError = '';
     this.cdr.markForCheck();
-    setTimeout(() => { this.missatgeExit = ''; this.cdr.markForCheck(); }, 3500);
+    setTimeout(() => {
+      this.missatgeExit = '';
+      this.cdr.markForCheck();
+    }, 3500);
   }
 
   private mostrarError(msg: string): void {
     this.missatgeError = msg;
     this.missatgeExit = '';
     this.cdr.markForCheck();
-    setTimeout(() => { this.missatgeError = ''; this.cdr.markForCheck(); }, 3500);
+    setTimeout(() => {
+      this.missatgeError = '';
+      this.cdr.markForCheck();
+    }, 3500);
+  }
+
+  private activarAnimacioNouAmic(id: number): void {
+    this.amicNouId = id;
+
+    if (this.timeoutAnimacioEntrada) clearTimeout(this.timeoutAnimacioEntrada);
+    this.timeoutAnimacioEntrada = setTimeout(() => {
+      this.amicNouId = null;
+      this.cdr.markForCheck();
+    }, 1800);
   }
 }
