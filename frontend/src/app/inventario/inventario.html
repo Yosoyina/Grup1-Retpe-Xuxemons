@@ -18,14 +18,14 @@
 
     <!-- APILABLES -->
     <section class="panel panel--apilable" aria-labelledby="lbl-apilable">
-      <ul class="slots-grid">
+      <ul class="slots-grid inventory" aria-label="Inventari d'objectes apilables">
 
         <!-- Slots plens -->
-        @for (slot of apilablesFills; track slot.id) {
-          <li>
+        @for (slot of apilablesFills; track slot.id; let i = $index) {
+          <li [attr.aria-label]="'Slot ' + (i + 1) + ' - ' + slot.cantidad + ' Xuxes de tipus ' + (slot.xuxe?.tipus ?? 'desconegut') + ': ' + (slot.xuxe?.nom ?? 'sense nom')">
             <div [ngClass]="slotClasses(slot)"
                  [class.slot--selected]="slotSeleccionat?.id === slot.id"
-                 [attr.aria-label]="slot.xuxe?.nom + ' x' + slot.cantidad"
+                 [attr.aria-label]="'Slot ' + (i + 1) + ' - ' + slot.cantidad + ' Xuxes de tipus ' + (slot.xuxe?.tipus ?? 'desconegut') + ': ' + (slot.xuxe?.nom ?? 'sense nom')"
                  role="button"
                  tabindex="0"
                  (click)="seleccionar(slot)"
@@ -49,14 +49,18 @@
                 {{ slot.xuxe?.tipus }}
               </span>
 
+              <span class="sr-only">
+                Slot {{ i + 1 }} - {{ slot.cantidad }} Xuxes de tipus {{ slot.xuxe?.tipus ?? 'desconegut' }}: {{ slot.xuxe?.nom ?? 'sense nom' }}
+              </span>
+
             </div>
           </li>
         }
 
         <!-- Slots buits -->
-        @for (slot of apilablesEmpties; track slot.id) {
-          <li>
-            <div [ngClass]="slotClasses(slot)" aria-label="Slot buit"></div>
+        @for (slot of apilablesEmpties; track slot.id; let i = $index) {
+          <li [attr.aria-label]="'Slot buit ' + (apilablesFills.length + i + 1)">
+            <div [ngClass]="slotClasses(slot)" [attr.aria-label]="'Slot buit ' + (apilablesFills.length + i + 1)"></div>
           </li>
         }
 
@@ -70,15 +74,15 @@
 
     <!-- NO APILABLES -->
     <section class="panel panel--noapilable" aria-labelledby="lbl-noapilable">
-      <ul class="slots-grid">
+      <ul class="slots-grid inventory" aria-label="Inventari d'objectes no apilables">
 
         <!-- Slots plens -->
-        @for (slot of noApilablesFills; track slot.id) {
-          <li>
+        @for (slot of noApilablesFills; track slot.id; let i = $index) {
+          <li [attr.aria-label]="'Slot ' + (i + 1) + ' - 1 objecte no apilable de tipus ' + (slot.xuxe?.tipus ?? 'desconegut') + ': ' + (slot.xuxe?.nom ?? 'sense nom')">
             <button type="button"
                     [ngClass]="slotClasses(slot)"
                     [class.slot--selected]="slotSeleccionat?.id === slot.id"
-                    [attr.aria-label]="slot.xuxe?.nom"
+                    [attr.aria-label]="'Slot ' + (i + 1) + ' - 1 objecte no apilable de tipus ' + (slot.xuxe?.tipus ?? 'desconegut') + ': ' + (slot.xuxe?.nom ?? 'sense nom')"
                     (click)="seleccionar(slot)">
 
               <img class="slot-img"
@@ -88,14 +92,18 @@
               <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
                 {{ slot.xuxe?.tipus }}
               </span>
+
+              <span class="sr-only">
+                Slot {{ i + 1 }} - 1 objecte no apilable de tipus {{ slot.xuxe?.tipus ?? 'desconegut' }}: {{ slot.xuxe?.nom ?? 'sense nom' }}
+              </span>
             </button>
           </li>
         }
 
         <!-- Slots buits -->
-        @for (slot of noApilablesEmpties; track slot.id) {
-          <li>
-            <div [ngClass]="slotClasses(slot)" aria-label="Slot buit"></div>
+        @for (slot of noApilablesEmpties; track slot.id; let i = $index) {
+          <li [attr.aria-label]="'Slot buit ' + (noApilablesFills.length + i + 1)">
+            <div [ngClass]="slotClasses(slot)" [attr.aria-label]="'Slot buit ' + (noApilablesFills.length + i + 1)"></div>
           </li>
         }
 
