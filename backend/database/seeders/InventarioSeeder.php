@@ -24,13 +24,13 @@ class InventarioSeeder extends Seeder
             ],
             [
                 'nombre_xuxes' => "Xucolate",
-                'descripcio'   => 'Una xuxa fresca i refrescant.',
+                'descripcio'   => 'Una xuxa sòlida com una roca.',
                 'imagen'       => 'Imatges/Xuxes/Xucolate.png',
                 'apilable'     => true,
             ],
             [
                 'nombre_xuxes' => 'Soda Prime',
-                'descripcio'   => 'Una xuxa sòlida com una roca.',
+                'descripcio'   => 'Una xuxa fresca i refrescant.',
                 'imagen'       => 'Imatges/Xuxes/SodaPrime.png',
                 'apilable'     => true,
             ],
