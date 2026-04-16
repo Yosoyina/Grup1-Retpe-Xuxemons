@@ -1,6 +1,8 @@
 <!-- menu-principal.component.html -->
-<div class="menu-general-container">
-  <h1 class="titulo-general">MENÚ PRINCIPAL</h1>
+<section class="menu-general-container" aria-labelledby="menu-title">
+  <header>
+    <h1 class="titulo-general" id="menu-title">MENÚ PRINCIPAL</h1>
+  </header>
 
   <nav class="menu-grid-container" aria-label="Menú principal">
     <div class="menu-grid">
@@ -45,7 +47,7 @@
   </nav>
 
   <!-- SORTIR -->
-  <div class="menu-footer">
+  <footer class="menu-footer">
     <!-- ADMIN (solo visible si es admin) -->
     @if ((authService.usuari$ | async)?.role === 'admin') {
       <button class="btn-admin" routerLink="/admin">
@@ -58,8 +60,8 @@
       <img src="/Sortir.png" alt="Sortir" />
       <span>SORTIR</span>
     </button>
-  </div>
-</div>
+  </footer>
+</section>
 
 @if (rewardModalVisible && dailyReward) {
 <div class="reward-modal-overlay" (click)="closeRewardModal()">

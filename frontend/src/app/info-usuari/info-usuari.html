@@ -1,13 +1,15 @@
 @if (usuari) {
 
-<div class="pagina">
+<section class="pagina" aria-labelledby="perfil-title">
 
-  <h1 class="titol">Perfil d'Usuari</h1>
+  <header>
+    <h1 class="titol" id="perfil-title">Perfil d'Usuari</h1>
+  </header>
 
   <div class="contingut">
 
     <!-- columna esquerra: avatar + id -->
-    <div class="columna-esquerra">
+    <aside class="columna-esquerra" aria-label="Resum del perfil">
 
       <!-- foto de perfil -->
       <div class="cercle-avatar">
@@ -50,12 +52,12 @@
         Dona-se de Baixa
       </button>
 
-    </div>
+    </aside>
 
     <!-- columna dreta: formulari -->
-    <div class="columna-dreta">
+    <section class="columna-dreta" aria-labelledby="info-personal-title">
       <div class="card-form">
-        <h2>Informació Personal</h2>
+        <h2 id="info-personal-title">Informació Personal</h2>
 
         <form [formGroup]="editForm" (ngSubmit)="guardarCanvis()">
 
@@ -125,7 +127,7 @@
 
         </form>
       </div>
-    </div>
+    </section>
 
   </div>
 
@@ -135,14 +137,14 @@
     SORTIR
   </button>
 
-</div>
+</section>
 
 <!-- dialeg confirmacio eliminar -->
 @if (mostrarConfirmacio) {
 <div class="modal-overlay">
-  <div class="modal modal-perill">
+  <div class="modal modal-perill" role="dialog" aria-modal="true" aria-labelledby="disable-account-title">
     <div class="modal-icona">⚠️</div>
-    <h3 class="modal-titol">Inhabilitar compte</h3>
+    <h3 class="modal-titol" id="disable-account-title">Inhabilitar compte</h3>
     <p class="modal-text">Estàs a punt d'inhabilitar el teu compte.</p>
     <p class="modal-subtext">Podràs contactar amb un administrador per reactivar-la.</p>
     <div class="modal-botons">
@@ -156,11 +158,11 @@
 <!-- modal dades actualitzades -->
 @if (mostrarModalActualitzat) {
 <div class="modal-overlay" (click)="mostrarModalActualitzat = false">
-  <div class="modal modal-exit" (click)="$event.stopPropagation()">
+  <div class="modal modal-exit" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="profile-updated-title">
     <div class="modal-exit-avatar">
       <img [src]="getAvatarSrc(usuari.avatar)" [alt]="usuari.nombre" class="modal-avatar-img">
     </div>
-    <h3 class="modal-titol modal-titol-exit">Perfil actualitzat!</h3>
+    <h3 class="modal-titol modal-titol-exit" id="profile-updated-title">Perfil actualitzat!</h3>
     <p class="modal-exit-subtitol">Els teus canvis s'han desat correctament.</p>
     <button class="btn-tancar-modal" (click)="mostrarModalActualitzat = false">✕ Tancar</button>
   </div>

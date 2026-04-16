@@ -1,5 +1,6 @@
+<section class="xuxedex-page" aria-labelledby="xuxedex-title">
 <header class="xuxedex-header">
-  <h1>XUXEDEX</h1>
+  <h1 id="xuxedex-title">XUXEDEX</h1>
 </header>
 
 <!-- TOAST FEED -->
@@ -43,7 +44,7 @@
 </div>
 }
 
-<div class="container">
+<section class="container" aria-label="Contingut principal de la Xuxedex">
   @if (xuxemons$ | async; as xuxemons) {
   <section class="panel panel-esquerra" aria-label="Selecció de Xuxemon">
     <div class="filtros tipus-filtros" role="group" aria-label="Filtrar per tipus">
@@ -383,7 +384,7 @@
     SORTIR
   </button>
   }
-</div>
+</section>
 
 <!-- MODAL ALIMENTAR -->
 @if (mostrarPanellAlimentar && xuxemonSeleccionado) {
@@ -434,6 +435,7 @@
   </div>
 </div>
 }
+</section>
 
 <!-- MODAL VACUNA -->
 @if (mostrarPanellVacuna && xuxemonSeleccionado) {

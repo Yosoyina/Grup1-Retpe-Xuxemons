@@ -1,6 +1,10 @@
-<h1>Registre</h1>
+<section class="auth-page" aria-labelledby="register-title">
+<header>
+  <h1 id="register-title">Registre</h1>
+</header>
 
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<section aria-label="Formulari de registre">
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" aria-labelledby="register-title">
 
     <!-- nom del jugador -->
     <div>
@@ -81,9 +85,9 @@
 
 @if (showModal) {
 <div class="modal-overlay">
-  <div class="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="register-success-title">
 
-    <h2>Registre correcte!</h2>
+    <h2 id="register-success-title">Registre correcte!</h2>
 
     <p>El teu ID de jugador és:</p>
 
@@ -109,3 +113,5 @@
 }
 
 </form>
+</section>
+</section>
