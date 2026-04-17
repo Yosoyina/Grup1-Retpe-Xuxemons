@@ -39,8 +39,7 @@ services:
       basedatos:
         condition: service_healthy
     command: >
-      sh -c "
-        composer install --no-interaction --prefer-dist &&      
+      sh -c "   
         php artisan config:clear &&
         php artisan jwt:secret --force &&
         php artisan migrate --force &&
