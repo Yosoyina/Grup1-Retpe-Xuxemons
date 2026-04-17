@@ -111,9 +111,9 @@ class UserController extends Controller
 
     // ── TOGGLE ACTIU (ADMIN) ──────────────────────────────
 
-    public function toggleActiu($id)
+    public function toggleActiu(int $id)
     {
-        $user = \App\Models\User::findOrFail($id);
+        $user = \App\Models\User::where('id', $id)->where('role', '!=', 'admin')->firstOrFail();
         $user->actiu = !$user->actiu;
         $user->save();
 

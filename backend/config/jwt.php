@@ -101,7 +101,9 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 60),
+    //Para que el token expire en minutos, para pruebas. En producción, se recomienda un tiempo más largo, como 60 minutos.
+
+    'ttl' => env('JWT_TTL', 120),
 
     /*
     |--------------------------------------------------------------------------
