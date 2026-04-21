@@ -114,6 +114,7 @@ class UserController extends Controller
     public function toggleActiu($id)
     {
         $user = \App\Models\User::findOrFail($id);
+        $user->actiu = !$user->actiu;
         $user->save();
 
         return response()->json([
