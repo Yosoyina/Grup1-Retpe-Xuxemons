@@ -223,7 +223,13 @@
 }
 
 .usuario-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
-.card-inactiva { opacity: 0.65; border-color: rgba(180, 180, 180, 0.6); }
+.card-inactiva {
+  opacity: 0.9;
+  border-color: #e04040;
+  border-left: 5px solid #e04040;
+  background: rgba(224, 64, 64, 0.07);
+}
+.card-inactiva:hover { box-shadow: 0 6px 20px rgba(224,64,64,0.2); }
 
 .usuario-info { display: flex; align-items: center; gap: 12px; min-width: 0; }
 
@@ -333,9 +339,47 @@
 
 .btn-xuxemon      { background: #f0a13a; color: #1a1000; }
 .btn-ver          { background: #9a5bb0; color: #fff; }
-.btn-inventari    { background: var(--green); color: #fff; }
+.btn-inventari    { background: var(--green); color: #fff; width: 130px; }
+.btn-vacunes      { background: #2fa3c8; color: #fff; width: 130px; }
+.btn-fer-admin    { background: #7c4dff; color: #fff; }
+.btn-treure-admin { background: #f57c00; color: #fff; }
 .btn-deshabilitar { background: #e04040; color: #fff; }
-.btn-habilitar    { background: #3fb65c; color: #fff; }
+.btn-habilitar {
+  background: #3fb65c;
+  color: #fff;
+  animation: pulso-habilitar 1.4s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(63, 182, 92, 0.5);
+}
+@keyframes pulso-habilitar {
+  0%   { box-shadow: 0 0 0 0 rgba(63, 182, 92, 0.55); }
+  60%  { box-shadow: 0 0 0 8px rgba(63, 182, 92, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(63, 182, 92, 0); }
+}
+.compte-deshabilitat-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #e04040;
+  background: rgba(224, 64, 64, 0.12);
+  border: 1px solid rgba(224, 64, 64, 0.35);
+  border-radius: 6px;
+  padding: 2px 7px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.acciones-inactiva {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.usuari-deshabilitat-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e04040;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
 .btn-config-save  { background: #4facfe; color: #fff; }
 
 /* ── MISSATGES ───────────────────────────────────── */

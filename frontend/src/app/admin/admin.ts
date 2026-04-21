@@ -42,6 +42,7 @@ export class Admin implements OnInit {
   mensajeError = '';
   modalAbierto = false;
   usuarioAConfirmar: UsuarioAdmin | null = null;
+  usuarioRolAConfirmar: UsuarioAdmin | null = null;
   private apiUrl = 'http://localhost:8000/api/admin';
 
   // Inventari
@@ -50,6 +51,13 @@ export class Admin implements OnInit {
   modalInventariAbierto = false;
   usuarioInventariId: number | null = null;
   afegindoXuxes = false;
+
+  // Vacunes
+  vacunesDisponibles: XuxeItem[] = [];
+  vacunesQuantitats: Record<number, number> = {};
+  modalVacunesAbierto = false;
+  usuarioVacunesId: number | null = null;
+  afegindoVacunes = false;
 
   // Configuració global del sistema
   configItems: SystemConfigItem[] = [];
@@ -231,6 +239,38 @@ export class Admin implements OnInit {
     });
   }
 
+  // Obre el modal de confirmació per canviar el rol d'un usuari
+  pedirConfirmacionRol(usuario: UsuarioAdmin): void {
+    this.usuarioRolAConfirmar = usuario;
+  }
+
+  // Cancel·la el canvi de rol
+  cancelarConfirmacionRol(): void {
+    this.usuarioRolAConfirmar = null;
+  }
+
+  // Confirma el canvi de rol i crida la API
+  confirmarToggleRole(): void {
+    if (!this.usuarioRolAConfirmar) return;
+    const usuario = this.usuarioRolAConfirmar;
+    this.usuarioRolAConfirmar = null;
+
+    this.http.put<{ message: string; role: string }>(
+      `${this.apiUrl}/usuarios/${usuario.id}/toggle-role`, {}
+    ).subscribe({
+      next: (res) => {
+        usuario.role = res.role;
+        this.mensajeExito = res.message;
+        this.mensajeError = '';
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.mensajeError = err.error?.message ?? 'Error al canviar el rol.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   // Función para obtener el nombre completo del usuario a partir de su ID
   getNombreUsuario(userId: number): string {
     const usuario = this.usuarios.find(u => u.id === userId);
@@ -256,8 +296,12 @@ export class Admin implements OnInit {
   cargarXuxesDisponibles(): void {
     this.http.get<{ xuxemons: any[]; xuxes: XuxeItem[] }>(`${this.apiUrl}/inventario/items`).subscribe({
       next: (res) => {
-        this.xuxesDisponibles = res.xuxes;
-        res.xuxes.forEach(x => { this.xuxesQuantitats[x.id] = 1; });
+        this.xuxesDisponibles  = res.xuxes.filter(x => x.apilable);
+        this.vacunesDisponibles = res.xuxes.filter(x => !x.apilable);
+        res.xuxes.forEach(x => {
+          this.xuxesQuantitats[x.id]  = 1;
+          this.vacunesQuantitats[x.id] = 1;
+        });
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error carregant Xuxes disponibles', err),
@@ -277,6 +321,21 @@ export class Admin implements OnInit {
   tancarModalInventari(): void {
     this.modalInventariAbierto = false;
     this.usuarioInventariId = null;
+  }
+
+  // Abre el modal de vacunes para un usuario específico
+  obrirModalVacunes(userId: number): void {
+    this.usuarioVacunesId = userId;
+    this.modalVacunesAbierto = true;
+    this.vacunesDisponibles.forEach(x => { this.vacunesQuantitats[x.id] = 1; });
+    this.mensajeExito = '';
+    this.mensajeError = '';
+  }
+
+  // Cierra el modal de vacunes y resetea las variables relacionadas
+  tancarModalVacunes(): void {
+    this.modalVacunesAbierto = false;
+    this.usuarioVacunesId = null;
   }
 
   // Agrega una Xuxa específica al inventario del usuario
@@ -303,6 +362,36 @@ export class Admin implements OnInit {
         },
         error: (err) => {
           this.mensajeError = err.error?.message ?? 'Error afegint Xuxes';
+          this.mensajeExito = '';
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  // Agrega una Vacuna específica al inventario del usuario
+  afegirVacuna(xuxeId: number): void {
+    const cantidad = this.vacunesQuantitats[xuxeId] ?? 1;
+    if (!this.usuarioVacunesId || !xuxeId || cantidad < 1) return;
+    this.afegindoVacunes = true;
+
+    this.http.post<{ mensaje: string; descartado: number; slots_utilizados: number; max_slots: number }>(
+      `${this.apiUrl}/inventario`,
+      { user_id: this.usuarioVacunesId, xuxe_id: xuxeId, cantidad }
+    ).pipe(finalize(() => { this.afegindoVacunes = false; this.cdr.detectChanges(); }))
+      .subscribe({
+        next: (res) => {
+          if (res.descartado > 0) {
+            this.mensajeError = res.mensaje;
+            this.mensajeExito = '';
+          } else {
+            this.mensajeExito = res.mensaje;
+            this.mensajeError = '';
+          }
+          this.vacunesQuantitats[xuxeId] = 1;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.mensajeError = err.error?.message ?? 'Error afegint Vacunes';
           this.mensajeExito = '';
           this.cdr.detectChanges();
         }

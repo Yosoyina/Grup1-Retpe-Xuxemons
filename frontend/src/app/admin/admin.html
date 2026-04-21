@@ -3,13 +3,13 @@
 
   <div class="admin-nav">
     <button class="nav-tab" [class.activa]="pestanyaActiva === 'usuaris'" (click)="canviarPestanya('usuaris')">
-      👥 Gestió d'Usuaris
+      Gestió d'Usuaris
     </button>
     <button class="nav-tab" [class.activa]="pestanyaActiva === 'config'" (click)="canviarPestanya('config')">
-      ⚙️ Configuració Global
+      Configuració Global
     </button>
     <button class="nav-tab" [class.activa]="pestanyaActiva === 'xuxemons'" (click)="canviarPestanya('xuxemons')">
-      🌱 Xuxes per Créixer
+      Xuxes per Créixer
     </button>
   </div>
 
@@ -25,7 +25,7 @@
     <!-- SECCIÓ ÚNICA USUARIS -->
     <div class="seccio seccio-usuaris">
       <div class="seccio-header">
-        <span class="seccio-icon">👥</span>
+        <span class="seccio-icon"></span>
         <h2>Gestió d'Usuaris</h2>
         <span class="seccio-badge">{{ usuarios.length }} usuaris</span>
       </div>
@@ -65,37 +65,48 @@
           </div>
 
           <!-- Accions -->
+          @if (usuario.actiu) {
           <div class="acciones">
             <div class="acciones-grup">
               <span class="acciones-label">Xuxemons</span>
               <button class="btn-accio btn-xuxemon" (click)="agregarXuxemonAleatorio(usuario.id)"
                 [disabled]="agregandoParaUsuarioId === usuario.id">
-                <span class="btn-icon">🐾</span>
                 {{ agregandoParaUsuarioId === usuario.id ? 'Assignant...' : 'Donar' }}
               </button>
               <button class="btn-accio btn-ver" (click)="cargarXuxemonsUsuario(usuario.id)">
-                <span class="btn-icon">👁</span>
                 Veure
               </button>
             </div>
             <div class="acciones-grup">
               <span class="acciones-label">Inventari</span>
               <button class="btn-accio btn-inventari" (click)="obrirModalInventari(usuario.id)">
-                <span class="btn-icon">🎒</span>
                 Afegir Xuxes
+              </button>
+              <button class="btn-accio btn-vacunes" (click)="obrirModalVacunes(usuario.id)">
+                Afegir Vacunes
               </button>
             </div>
             <div class="acciones-grup">
               <span class="acciones-label">Compte</span>
-              <button class="btn-accio btn-toggle"
-                [class.btn-habilitar]="!usuario.actiu"
-                [class.btn-deshabilitar]="usuario.actiu"
-                (click)="pedirConfirmacionToggle(usuario)">
-                <span class="btn-icon">{{ usuario.actiu ? '🔒' : '🔓' }}</span>
-                {{ usuario.actiu ? 'Deshabilitar' : 'Habilitar' }}
+              <button class="btn-accio btn-toggle btn-deshabilitar" (click)="pedirConfirmacionToggle(usuario)">
+                Deshabilitar
+              </button>
+              <button class="btn-accio btn-rol"
+                [class.btn-fer-admin]="usuario.role !== 'admin'"
+                [class.btn-treure-admin]="usuario.role === 'admin'"
+                (click)="pedirConfirmacionRol(usuario)">
+                {{ usuario.role === 'admin' ? 'Treure Admin' : 'Fer Admin' }}
               </button>
             </div>
           </div>
+          } @else {
+          <div class="acciones acciones-inactiva">
+            <span class="usuari-deshabilitat-text">Usuari deshabilitat</span>
+            <button class="btn-accio btn-toggle btn-habilitar" (click)="pedirConfirmacionToggle(usuario)">
+              Habilitar
+            </button>
+          </div>
+          }
 
         </div>
         }
@@ -115,7 +126,7 @@
   <!-- ── SECCIÓ CONFIGURACIÓ GLOBAL ───────────────────────────── -->
   <div class="seccio seccio-config">
     <div class="seccio-header">
-      <span class="seccio-icon">⚙️</span>
+      <span class="seccio-icon"></span>
       <h2>Configuració del Sistema</h2>
     </div>
 
@@ -167,7 +178,7 @@
   <!-- ── SECCIÓ XUXES PER CRÉIXER ──────────────────────────────── -->
   <div class="seccio seccio-nivell">
     <div class="seccio-header">
-      <span class="seccio-icon">🌱</span>
+      <span class="seccio-icon"></span>
       <h2>Xuxes per Créixer</h2>
       <span class="seccio-badge">Petits i Mitja</span>
     </div>
@@ -183,14 +194,14 @@
       @if (xuxemonsNivell.length > 0) {
       <div class="nivell-taula">
 
-        <div class="nivell-grup-titol">🐣 Xuxemons Petits → Mitja</div>
+        <div class="nivell-grup-titol">Xuxemons Petits → Mitja</div>
         <div class="nivell-grid">
           @for (x of xuxemonsNivellPetit; track x.id) {
           <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
             @if (x.imagen) {
             <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
             } @else {
-            <div class="nivell-img-placeholder">🐣</div>
+            <div class="nivell-img-placeholder"></div>
             }
             <div class="nivell-nom">{{ x.nombre_xuxemon }}</div>
             <div class="nivell-tipus">{{ x.tipo_elemento }}</div>
@@ -213,14 +224,14 @@
           }
         </div>
 
-        <div class="nivell-grup-titol">🐥 Xuxemons Mitja → Gran</div>
+        <div class="nivell-grup-titol">Xuxemons Mitja → Gran</div>
         <div class="nivell-grid">
           @for (x of xuxemonsNivellMitja; track x.id) {
           <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
             @if (x.imagen) {
             <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
             } @else {
-            <div class="nivell-img-placeholder">🐥</div>
+            <div class="nivell-img-placeholder"></div>
             }
             <div class="nivell-nom">{{ x.nombre_xuxemon }}</div>
             <div class="nivell-tipus">{{ x.tipo_elemento }}</div>
@@ -257,7 +268,7 @@
 
   <div class="admin-footer">
     <button class="btn-salir" (click)="salir()">
-      <span>⬅</span> Tornar al Menú
+      Tornar al Menú
     </button>
   </div>
 
@@ -287,12 +298,39 @@
   </div>
   }
 
+  <!-- MODAL CONFIRMACIÓ TOGGLE ROL -->
+  @if (usuarioRolAConfirmar) {
+  <div class="overlay" (click)="cancelarConfirmacionRol()">
+    <div class="modal modal-confirm" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ usuarioRolAConfirmar!.role === 'admin' ? 'Treure permisos Admin' : 'Fer Admin' }}</h2>
+        <button class="btn-cerrar" (click)="cancelarConfirmacionRol()">&#x2715;</button>
+      </div>
+      <div class="confirm-body">
+        <p>
+          Segur que vols
+          <strong>{{ usuarioRolAConfirmar!.role === 'admin' ? 'treure els permisos d\'admin a' : 'donar permisos d\'admin a' }}</strong>
+          <strong>{{ usuarioRolAConfirmar!.nombre }} {{ usuarioRolAConfirmar!.apellidos }}</strong>?
+        </p>
+        <div class="confirm-accions">
+          <button class="btn-cancel" (click)="cancelarConfirmacionRol()">Cancel·lar</button>
+          <button
+            [class]="usuarioRolAConfirmar!.role === 'admin' ? 'btn-treure-admin confirm-btn' : 'btn-fer-admin confirm-btn'"
+            (click)="confirmarToggleRole()">
+            {{ usuarioRolAConfirmar!.role === 'admin' ? 'Sí, treure Admin' : 'Sí, fer Admin' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
   <!-- MODAL INVENTARI -->
   @if (modalInventariAbierto) {
   <div class="overlay" (click)="tancarModalInventari()">
     <div class="modal modal-inventari" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h2>🎒 Afegir Xuxes a {{ getNombreUsuario(usuarioInventariId!) }}</h2>
+        <h2>Afegir Xuxes a {{ getNombreUsuario(usuarioInventariId!) }}</h2>
         <button class="btn-cerrar" (click)="tancarModalInventari()">✕</button>
       </div>
 
@@ -311,18 +349,58 @@
               @if (xuxa.imagen) {
                 <img class="xuxa-img" [src]="'http://localhost:8000/' + xuxa.imagen" [alt]="xuxa.nombre_xuxes">
               } @else {
-                <div class="xuxa-img-placeholder">🍬</div>
+                <div class="xuxa-img-placeholder"></div>
               }
               <div class="xuxa-text">
                 <span class="xuxa-nom">{{ xuxa.nombre_xuxes }}</span>
-                <span class="xuxa-tipus" [class.apilable]="xuxa.apilable">
-                  {{ xuxa.apilable ? 'Apilable' : 'No apilable' }}
-                </span>
               </div>
             </div>
             <div class="xuxa-accio">
               <input type="number" [(ngModel)]="xuxesQuantitats[xuxa.id]" min="1" max="99" class="qty-input">
               <button class="btn-afegir-fila" (click)="afegirXuxa(xuxa.id)" [disabled]="afegindoXuxes">
+                Afegir
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (modalVacunesAbierto) {
+  <div class="overlay" (click)="tancarModalVacunes()">
+    <div class="modal modal-inventari" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Afegir Vacunes a {{ getNombreUsuario(usuarioVacunesId!) }}</h2>
+        <button class="btn-cerrar" (click)="tancarModalVacunes()">✕</button>
+      </div>
+
+      <div class="inventari-form">
+        @if (mensajeExito) {
+        <div class="mensaje exito">✓ {{ mensajeExito }}</div>
+        }
+        @if (mensajeError) {
+        <div class="mensaje error">⚠ {{ mensajeError }}</div>
+        }
+
+        <div class="xuxes-lista">
+          @for (vacuna of vacunesDisponibles; track vacuna.id) {
+          <div class="xuxa-row">
+            <div class="xuxa-info">
+              @if (vacuna.imagen) {
+                <img class="xuxa-img" [src]="'http://localhost:8000/' + vacuna.imagen" [alt]="vacuna.nombre_xuxes">
+              } @else {
+                <div class="xuxa-img-placeholder"></div>
+              }
+              <div class="xuxa-text">
+                <span class="xuxa-nom">{{ vacuna.nombre_xuxes }}</span>
+              </div>
+            </div>
+            <div class="xuxa-accio">
+              <input type="number" [(ngModel)]="vacunesQuantitats[vacuna.id]" min="1" max="99" class="qty-input">
+              <button class="btn-afegir-fila" (click)="afegirVacuna(vacuna.id)" [disabled]="afegindoVacunes">
                 Afegir
               </button>
             </div>
