@@ -1,17 +1,19 @@
 @if (usuari) {
 
-<div class="pagina">
+<section class="pagina" aria-labelledby="perfil-title">
 
-  <h1 class="titol">Perfil d'Usuari</h1>
+  <header>
+    <h1 class="titol" id="perfil-title">Perfil d'Usuari</h1>
+  </header>
 
   <div class="contingut">
 
     <!-- columna esquerra: avatar + id -->
-    <div class="columna-esquerra">
+    <aside class="columna-esquerra" aria-label="Resum del perfil">
 
       <!-- foto de perfil -->
       <div class="cercle-avatar">
-        <img [src]="getAvatarSrc(usuari.avatar)" [alt]="usuari.nombre" class="avatar-img">
+        <img [src]="getAvatarSrc(usuari.avatar)" [alt]="usuari.nombre" class="avatar-img" loading="lazy" decoding="async">
       </div>
 
       <div class="id-jugador">
@@ -22,16 +24,16 @@
       </div>
 
       <!-- boto canviar avatar -->
-      <button class="btn-avatar" (click)="mostrarSeleccioAvatar = !mostrarSeleccioAvatar">
+      <button class="btn-avatar" type="button" (click)="mostrarSeleccioAvatar = !mostrarSeleccioAvatar" [attr.aria-expanded]="mostrarSeleccioAvatar" aria-controls="avatar-grid">
         <img src="/AvatarBoto.png" alt="" class="btn-icon">
         Canviar avatar
       </button>
 
       <!-- seleccio d'avatars -->
       @if (mostrarSeleccioAvatar) {
-      <div class="grid-avatars">
+      <div class="grid-avatars" id="avatar-grid">
         @for (avatar of avatars; track avatar) {
-        <img [src]="getAvatarSrc(avatar)" [alt]="avatar" class="avatar-opcio" (click)="seleccionarAvatar(avatar)">
+        <img [src]="getAvatarSrc(avatar)" [alt]="avatar" class="avatar-opcio" loading="lazy" decoding="async" role="button" tabindex="0" [attr.aria-label]="'Seleccionar avatar ' + avatar" (click)="seleccionarAvatar(avatar)" (keydown.enter)="seleccionarAvatar(avatar)" (keydown.space)="seleccionarAvatar(avatar); $event.preventDefault()">
         }
       </div>
       }
@@ -45,17 +47,17 @@
       }
 
       <!-- boto dona-se de baixa -->
-      <button class="btn-baixa" (click)="mostrarConfirmacio = true">
+      <button class="btn-baixa" type="button" (click)="mostrarConfirmacio = true">
         <img src="/DonarBaixa.png" alt="" class="btn-icon">
         Dona-se de Baixa
       </button>
 
-    </div>
+    </aside>
 
     <!-- columna dreta: formulari -->
-    <div class="columna-dreta">
+    <section class="columna-dreta" aria-labelledby="info-personal-title">
       <div class="card-form">
-        <h2>Informació Personal</h2>
+        <h2 id="info-personal-title">Informació Personal</h2>
 
         <form [formGroup]="editForm" (ngSubmit)="guardarCanvis()">
 
@@ -125,24 +127,24 @@
 
         </form>
       </div>
-    </div>
+    </section>
 
   </div>
 
   <!-- boto sortir baix a la dreta -->
-  <button class="btn-sortir" (click)="tornarAlMenu()">
+  <button class="btn-sortir" type="button" (click)="tornarAlMenu()">
     <img src="/Sortir.png" alt="" class="btn-icon">
     SORTIR
   </button>
 
-</div>
+</section>
 
 <!-- dialeg confirmacio eliminar -->
 @if (mostrarConfirmacio) {
 <div class="modal-overlay">
-  <div class="modal modal-perill">
+  <div class="modal modal-perill" role="dialog" aria-modal="true" aria-labelledby="disable-account-title">
     <div class="modal-icona">⚠️</div>
-    <h3 class="modal-titol">Inhabilitar compte</h3>
+    <h3 class="modal-titol" id="disable-account-title">Inhabilitar compte</h3>
     <p class="modal-text">Estàs a punt d'inhabilitar el teu compte.</p>
     <p class="modal-subtext">Podràs contactar amb un administrador per reactivar-la.</p>
     <div class="modal-botons">
@@ -156,11 +158,11 @@
 <!-- modal dades actualitzades -->
 @if (mostrarModalActualitzat) {
 <div class="modal-overlay" (click)="mostrarModalActualitzat = false">
-  <div class="modal modal-exit" (click)="$event.stopPropagation()">
+  <div class="modal modal-exit" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="profile-updated-title">
     <div class="modal-exit-avatar">
-      <img [src]="getAvatarSrc(usuari.avatar)" [alt]="usuari.nombre" class="modal-avatar-img">
+      <img [src]="getAvatarSrc(usuari.avatar)" [alt]="usuari.nombre" class="modal-avatar-img" loading="lazy" decoding="async">
     </div>
-    <h3 class="modal-titol modal-titol-exit">Perfil actualitzat!</h3>
+    <h3 class="modal-titol modal-titol-exit" id="profile-updated-title">Perfil actualitzat!</h3>
     <p class="modal-exit-subtitol">Els teus canvis s'han desat correctament.</p>
     <button class="btn-tancar-modal" (click)="mostrarModalActualitzat = false">✕ Tancar</button>
   </div>

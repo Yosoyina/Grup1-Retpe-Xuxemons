@@ -1,6 +1,10 @@
-<h1>Login</h1>
+<section class="auth-page" aria-labelledby="login-title">
+<header>
+  <h1 id="login-title">Login</h1>
+</header>
 
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<section aria-label="Formulari d'acces">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" aria-labelledby="login-title">
 
   <!-- id de jugador -->
   <div>
@@ -49,3 +53,5 @@
   </button>
 
 </form>
+</section>
+</section>

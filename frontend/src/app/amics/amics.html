@@ -5,8 +5,10 @@
 <div class="msg msg-error" role="alert" aria-live="polite">✖ {{ missatgeError }}</div>
 }
 
-<div class="pagina">
-  <h1 class="titol">AMICS</h1>
+<section class="pagina" aria-labelledby="amics-title">
+  <header>
+    <h1 class="titol" id="amics-title">AMICS</h1>
+  </header>
 
   <div class="amics-container">
     <div class="cerca-bar">
@@ -170,7 +172,7 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <button class="sortir-btn" type="button" (click)="sortir()" aria-label="Tornar al menu principal">
   <img src="/Sortir.png" alt="" />

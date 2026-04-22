@@ -1,9 +1,9 @@
-<div class="motxilla-wrapper">
+<section class="motxilla-wrapper" aria-labelledby="inventario-title">
 
   <!-- Header -->
   <header class="inv-header">
-    <img class="bag-deco" src="/Moxilla_Inventario.png" alt="Motxilla">
-    <h1 class="inv-title">Motxilla</h1>
+    <img class="bag-deco" src="/Moxilla_Inventario.png" alt="Motxilla" decoding="async">
+    <h1 class="inv-title" id="inventario-title">Motxilla</h1>
   </header>
 
   <!-- Alerta motxilla plena -->
@@ -29,11 +29,14 @@
                  role="button"
                  tabindex="0"
                  (click)="seleccionar(slot)"
-                 (keydown.enter)="seleccionar(slot)">
+                 (keydown.enter)="seleccionar(slot)"
+                 (keydown.space)="seleccionar(slot); $event.preventDefault()">
 
               <img class="slot-img"
                    [src]="slot.xuxe?.imagen"
-                   [alt]="slot.xuxe?.nom" />
+                   [alt]="slot.xuxe?.nom"
+                   loading="lazy"
+                   decoding="async" />
 
               <!-- Apilament x1..x5 -->
               <span class="slot-count"
@@ -87,7 +90,9 @@
 
               <img class="slot-img"
                    [src]="slot.xuxe?.imagen"
-                   [alt]="slot.xuxe?.nom" />
+                   [alt]="slot.xuxe?.nom"
+                   loading="lazy"
+                   decoding="async" />
 
               <span class="badge" [ngClass]="'badge--' + slot.xuxe?.tipus?.toLowerCase()">
                 {{ slot.xuxe?.tipus }}
@@ -117,7 +122,7 @@
 
   </div>
 
-</div>
+</section>
 
 <!-- MODAL DETALL XUXE -->
 @if (slotSeleccionat) {
@@ -129,7 +134,7 @@
 
     <div class="detall-imatge">
       @if (slotSeleccionat.xuxe?.imagen) {
-        <img [src]="slotSeleccionat.xuxe!.imagen" [alt]="slotSeleccionat.xuxe?.nom" />
+        <img [src]="slotSeleccionat.xuxe!.imagen" [alt]="slotSeleccionat.xuxe?.nom" loading="lazy" decoding="async" />
       } @else {
         <div class="detall-placeholder">{{ slotSeleccionat.xuxe?.nom?.charAt(0) }}</div>
       }
