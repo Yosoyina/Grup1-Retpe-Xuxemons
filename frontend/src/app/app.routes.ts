@@ -98,6 +98,16 @@ export const routes: Routes = [
         component: Amics,
       },
       {
+        path: 'batalla',
+        redirectTo: 'menu-principal',
+        pathMatch: 'full'
+      },
+      {
+        path: 'xat',
+        redirectTo: 'menu-principal',
+        pathMatch: 'full'
+      },
+      {
         path: 'admin',
         title: 'Admin',
         data: {
@@ -107,8 +117,16 @@ export const routes: Routes = [
         },
         component: Admin,
         canActivate: [adminGuard]
+      },
+      {
+        path: '**',
+        redirectTo: 'menu-principal'
       }
     ]
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
   }
 
 ];

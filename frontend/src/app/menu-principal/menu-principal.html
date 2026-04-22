@@ -9,37 +9,37 @@
 
       <!-- XUXEDEX -->
       <button class="btn-menu" routerLink="/xuxedex">
-        <img src="/Xuxedex.png" alt="Xuxedex" />
+        <img src="/Xuxedex.png" alt="Xuxedex" decoding="async" />
         <span>XUXEDEX</span>
       </button>
 
       <!-- MOTXILLA -->
       <button class="btn-menu" routerLink="/inventario">
-        <img src="/Moxilla.png" alt="Motxilla" />
+        <img src="/Moxilla.png" alt="Motxilla" decoding="async" />
         <span>MOTXILLA</span>
       </button>
 
       <!-- AMICS -->
       <button class="btn-menu" routerLink="/amics">
-        <img src="/Amics.png" alt="Amics" />
+        <img src="/Amics.png" alt="Amics" decoding="async" />
         <span>AMICS</span>
       </button>
 
       <!-- BATALLA -->
       <button class="btn-menu" routerLink="/batalla">
-        <img src="/Batalla.png" alt="Batalla" />
+        <img src="/Batalla.png" alt="Batalla" decoding="async" />
         <span>BATALLA</span>
       </button>
 
       <!-- XAT -->
       <button class="btn-menu" routerLink="/xat">
-        <img src="/Xat.png" alt="Xat" />
+        <img src="/Xat.png" alt="Xat" decoding="async" />
         <span>XAT</span>
       </button>
 
       <!-- INFO USUARIO -->
       <button class="btn-menu" routerLink="/info-usuari">
-        <img src="/Perfil.png" alt="Perfil" />
+        <img src="/Perfil.png" alt="Perfil" decoding="async" />
         <span>PERFIL</span>
       </button>
 
@@ -51,7 +51,7 @@
     <!-- ADMIN (solo visible si es admin) -->
     @if ((authService.usuari$ | async)?.role === 'admin') {
       <button class="btn-admin" routerLink="/admin">
-        <img src="/admin.png" alt="Admin" />
+        <img src="/admin.png" alt="Admin" decoding="async" />
         <span>ADMIN</span>
       </button>
     }
@@ -83,7 +83,7 @@
       <div class="reward-xuxes-grid">
         @for (xuxe of dailyReward.xuxes; track xuxe.id) {
         <article class="reward-item-card">
-          <img [src]="getRewardImage(xuxe.imagen)" [alt]="xuxe.nombre_xuxes">
+          <img [src]="getRewardImage(xuxe.imagen)" [alt]="xuxe.nombre_xuxes" loading="lazy" decoding="async">
           <strong>{{ xuxe.nombre_xuxes }}</strong>
           <span>x{{ xuxe.cantidad }}</span>
           @if (xuxe.discarded > 0) {
@@ -98,7 +98,7 @@
       <h3>Xuxemon pequeño</h3>
       @if (dailyReward.xuxemon) {
       <article class="reward-xuxemon-card">
-        <img [src]="getRewardImage(dailyReward.xuxemon.imagen)" [alt]="dailyReward.xuxemon.nombre_xuxemon">
+        <img [src]="getRewardImage(dailyReward.xuxemon.imagen)" [alt]="dailyReward.xuxemon.nombre_xuxemon" loading="lazy" decoding="async">
         <div>
           <strong>{{ dailyReward.xuxemon.nombre_xuxemon }}</strong>
           <p>{{ dailyReward.xuxemon.tipo_elemento }} · {{ dailyReward.xuxemon.tamano }}</p>

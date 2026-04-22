@@ -102,7 +102,7 @@
         </div>
         }
         @if (xuxemon.imagen) {
-        <img [src]="xuxemon.imagen" [alt]="'Xuxemon ' + xuxemon.nombre_xuxemon + ', tipus ' + xuxemon.tipo_elemento + ', mida ' + xuxemon.tamano">
+        <img [src]="xuxemon.imagen" [alt]="'Xuxemon ' + xuxemon.nombre_xuxemon + ', tipus ' + xuxemon.tipo_elemento + ', mida ' + xuxemon.tamano" loading="lazy" decoding="async">
         } @else {
         <div class="placeholder-img" aria-hidden="true">{{ xuxemon.nombre_xuxemon.charAt(0) }}</div>
         }
@@ -150,7 +150,7 @@
 
       <div class="detalle-visual">
         @if (xuxemonSeleccionado.imagen) {
-        <img [src]="xuxemonSeleccionado.imagen" [alt]="'Xuxemon ' + xuxemonSeleccionado.nombre_xuxemon + ', tipus ' + xuxemonSeleccionado.tipo_elemento + ', mida ' + xuxemonSeleccionado.tamano">
+        <img [src]="xuxemonSeleccionado.imagen" [alt]="'Xuxemon ' + xuxemonSeleccionado.nombre_xuxemon + ', tipus ' + xuxemonSeleccionado.tipo_elemento + ', mida ' + xuxemonSeleccionado.tamano" loading="lazy" decoding="async">
         } @else {
         <div class="placeholder-img placeholder-gran" aria-hidden="true">{{ xuxemonSeleccionado.nombre_xuxemon.charAt(0)
           }}</div>
@@ -214,7 +214,7 @@
         </div>
         }
         @if (xuxemon.imagen) {
-        <img [src]="xuxemon.imagen" [alt]="'Xuxemon ' + xuxemon.nombre_xuxemon + ', tipus ' + xuxemon.tipo_elemento + ', mida ' + xuxemon.tamano">
+        <img [src]="xuxemon.imagen" [alt]="'Xuxemon ' + xuxemon.nombre_xuxemon + ', tipus ' + xuxemon.tipo_elemento + ', mida ' + xuxemon.tamano" loading="lazy" decoding="async">
         } @else {
         <div class="placeholder-img" aria-hidden="true">{{ xuxemon.nombre_xuxemon.charAt(0) }}</div>
         }
@@ -271,12 +271,12 @@
       </div>
       @if (!evoFase2) {
       <div class="evo-img-before evo-shaking">
-        <img [src]="evoImagenBefore" [alt]="'Xuxemon abans de evolucionar: ' + evoNomBefore">
+        <img [src]="evoImagenBefore" [alt]="'Xuxemon abans de evolucionar: ' + evoNomBefore" decoding="async">
       </div>
       } @else {
       <div class="evo-flash-circle"></div>
       <div class="evo-img-after">
-        <img [src]="evoImagenAfter" [alt]="'Xuxemon evolucionat: ' + evoNomAfter">
+        <img [src]="evoImagenAfter" [alt]="'Xuxemon evolucionat: ' + evoNomAfter" decoding="async">
       </div>
       }
     </div>
@@ -319,7 +319,7 @@
           <div class="etapa-nivell">{{ getNivell(etapa.tamano) }}</div>
           <div class="etapa-img-wrapper">
             @if (etapa.imagen) {
-            <img [src]="etapa.imagen" [alt]="'Xuxemon ' + etapa.nombre_xuxemon + ', mida ' + etapa.tamano">
+            <img [src]="etapa.imagen" [alt]="'Xuxemon ' + etapa.nombre_xuxemon + ', mida ' + etapa.tamano" loading="lazy" decoding="async">
             } @else {
             <div class="placeholder-img">{{ etapa.nombre_xuxemon.charAt(0) }}</div>
             }
@@ -479,7 +479,7 @@
         (click)="seleccionarVacuna(slot)">
         <div class="vacuna-slot-img">
           @if (slot.xuxe?.imagen) {
-          <img [src]="slot.xuxe!.imagen" [alt]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'" />
+          <img [src]="slot.xuxe!.imagen" [alt]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'" loading="lazy" decoding="async" />
           } @else {
           <span class="vacuna-emoji">💊</span>
           }
