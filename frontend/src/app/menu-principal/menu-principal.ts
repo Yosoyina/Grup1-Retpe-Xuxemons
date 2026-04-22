@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
@@ -11,29 +11,23 @@ import { DailyRewardResponse, RewardService } from '../services/reward.service';
   templateUrl: './menu-principal.html',
   styleUrl: './menu-principal.css',
 })
-export class MenuPrincipal {
+export class MenuPrincipal implements OnInit {
   carregant = true;
   rewardModalVisible = false;
   dailyReward: DailyRewardResponse | null = null;
 
-  // En el constructor, verificamos que el backend está disponible y que el token es válido
   constructor(
     public authService: AuthService,
     private router: Router,
     private rewardService: RewardService,
     private inventarioService: InventarioService,
     private cdr: ChangeDetectorRef,
-  ) {
-    // verificar que el backend esta disponible i el token es valid
-    this.authService.getPerfil().subscribe({
-      next: () => {
-        this.checkDailyReward();
-      },
-      error: () => {
-        localStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      }
-    });
+  ) {}
+
+  // intentarAutoLogin a app.component ja ha validat el token abans d'arribar aquí.
+  // Només cal comprovar la recompensa diària.
+  ngOnInit(): void {
+    this.checkDailyReward();
   }
 
   closeRewardModal() {

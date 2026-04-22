@@ -1,29 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { XuxemonService, Xuxemon } from '../services/xuxemon.service';
 import { AdminConfigService, SystemConfigItem, XuxemonNivell } from '../services/admin-config.service';
+import { AdminService, UsuarioAdmin, XuxeItem } from '../services/admin.service';
 import { finalize } from 'rxjs';
-
-interface UsuarioAdmin {
-  id: number;
-  nombre: string;
-  apellidos: string;
-  email: string;
-  id_jugador: string | null;
-  role: string;
-  actiu: boolean;
-  avatar: string | null;
-}
-
-interface XuxeItem {
-  id: number;
-  nombre_xuxes: string;
-  apilable: boolean;
-  imagen?: string;
-}
 
 @Component({
   selector: 'app-admin',
@@ -43,8 +25,6 @@ export class Admin implements OnInit {
   modalAbierto = false;
   usuarioAConfirmar: UsuarioAdmin | null = null;
   usuarioRolAConfirmar: UsuarioAdmin | null = null;
-  private apiUrl = 'http://localhost:8000/api/admin';
-
   // Inventari
   xuxesDisponibles: XuxeItem[] = [];
   xuxesQuantitats: Record<number, number> = {};
@@ -76,7 +56,7 @@ export class Admin implements OnInit {
   // Pestanya activa ('usuaris', 'config', 'xuxemons')
   pestanyaActiva: string = 'usuaris';
 
-  // Getters para filtrar xuxemons por tipo
+  // Getters para filtrar xuxemons per tipus
   get xuxemonsAgua(): Xuxemon[] {
     return this.xuxemons.filter(x => x.tipo_elemento === 'Aigua');
   }
@@ -93,7 +73,7 @@ export class Admin implements OnInit {
 
   // Getters para filtrar xuxemons por tipo
   constructor(
-    private http: HttpClient,
+    private adminService: AdminService,
     private xuxemonService: XuxemonService,
     private adminConfigService: AdminConfigService,
     private cdr: ChangeDetectorRef,
@@ -112,11 +92,9 @@ export class Admin implements OnInit {
   cargarUsuarios(): void {
     this.cargandoUsuarios = true;
 
-    this.http.get<any>(`${this.apiUrl}/usuarios`).subscribe({
+    this.adminService.getUsuarios().subscribe({
       next: (response) => {
-        this.usuarios = Array.isArray(response)
-          ? response
-          : (response?.users ?? response?.data ?? []);
+        this.usuarios = Array.isArray(response) ? response : ((response as any)?.users ?? (response as any)?.data ?? []);
         this.cargandoUsuarios = false;
         this.cdr.detectChanges();
       },
@@ -222,9 +200,7 @@ export class Admin implements OnInit {
     const usuario = this.usuarioAConfirmar;
     this.usuarioAConfirmar = null;
 
-    this.http.put<{ message: string; actiu: boolean }>(
-      `${this.apiUrl}/usuarios/${usuario.id}/toggle`, {}
-    ).subscribe({
+    this.adminService.toggleActiu(usuario.id).subscribe({
       next: (res) => {
         usuario.actiu = res.actiu;
         this.mensajeExito = res.message;
@@ -255,9 +231,7 @@ export class Admin implements OnInit {
     const usuario = this.usuarioRolAConfirmar;
     this.usuarioRolAConfirmar = null;
 
-    this.http.put<{ message: string; role: string }>(
-      `${this.apiUrl}/usuarios/${usuario.id}/toggle-role`, {}
-    ).subscribe({
+    this.adminService.toggleRole(usuario.id).subscribe({
       next: (res) => {
         usuario.role = res.role;
         this.mensajeExito = res.message;
@@ -294,7 +268,7 @@ export class Admin implements OnInit {
 
   // Carga la lista de Xuxes disponibles para agregar al inventario
   cargarXuxesDisponibles(): void {
-    this.http.get<{ xuxemons: any[]; xuxes: XuxeItem[] }>(`${this.apiUrl}/inventario/items`).subscribe({
+    this.adminService.getInventarioItems().subscribe({
       next: (res) => {
         this.xuxesDisponibles  = res.xuxes.filter(x => x.apilable);
         this.vacunesDisponibles = res.xuxes.filter(x => !x.apilable);
@@ -344,10 +318,8 @@ export class Admin implements OnInit {
     if (!this.usuarioInventariId || !xuxeId || cantidad < 1) return;
     this.afegindoXuxes = true;
 
-    this.http.post<{ mensaje: string; descartado: number; slots_utilizados: number; max_slots: number }>(
-      `${this.apiUrl}/inventario`,
-      { user_id: this.usuarioInventariId, xuxe_id: xuxeId, cantidad }
-    ).pipe(finalize(() => { this.afegindoXuxes = false; this.cdr.detectChanges(); }))
+    this.adminService.afegirItem(this.usuarioInventariId, xuxeId, cantidad)
+    .pipe(finalize(() => { this.afegindoXuxes = false; this.cdr.detectChanges(); }))
       .subscribe({
         next: (res) => {
           if (res.descartado > 0) {
@@ -374,10 +346,8 @@ export class Admin implements OnInit {
     if (!this.usuarioVacunesId || !xuxeId || cantidad < 1) return;
     this.afegindoVacunes = true;
 
-    this.http.post<{ mensaje: string; descartado: number; slots_utilizados: number; max_slots: number }>(
-      `${this.apiUrl}/inventario`,
-      { user_id: this.usuarioVacunesId, xuxe_id: xuxeId, cantidad }
-    ).pipe(finalize(() => { this.afegindoVacunes = false; this.cdr.detectChanges(); }))
+    this.adminService.afegirItem(this.usuarioVacunesId, xuxeId, cantidad)
+    .pipe(finalize(() => { this.afegindoVacunes = false; this.cdr.detectChanges(); }))
       .subscribe({
         next: (res) => {
           if (res.descartado > 0) {

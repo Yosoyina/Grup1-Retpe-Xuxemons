@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map, of } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 export interface EtapaEvoluciones {
   id: number;
@@ -50,8 +51,8 @@ export interface AplicarVacunaResult {
 })
 export class XuxemonService {
   xuxemons$ = new BehaviorSubject<Xuxemon[]>([]);
-  private apiUrl = 'http://localhost:8000/api/xuxedex';
-  private adminUrl = 'http://localhost:8000/api/admin/xuxedex';
+  private apiUrl = `${API_URL}/xuxedex`;
+  private adminUrl = `${API_URL}/admin/xuxedex`;
 
   constructor(private http: HttpClient) { }
 
@@ -65,7 +66,7 @@ export class XuxemonService {
       // Converteix la ruta relativa de la imatge a URL completa
       const llistaAmbImatges = llista.map(x => ({
         ...x,
-        imagen: x.imagen && x.imagen !== 'null' && x.imagen.trim() !== '' ? `http://localhost:8000/${x.imagen}` : null
+        imagen: x.imagen && x.imagen !== 'null' && x.imagen.trim() !== '' ? `${API_URL.replace('/api', '')}/${x.imagen}` : null
       }));
       this.xuxemons$.next(llistaAmbImatges);
     });
@@ -101,12 +102,12 @@ export class XuxemonService {
 
   // Mètodes per obtenir les classes CSS segons el tipus i mida del Xuxemon
   getEvoluciones(id: number): Observable<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }> {
-    return this.http.get<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }>(`http://localhost:8000/api/xuxemons/${id}/evolucions`).pipe(
+    return this.http.get<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }>(`${API_URL}/xuxemons/${id}/evolucions`).pipe(
       map(res => ({
         ...res,
         cadena_evolutiva: res.cadena_evolutiva.map(e => ({
           ...e,
-          imagen: e.imagen && e.imagen.trim() !== '' ? `http://localhost:8000/${e.imagen}` : null
+          imagen: e.imagen && e.imagen.trim() !== '' ? `${API_URL.replace('/api', '')}/${e.imagen}` : null
         }))
       }))
     );
@@ -114,17 +115,17 @@ export class XuxemonService {
 
   // Método para evolucionar un Xuxemon dado su ID, devuelve el mensaje y el Xuxemon evolucionado
   evolucionar(id: number): Observable<{ message: string, xuxemon: Xuxemon }> {
-    return this.http.post<{ message: string, xuxemon: Xuxemon }>(`http://localhost:8000/api/xuxemons/${id}/evolucionar`, {});
+    return this.http.post<{ message: string, xuxemon: Xuxemon }>(`${API_URL}/xuxemons/${id}/evolucionar`, {});
   }
 
   // Alimenta un Xuxemon i pot provocar una infecció
   feed(id: number | string, xuxedex_id: number, cantidad: number = 1): Observable<FeedResult> {
-    return this.http.post<FeedResult>(`http://localhost:8000/api/xuxemons/${id}/feed`, { xuxedex_id, cantidad });
+    return this.http.post<FeedResult>(`${API_URL}/xuxemons/${id}/feed`, { xuxedex_id, cantidad });
   }
 
   // Aplica una vacuna de l'inventari a un xuxemon per curar la seva malaltia
   aplicarVacuna(inventario_id: number, xuxedex_id: number): Observable<AplicarVacunaResult> {
-    return this.http.post<AplicarVacunaResult>(`http://localhost:8000/api/vacunes/aplicar`, {
+    return this.http.post<AplicarVacunaResult>(`${API_URL}/vacunes/aplicar`, {
       inventario_id,
       xuxedex_id,
     });
