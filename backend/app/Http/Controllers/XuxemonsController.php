@@ -100,7 +100,7 @@ class XuxemonsController extends Controller
             'nombre_xuxemon' => 'required|string|max:50',
             'tipo_elemento' => 'required|in:Aigua,Terra,Aire',
             'tamano' => 'required|in:Petit,Mitja,Gran',
-            'descripcio' => 'nullable|string',
+            'descripcio' => 'nullable|string|max:500',
             'imagen' => 'nullable|string',
         ]));
 
@@ -126,7 +126,7 @@ class XuxemonsController extends Controller
             'nombre_xuxemon' => 'sometimes|string|max:50',
             'tipo_elemento' => 'sometimes|in:Aigua,Terra,Aire',
             'tamano' => 'sometimes|in:Petit,Mitja,Gran',
-            'descripcio' => 'nullable|string',
+            'descripcio' => 'nullable|string|max:500',
             'imagen' => 'nullable|string',
         ]));
 
@@ -465,11 +465,11 @@ class XuxemonsController extends Controller
     // Retorna els xuxemons d'un usuari específic (per a administradors)
     public function getAdminXuxedex(Request $request)
     {
-        $userId = $request->query('user_id');
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
 
-        if (!$userId) {
-            return response()->json(['error' => 'user_id requerido'], 400);
-        }
+        $userId = $request->query('user_id');
 
         $this->xuxedexService->ensureStarterXuxedex((int) $userId);
 
@@ -512,11 +512,11 @@ class XuxemonsController extends Controller
     // Afegeix un xuxemon aleatori a un usuari (per a administradors)
     public function addXuxemonToUser(Request $request)
     {
-        $userId = $request->input('user_id');
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
 
-        if (!$userId) {
-            return response()->json(['error' => 'user_id requerido'], 400);
-        }
+        $userId = $request->input('user_id');
 
         $this->xuxedexService->ensureStarterXuxedex((int) $userId);
 
