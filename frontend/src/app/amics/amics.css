@@ -61,7 +61,7 @@
   flex-direction: column;
   align-items: center;
   padding: clamp(16px, 2.5vw, 36px) 16px clamp(100px, 10vh, 140px);
-  background-image: url('/Fondo-Principal.png');
+  background-image: url('/Fondo-Principal.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

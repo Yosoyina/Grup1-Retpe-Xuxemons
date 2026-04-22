@@ -1,6 +1,6 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@700;800&display=swap');
 
-/* ── HOST + VARIABLES ────────────────────────────── */
+/* -- HOST + VARIABLES ------------------------------ */
 :host {
   display: block;
   min-height: 100dvh;
@@ -23,7 +23,7 @@
   --transition-btn: filter .12s ease, opacity .12s ease, background-color .12s ease;
 }
 
-/* ── PAGINA ───────────────────────────────────────── */
+/* -- PAGINA ----------------------------------------- */
 .pagina {
   min-height: 100dvh;
   display: flex;
@@ -31,7 +31,7 @@
   align-items: center;
   justify-content: center;
   padding: clamp(14px, 2.2vw, 26px) 16px clamp(96px, 10vh, 140px);
-  background-image: url('/Fondo-Principal.png');
+  background-image: url('/Fondo-Principal.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -50,7 +50,7 @@
   pointer-events: none;
 }
 
-/* ── TITOL ───────────────────────────────────────── */
+/* -- TITOL ----------------------------------------- */
 .titol {
   position: relative;
   z-index: 2;
@@ -68,7 +68,7 @@
   text-shadow: 0 10px 0 rgba(30, 42, 120, .35), 0 18px 30px rgba(0, 0, 0, .26);
 }
 
-/* ── LAYOUT ──────────────────────────────────────── */
+/* -- LAYOUT ---------------------------------------- */
 .contingut {
   position: relative;
   z-index: 2;
@@ -79,7 +79,7 @@
   width: min(1240px, 94vw);
 }
 
-/* ── COLUMNA ESQUERRA ────────────────────────────── */
+/* -- COLUMNA ESQUERRA ------------------------------ */
 .columna-esquerra {
   position: relative;
   display: flex;
@@ -91,7 +91,7 @@
   padding-bottom: 6px;
 }
 
-/* ── AVATAR ──────────────────────────────────────── */
+/* -- AVATAR ---------------------------------------- */
 .cercle-avatar {
   width: clamp(240px, 26vw, 360px);
   height: clamp(240px, 26vw, 360px);
@@ -112,7 +112,7 @@
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .18));
 }
 
-.avatar-img[src="/avatarpordefecto.png"] {
+.avatar-img[src="/avatarpordefecto.webp"] {
   width: 108% !important;
   height: 108% !important;
   object-fit: cover !important;
@@ -120,7 +120,7 @@
   transform: scale(1.3) !important;
 }
 
-/* ── ID JUGADOR ──────────────────────────────────── */
+/* -- ID JUGADOR ------------------------------------ */
 .id-jugador {
   width: min(280px, 86vw);
   background: rgba(255, 255, 255, .88);
@@ -160,10 +160,10 @@
   font-variation-settings: normal;
 }
 
-/* ── ICONES BOTONS ───────────────────────────────── */
+/* -- ICONES BOTONS --------------------------------- */
 .btn-icon { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; pointer-events: none; }
 
-/* ── BOTONS ESQUERRA ─────────────────────────────── */
+/* -- BOTONS ESQUERRA ------------------------------- */
 .btn-avatar,
 .btn-baixa {
   max-width: 92vw;
@@ -200,7 +200,7 @@
   font-size: 1.12rem;
 }
 
-/* ── GRID AVATARS ────────────────────────────────── */
+/* -- GRID AVATARS ---------------------------------- */
 .grid-avatars {
   position: absolute;
   left: 50%;
@@ -242,7 +242,7 @@
   transition: var(--transition-btn);
 }
 
-/* ── MISSATGES ───────────────────────────────────── */
+/* -- MISSATGES ------------------------------------- */
 .msg-exit,
 .msg-error {
   font-weight: 900;
@@ -257,7 +257,7 @@
 .msg-exit  { color: #1e8e50; }
 .msg-error { color: #c9443a; }
 
-/* ── COLUMNA DRETA ───────────────────────────────── */
+/* -- COLUMNA DRETA --------------------------------- */
 .columna-dreta { flex: 1; max-width: 760px; width: 100%; z-index: 2; }
 
 .card-form {
@@ -301,7 +301,7 @@
   box-shadow: 0 16px 24px rgba(0, 0, 0, .16);
 }
 
-/* ── CAMPS FORMULARI ─────────────────────────────── */
+/* -- CAMPS FORMULARI ------------------------------- */
 .fila-dos { display: flex; gap: 26px; }
 .fila-dos .camp { flex: 1; }
 .camp { display: flex; flex-direction: column; margin-bottom: 18px; }
@@ -353,7 +353,7 @@ input:focus {
   width: fit-content;
 }
 
-/* ── BOTONS FORMULARI + SORTIR ───────────────────── */
+/* -- BOTONS FORMULARI + SORTIR --------------------- */
 .btn-guardar,
 .btn-sortir,
 .btn-tancar-modal {
@@ -407,7 +407,7 @@ input:focus {
 
 .boto-guardar-container { display: flex; justify-content: center; margin-top: 6px; }
 
-/* ── HOVER GLOBAL BOTONS ─────────────────────────── */
+/* -- HOVER GLOBAL BOTONS --------------------------- */
 .btn-avatar:hover, .btn-baixa:hover,
 .btn-guardar:hover, .btn-sortir:hover,
 .btn-copiar:hover,  .avatar-opcio:hover,
@@ -419,7 +419,7 @@ input:focus {
 .btn-guardar:focus-visible, .btn-sortir:focus-visible,
 .btn-copiar:focus-visible { outline: none !important; box-shadow: none !important; }
 
-/* ── MODAL ───────────────────────────────────────── */
+/* -- MODAL ----------------------------------------- */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -440,7 +440,7 @@ input:focus {
   box-shadow: 0 26px 60px rgba(0, 0, 0, .30);
 }
 
-/* ── MODAL PERILL ────────────────────────────────── */
+/* -- MODAL PERILL ---------------------------------- */
 .modal-perill {
   border-color: #e53935;
   max-width: 420px;
@@ -485,7 +485,7 @@ input:focus {
 
 .btn-cancelar:hover { filter: brightness(0.97); }
 
-/* ── MODAL EXIT ──────────────────────────────────── */
+/* -- MODAL EXIT ------------------------------------ */
 .modal-exit {
   border-color: var(--yellow-2);
   border-width: 10px;
@@ -537,7 +537,7 @@ input:focus {
   object-position: center bottom;
 }
 
-.modal-avatar-img[src="/avatarpordefecto.png"] {
+.modal-avatar-img[src="/avatarpordefecto.webp"] {
   width: 108% !important;
   height: 108% !important;
   object-fit: cover !important;
@@ -560,7 +560,7 @@ input:focus {
 
 .modal-exit-subtitol { font-size: 18px; font-weight: 700; color: black; text-shadow: 0 1px 5px rgba(0, 0, 0, .40); margin: 0 0 22px; }
 
-/* ── RESPONSIVE ──────────────────────────────────── */
+/* -- RESPONSIVE ------------------------------------ */
 @media (max-width: 980px) {
   .contingut  { gap: 28px; }
   .card-form  { padding: 88px 28px 42px; }

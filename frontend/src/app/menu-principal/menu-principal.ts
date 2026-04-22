@@ -34,7 +34,7 @@ export class MenuPrincipal implements OnInit {
   }
 
   getRewardImage(path?: string | null): string {
-    return path ? `/${path}` : '/23.png';
+    return path ? `/${path}` : '/23.webp';
   }
 
   // Función para cerrar sesión
