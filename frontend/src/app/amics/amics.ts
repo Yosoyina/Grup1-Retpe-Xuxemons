@@ -2,7 +2,7 @@ import { Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged, filter, switchMap, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, merge, switchMap, Subscription, Subject } from 'rxjs';
 import { AmicsService, Amic, PeticioAmistat } from '../services/amics.service';
 
 @Component({
@@ -41,8 +41,10 @@ export class Amics implements OnDestroy {
 
   // ID del amigo que debe animarse al entrar, guardado mientras se espera que llegue de la API
   private amicPendentAnimacioId: number | null = null;
-  // Almacén de suscripciones para poder limpiarlas al destruir el componente
+  // Almacén de suscripcions per poder netejar-les en destruir el component
   private subs: Subscription[] = [];
+  // Subject per disparar la cerca manualment (botó o Enter) sense duplicar la petició del stream reactiu
+  private cercaManual$ = new Subject<string>();
   // Timers para controlar la duración de las animaciones de entrada y salida
   private timeoutAnimacioEntrada: ReturnType<typeof setTimeout> | null = null;
   private timeoutAnimacioSortida: ReturnType<typeof setTimeout> | null = null;
@@ -86,11 +88,11 @@ export class Amics implements OnDestroy {
     );
 
     this.subs.push(
-      // Búsqueda reactiva: espera 300ms tras cada tecla, ignora repetidos
-      // y solo busca si hay 3 o más caracteres para no saturar la API
-      this.cercaBusqueda.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
+      // Un sol stream: unifica les tecles (amb debounce) i els clicks manuals del botó/Enter
+      merge(
+        this.cercaBusqueda.valueChanges.pipe(debounceTime(300), distinctUntilChanged()),
+        this.cercaManual$
+      ).pipe(
         filter(q => (q ?? '').trim().length >= 3),
         switchMap(q => {
           this.cercant = true;
@@ -111,7 +113,7 @@ export class Amics implements OnDestroy {
     );
 
     this.subs.push(
-      // Si el texto buscado tiene menos de 3 caracteres, limpiamos los resultados
+      // Si el text buscat té menys de 3 caràcters, netejem els resultats
       this.cercaBusqueda.valueChanges.pipe(
         filter(q => (q ?? '').trim().length < 3),
       ).subscribe(() => {
@@ -124,6 +126,7 @@ export class Amics implements OnDestroy {
   // Limpieza al destruir el componente: cancelamos suscripciones y timers pendientes
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe());
+    this.cercaManual$.complete();
     if (this.timeoutAnimacioEntrada) clearTimeout(this.timeoutAnimacioEntrada);
     if (this.timeoutAnimacioSortida) clearTimeout(this.timeoutAnimacioSortida);
   }
@@ -217,25 +220,12 @@ export class Amics implements OnDestroy {
     return '/Imatges/Xuxemons/' + avatar;
   }
 
-  // Búsqueda manual (por si el usuario pulsa el botón en lugar de esperar el debounce)
+  // Cerca manual: emet al Subject compartit amb el stream reactiu (no fa cap crida HTTP addicional)
   cercar(): void {
     const q = (this.cercaBusqueda.value ?? '').trim();
-    if (q.length < 3) return;
-
-    this.cercant = true;
-    this.cdr.markForCheck();
-
-    this.amicsService.cercarUsuaris(q).subscribe({
-      next: resultats => {
-        this.resultatsCerca = resultats;
-        this.cercant = false;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.cercant = false;
-        this.cdr.markForCheck();
-      },
-    });
+    if (q.length >= 3) {
+      this.cercaManual$.next(q);
+    }
   }
 
   // Navega de vuelta al menú principal

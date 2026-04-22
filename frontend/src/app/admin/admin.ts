@@ -96,19 +96,19 @@ export class Admin implements OnInit {
       next: (response) => {
         this.usuarios = Array.isArray(response) ? response : ((response as any)?.users ?? (response as any)?.data ?? []);
         this.cargandoUsuarios = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error cargando usuarios', err);
-        if (err.status === 401) {
-          this.mensajeError = 'Sesion caducada. Vuelve a iniciar sesion.';
-        } else if (err.status === 403) {
-          this.mensajeError = 'No tienes permisos de admin para ver usuarios.';
-        } else {
-          this.mensajeError = 'Error al cargar usuarios';
-        }
-        this.cargandoUsuarios = false;
-        this.cdr.detectChanges();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando usuarios', err);
+          if (err.status === 401) {
+            this.mensajeError = 'Sesion caducada. Vuelve a iniciar sesion.';
+          } else if (err.status === 403) {
+            this.mensajeError = 'No tienes permisos de admin para ver usuarios.';
+          } else {
+            this.mensajeError = 'Error al cargar usuarios';
+          }
+          this.cargandoUsuarios = false;
+          this.cdr.detectChanges();
       }
     });
   }
@@ -131,13 +131,13 @@ export class Admin implements OnInit {
           imagen: x.imagen ? `http://localhost:8000/${x.imagen}` : null
         }));
         this.cargandoXuxemons = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error cargando xuxemons', err);
-        this.mensajeError = 'Error al cargar Xuxemons';
-        this.cargandoXuxemons = false;
-        this.cdr.detectChanges();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando xuxemons', err);
+          this.mensajeError = 'Error al cargar Xuxemons';
+          this.cargandoXuxemons = false;
+          this.cdr.detectChanges();
       }
     });
   }
@@ -319,7 +319,7 @@ export class Admin implements OnInit {
     this.afegindoXuxes = true;
 
     this.adminService.afegirItem(this.usuarioInventariId, xuxeId, cantidad)
-    .pipe(finalize(() => { this.afegindoXuxes = false; this.cdr.detectChanges(); }))
+      .pipe(finalize(() => { this.afegindoXuxes = false; this.cdr.detectChanges(); }))
       .subscribe({
         next: (res) => {
           if (res.descartado > 0) {
@@ -347,7 +347,7 @@ export class Admin implements OnInit {
     this.afegindoVacunes = true;
 
     this.adminService.afegirItem(this.usuarioVacunesId, xuxeId, cantidad)
-    .pipe(finalize(() => { this.afegindoVacunes = false; this.cdr.detectChanges(); }))
+      .pipe(finalize(() => { this.afegindoVacunes = false; this.cdr.detectChanges(); }))
       .subscribe({
         next: (res) => {
           if (res.descartado > 0) {
@@ -391,7 +391,7 @@ export class Admin implements OnInit {
     this.configMissatgeError = '';
 
     this.adminConfigService.updateConfig(clave, valor).pipe(
-      finalize(() => { this.guardantConfig[clave] = false; this.cdr.detectChanges(); })
+        finalize(() => { this.guardantConfig[clave] = false; this.cdr.detectChanges(); })
     ).subscribe({
       next: (res) => {
         this.configMissatgeExito = res.message;
@@ -447,7 +447,7 @@ export class Admin implements OnInit {
     this.nivellMissatgeError = '';
 
     this.adminConfigService.updateXuxesPerPujar(xuxemon.id, valor).pipe(
-      finalize(() => { this.guardantNivell[xuxemon.id] = false; this.cdr.detectChanges(); })
+        finalize(() => { this.guardantNivell[xuxemon.id] = false; this.cdr.detectChanges(); })
     ).subscribe({
       next: (res) => {
         this.nivellMissatgeExito = res.message;

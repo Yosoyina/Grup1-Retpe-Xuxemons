@@ -12,7 +12,6 @@ import { DailyRewardResponse, RewardService } from '../services/reward.service';
   styleUrl: './menu-principal.css',
 })
 export class MenuPrincipal implements OnInit {
-  carregant = true;
   rewardModalVisible = false;
   dailyReward: DailyRewardResponse | null = null;
 
@@ -59,12 +58,10 @@ export class MenuPrincipal implements OnInit {
           this.inventarioService.cargarInventario();
         }
 
-        this.carregant = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error obteniendo la recompensa diaria:', error);
-        this.carregant = false;
         this.cdr.detectChanges();
       }
     });
