@@ -44,7 +44,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $role,
-            'avatar' => 'avatarpordefecto.png',
+            'avatar' => 'avatarpordefecto.webp',
         ]);
 
         $this->xuxedexService->ensureStarterXuxedex($user->id);

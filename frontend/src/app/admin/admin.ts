@@ -252,6 +252,12 @@ export class Admin implements OnInit {
   }
 
 
+  // Retorna la URL correcta de l'avatar de l'usuari
+  getAvatarSrc(avatar: string | null): string {
+    if (!avatar || avatar.startsWith('avatarpordefecto')) return '/avatarpordefecto.webp';
+    return '/Imatges/Xuxemons/' + avatar;
+  }
+
   // Función para obtener las iniciales del usuario a partir de su nombre y apellidos
   getIniciales(nombre: string, apellidos: string): string {
     const n = (nombre || '').trim().charAt(0);

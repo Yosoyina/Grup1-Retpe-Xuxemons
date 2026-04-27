@@ -216,7 +216,7 @@ export class Amics implements OnDestroy {
 
   // Devuelve la ruta de la imagen del avatar; si no tiene, usa el avatar por defecto
   getAvatarSrc(avatar: string | null): string {
-    if (!avatar || avatar === 'avatarpordefecto.webp') return '/avatarpordefecto.webp';
+    if (!avatar || avatar.startsWith('avatarpordefecto')) return '/avatarpordefecto.webp';
     return '/Imatges/Xuxemons/' + avatar;
   }
 

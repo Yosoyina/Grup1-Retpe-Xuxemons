@@ -249,8 +249,10 @@
   flex-shrink: 0;
   overflow: hidden;
 }
+.avatar.avatar-amb-img { background: #f0f0f0; }
 
 .avatar-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.avatar-img-default { position: absolute; width: 140%; height: 140%; top: 60%; left: 50%; transform: translate(-50%, -50%); object-fit: cover; background: #f0f0f0; border-radius: 50%; }
 
 .datos { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 

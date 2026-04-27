@@ -19,25 +19,25 @@ class InventarioSeeder extends Seeder
             [
                 'nombre_xuxes' => 'Cura Xuxe',
                 'descripcio'   => 'Una xuxa ardent que escalfa la motxilla.',
-                'imagen'       => 'Imatges/Xuxes/CuraXuxe.png',
+                'imagen'       => 'Imatges/Xuxes/CuraXuxe.webp',
                 'apilable'     => true,
             ],
             [
                 'nombre_xuxes' => "Xucolate",
                 'descripcio'   => 'Una xuxa sòlida com una roca.',
-                'imagen'       => 'Imatges/Xuxes/Xucolate.png',
+                'imagen'       => 'Imatges/Xuxes/Xucolate.webp',
                 'apilable'     => true,
             ],
             [
                 'nombre_xuxes' => 'Soda Prime',
                 'descripcio'   => 'Una xuxa fresca i refrescant.',
-                'imagen'       => 'Imatges/Xuxes/SodaPrime.png',
+                'imagen'       => 'Imatges/Xuxes/SodaPrime.webp',
                 'apilable'     => true,
             ],
             [
                 'nombre_xuxes' => 'XuxEvo',
                 'descripcio'   => 'Xuxe para evolucionar els teus xuxemons.',
-                'imagen'       => 'Imatges/Xuxes/XuxEvos.png',
+                'imagen'       => 'Imatges/Xuxes/XuxEvos.webp',
                 'apilable'     => true,
             ],
         ];

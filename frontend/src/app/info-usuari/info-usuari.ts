@@ -95,8 +95,8 @@ export class InfoUsuari {
   }
 
   // retorna la URL correcta per a cada avatar
-  getAvatarSrc(avatar: string): string {
-    if (!avatar || avatar === 'avatarpordefecto.webp') {
+  getAvatarSrc(avatar: string | null): string {
+    if (!avatar || avatar.startsWith('avatarpordefecto')) {
       return '/avatarpordefecto.webp';
     }
     return '/Imatges/Xuxemons/' + avatar;
