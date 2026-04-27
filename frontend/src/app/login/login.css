@@ -1,39 +1,34 @@
-/* ═══════════════════════════════════════════════════════
-   LOGIN  –  Variables + Estils
-   Tipografies: Fredoka (H1) · Nunito (H2-H4) · Inter (UI)
-   ═══════════════════════════════════════════════════════ */
-
 /* ── Variables ───────────────────────────────────────── */
 :host {
   /* Colors */
-  --clr-brand:        #ffd21f;
-  --clr-brand-hover:  #ffcc00;
-  --clr-brand-focus:  rgba(255, 204, 0, .28);
+  --clr-brand: #ffd21f;
+  --clr-brand-hover: #ffcc00;
+  --clr-brand-focus: rgba(255, 204, 0, .28);
   --clr-brand-border: rgba(255, 208, 0, .95);
-  --clr-text:         #1c1c1c;
-  --clr-text-soft:    #2b2b2b;
-  --clr-placeholder:  rgba(40, 40, 40, .52);
-  --clr-error:        #dc2626;
-  --clr-success:      #16a34a;
-  --clr-form-bg:      rgba(255, 255, 255, .58);
-  --clr-input-bg:     rgba(255, 255, 255, .86);
-  --clr-overlay-1:    rgba(255, 255, 255, .08);
-  --clr-overlay-2:    rgba(255, 255, 255, .60);
+  --clr-text: #1c1c1c;
+  --clr-text-soft: #2b2b2b;
+  --clr-placeholder: rgba(40, 40, 40, .52);
+  --clr-error: #dc2626;
+  --clr-success: #16a34a;
+  --clr-form-bg: rgba(255, 255, 255, .58);
+  --clr-input-bg: rgba(255, 255, 255, .86);
+  --clr-overlay-1: rgba(255, 255, 255, .08);
+  --clr-overlay-2: rgba(255, 255, 255, .60);
 
   /* Tipografies (jerarquia del projecte) */
-  --font-title:   'Fredoka',  system-ui, sans-serif;
-  --font-heading: 'Nunito',   system-ui, sans-serif;
-  --font-ui:      'Inter',    system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-title: 'Fredoka', system-ui, sans-serif;
+  --font-heading: 'Nunito', system-ui, sans-serif;
+  --font-ui: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
 
   /* Mides de text */
-  --fs-h1:      72px;
-  --fs-body:    16px;
+  --fs-h1: 72px;
+  --fs-body: 16px;
   --fs-caption: 14px;
 
   /* Pesos */
-  --fw-regular:  400;
+  --fw-regular: 400;
   --fw-semibold: 600;
-  --fw-bold:     700;
+  --fw-bold: 700;
 
   /* Forma */
   --radius-pill: 999px;
@@ -41,7 +36,7 @@
 
   /* Transicions */
   --ease-quick: .12s ease;
-  --ease-std:   .18s ease;
+  --ease-std: .18s ease;
 
   /* Layout */
   min-height: 100dvh;
@@ -73,12 +68,10 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at 50% 40%,
-    rgba(255, 255, 255, .10),
-    rgba(255, 255, 255, .04) 55%,
-    rgba(0, 0, 0, .08) 100%
-  );
+  background: radial-gradient(circle at 50% 40%,
+      rgba(255, 255, 255, .10),
+      rgba(255, 255, 255, .04) 55%,
+      rgba(0, 0, 0, .08) 100%);
   z-index: -1;
 }
 
@@ -86,10 +79,12 @@
 h1 {
   font-family: var(--font-title);
   font-weight: var(--fw-bold);
-  font-size:   var(--fs-h1);
+  font-size: var(--fs-h1);
   position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
@@ -100,26 +95,27 @@ h1 {
 form {
   width: min(560px, 92vw);
   padding:
-    clamp(18px, 2.2vh, 26px)
-    clamp(16px, 2.2vw, 26px)
-    clamp(16px, 2vh, 22px);
-  border-radius:   var(--radius-card);
-  box-sizing:      border-box;
-  background:      var(--clr-form-bg);
-  border:          4px solid var(--clr-brand-border);
-  box-shadow:      0 18px 40px rgba(0, 0, 0, .26),
-                   inset 0 0 0 1px var(--clr-overlay-2);
+    clamp(18px, 2.2vh, 26px) clamp(16px, 2.2vw, 26px) clamp(16px, 2vh, 22px);
+  border-radius: var(--radius-card);
+  box-sizing: border-box;
+  background: var(--clr-form-bg);
+  border: 4px solid var(--clr-brand-border);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .26),
+    inset 0 0 0 1px var(--clr-overlay-2);
   backdrop-filter: blur(12px);
   max-height: calc(100dvh - 40px);
   overflow: hidden;
 }
 
-form > div { margin-bottom: 14px; }
+form>div {
+  margin-bottom: 14px;
+}
 
 /* ── Labels (sr-only) ────────────────────────────────── */
 label {
   position: absolute;
-  width: 1px; height: 1px;
+  width: 1px;
+  height: 1px;
   margin: -1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
@@ -133,85 +129,92 @@ input {
   height: 52px;
   padding: 0 18px;
   border-radius: var(--radius-pill);
-  box-sizing:    border-box;
-  background:    var(--clr-input-bg);
-  border:        3px solid var(--clr-brand-border);
-  font-family:   var(--font-ui);
-  font-weight:   var(--fw-regular);
-  font-size:     var(--fs-body);
-  color:         var(--clr-text);
+  box-sizing: border-box;
+  background: var(--clr-input-bg);
+  border: 3px solid var(--clr-brand-border);
+  font-family: var(--font-ui);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body);
+  color: var(--clr-text);
   outline: none;
   transition: box-shadow var(--ease-std), border-color var(--ease-std);
 }
 
 /* Placeholder · Inter Regular 14px (Caption) */
 input::placeholder {
-  font-family:  var(--font-ui);
-  font-weight:  var(--fw-regular);
-  font-size:    var(--fs-caption);
-  color:        var(--clr-placeholder);
+  font-family: var(--font-ui);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-caption);
+  color: var(--clr-placeholder);
 }
 
 input:focus {
   border-color: var(--clr-brand-hover);
-  box-shadow:   0 0 0 6px var(--clr-brand-focus);
+  box-shadow: 0 0 0 6px var(--clr-brand-focus);
 }
 
 /* ── Missatges · Inter Regular 14px (Caption) ────────── */
 .missatge-error,
 .missatge-exit {
-  display:     block;
-  margin-top:  4px;
+  display: block;
+  margin-top: 4px;
   font-family: var(--font-ui);
   font-weight: var(--fw-regular);
-  font-size:   var(--fs-caption);
+  font-size: var(--fs-caption);
   line-height: 1.3;
 }
 
-.missatge-error { color: var(--clr-error);   }
-.missatge-exit  { color: var(--clr-success); }
+.missatge-error {
+  color: var(--clr-error);
+}
+
+.missatge-exit {
+  color: var(--clr-success);
+}
 
 /* ── Paràgraf i link · Inter Regular/SemiBold ────────── */
 p {
-  margin:      8px 0 4px;
+  margin: 8px 0 4px;
   font-family: var(--font-ui);
   font-weight: var(--fw-regular);
-  font-size:   var(--fs-body);
-  color:       var(--clr-text-soft);
+  font-size: var(--fs-body);
+  color: var(--clr-text-soft);
 }
 
 p a {
-  font-family:     var(--font-ui);
-  font-weight:     var(--fw-semibold);
-  font-size:       var(--fs-caption);
-  color:           var(--clr-text-soft);
+  font-family: var(--font-ui);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-caption);
+  color: var(--clr-text-soft);
   text-decoration: none;
-  transition:      opacity var(--ease-quick);
+  transition: opacity var(--ease-quick);
 }
 
-p a:hover { text-decoration: underline; }
+p a:hover {
+  text-decoration: underline;
+}
 
 /* ── Botó Submit · Inter SemiBold 16px (Bold) ────────── */
 button[type="submit"] {
-  width:          100%;
-  height:         56px;
-  margin-top:     8px;
-  border:         none;
-  border-radius:  var(--radius-pill);
-  background:     var(--clr-brand);
-  color:          #111;
-  font-family:    var(--font-ui);
-  font-weight:    var(--fw-semibold);
-  font-size:      var(--fs-body);
+  width: 100%;
+  height: 56px;
+  margin-top: 8px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--clr-brand);
+  color: #111;
+  font-family: var(--font-ui);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-body);
   letter-spacing: .8px;
   text-transform: uppercase;
-  box-shadow:     0 14px 26px rgba(0, 0, 0, .22);
-  cursor:         pointer;
-  transition:     transform var(--ease-quick), filter var(--ease-std);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, .22);
+  cursor: pointer;
+  transition: transform var(--ease-quick), filter var(--ease-std);
 }
 
 button[type="submit"]:hover:not(:disabled) {
-  filter:    brightness(1.05);
+  filter: brightness(1.05);
   transform: translateY(-1px);
 }
 
@@ -220,15 +223,15 @@ button[type="submit"]:active:not(:disabled) {
 }
 
 button:disabled {
-  opacity:    .62;
-  cursor:     not-allowed;
+  opacity: .62;
+  cursor: not-allowed;
   box-shadow: none;
 }
 
 /* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 520px) {
   :host {
-    background-image:    url("/23.webp");
+    background-image: url("/23.webp");
     background-position: 50% 6%;
   }
 }
