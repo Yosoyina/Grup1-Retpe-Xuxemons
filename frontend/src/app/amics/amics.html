@@ -134,27 +134,6 @@
               </div>
 
               <div class="amic-botons">
-                @if (confirmantEliminar === amic.id) {
-                <div class="confirmacio-row">
-                  <span class="confirmacio-text">Segur?</span>
-                  <button
-                    type="button"
-                    class="btn-confirmar-si"
-                    (click)="eliminarAmic(amic)"
-                    [disabled]="estaEliminantAmic(amic.id)"
-                    aria-label="Confirmar eliminacio de {{ amic.nombre }}">
-                    Si
-                  </button>
-                  <button
-                    type="button"
-                    class="btn-confirmar-no"
-                    (click)="cancelarEliminar()"
-                    [disabled]="estaEliminantAmic(amic.id)"
-                    aria-label="Cancelar">
-                    No
-                  </button>
-                </div>
-                } @else {
                 <button
                   type="button"
                   class="btn-eliminar"
@@ -163,7 +142,6 @@
                   aria-label="Eliminar {{ amic.nombre }} de la llista d'amics">
                   ELIMINAR
                 </button>
-                }
               </div>
             </li>
             }
@@ -178,3 +156,13 @@
   <img src="/Sortir.webp" alt="" />
   SORTIR
 </button>
+
+<!-- Diàleg de confirmació reutilitzable (@Input/@Output) -->
+<app-confirm-dialog
+  [visible]="confirmantEliminar !== null"
+  [missatge]="'Segur que vols eliminar ' + (amicAConfirmar?.nombre ?? '') + ' de la llista d\'amics?'"
+  labelConfirmar="Eliminar"
+  labelCancelar="Cancel·lar"
+  (confirmat)="onConfirmatEliminar()"
+  (cancelat)="cancelarEliminar()">
+</app-confirm-dialog>

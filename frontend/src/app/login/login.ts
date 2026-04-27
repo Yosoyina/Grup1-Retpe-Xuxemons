@@ -14,7 +14,6 @@ import { Router, RouterLink } from '@angular/router';
 export class LoginComponent {
   errorMessage = '';
   isLoading = false;
-  successMessage = '';
 
   // Para controlar cuándo mostrar los errores de validación
   submitted = false;
@@ -43,7 +42,6 @@ export class LoginComponent {
 
     this.isLoading = true;
     this.errorMessage = '';
-    this.successMessage = '';
 
     this.authService.login(this.loginForm.getRawValue() as any).subscribe({
       next: () => {

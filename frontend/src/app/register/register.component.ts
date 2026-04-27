@@ -16,11 +16,18 @@ import { ChangeDetectorRef } from '@angular/core';
 export class RegisterComponent {
 
   errorMessage = '';
-  successMessage = '';
   isLoading = false;
   showModal = false;
   idJugadorGenerat = '';
   submitted = false;
+
+  // Preview de l'ID de jugador que es generarà (format: #Nom0000)
+  get previewId(): string {
+    const nombre = (this.registerForm.get('nombre')?.value || '').trim();
+    if (!nombre) return '';
+    const prefix = nombre.charAt(0).toUpperCase() + nombre.slice(1, 4).toLowerCase();
+    return `#${prefix}0000`;
+  }
 
   // FormGroup para el formulario de registro
   registerForm = new FormGroup({

@@ -190,7 +190,7 @@
             @for (x of xuxemonsNivellPetit; track x.id) {
             <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
               @if (x.imagen) {
-              <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
+              <img [src]="baseUrl + '/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
               } @else {
               <div class="nivell-img-placeholder"></div>
               }
@@ -212,7 +212,7 @@
             @for (x of xuxemonsNivellMitja; track x.id) {
             <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
               @if (x.imagen) {
-              <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
+              <img [src]="baseUrl + '/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
               } @else {
               <div class="nivell-img-placeholder"></div>
               }
@@ -323,7 +323,7 @@
           <div class="xuxa-row">
             <div class="xuxa-info">
               @if (xuxa.imagen) {
-              <img class="xuxa-img" [src]="'http://localhost:8000/' + xuxa.imagen" [alt]="xuxa.nombre_xuxes">
+              <img class="xuxa-img" [src]="baseUrl + '/' + xuxa.imagen" [alt]="xuxa.nombre_xuxes">
               } @else {
               <div class="xuxa-img-placeholder"></div>
               }
@@ -366,7 +366,7 @@
           <div class="xuxa-row">
             <div class="xuxa-info">
               @if (vacuna.imagen) {
-              <img class="xuxa-img" [src]="'http://localhost:8000/' + vacuna.imagen" [alt]="vacuna.nombre_xuxes">
+              <img class="xuxa-img" [src]="baseUrl + '/' + vacuna.imagen" [alt]="vacuna.nombre_xuxes">
               } @else {
               <div class="xuxa-img-placeholder"></div>
               }

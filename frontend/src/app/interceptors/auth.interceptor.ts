@@ -19,7 +19,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         localStorage.removeItem('token');
         // No redirigim des d'aquí si és la crida de validació inicial del token
         // (intentarAutoLogin ja gestiona el seu propi error i evita cascada de redirects)
-        const isPerfilCall = req.url.includes('/api/perfil');
+        const isPerfilCall = req.url.includes('/api/profile');
         if (!isPerfilCall) {
           router.navigate(['/login']);
         }

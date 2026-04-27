@@ -36,7 +36,6 @@ interface InventarioItemApi {
 }
 
 // API_URL importada de api.config
-const MAX_STACK = 5;
 const APILABLE_SLOTS = 10;
 const NO_APILABLE_SLOTS = 10;
 
@@ -125,55 +124,5 @@ export class InventarioService {
   // ── Comprueba si el inventario está lleno (20/20 slots ocupados) ─
   InventarioLleno(): boolean {
     return this.slots.every(s => !s.empty);
-  }
-
-  // ── Apartado para guardar una Xuxe en el inventario ─────────────────────────────
-  GuardarXuxesinv(xux: Xuxes): boolean {
-    const current = this.CopiarSlots();
-
-    if (xux.apilable) {
-      // Si ya existe una Xuxe del mismo tipo, apila una unidad más (máx. 5)
-      const existing = current.find(
-        s => s.apilable && !s.empty && s.xuxe?.id === xux.id && s.cantidad < MAX_STACK
-      );
-      if (existing) {
-        existing.cantidad++;
-        this._slots$.next(current);
-        return true;
-      }
-      // Si no existe, busca un slot apilable vacío
-      const empty = current.find(s => s.apilable && s.empty);
-      if (!empty) return false;
-      empty.empty = false; empty.xuxe = { ...xux }; empty.cantidad = 1;
-    } else {
-      // Las Xuxes no apilables ocupan siempre un slot individual
-      const empty = current.find(s => !s.apilable && s.empty);
-      if (!empty) return false;
-      empty.empty = false; empty.xuxe = { ...xux }; empty.cantidad = 1;
-    }
-
-    this._slots$.next(current);
-    return true;
-  }
-
-  // ── Eliminar una Xuxe del inventario del Jugador ────────────────────
-  EliminarXuxesinv(slotId: number): void {
-    const current = this.CopiarSlots();
-    const slot = current.find(s => s.id === slotId);
-    if (!slot || slot.empty) return;
-
-    // Si es apilable y queda más de 1, solo resta una unidad
-    if (slot.apilable && slot.cantidad > 1) {
-      slot.cantidad--;
-    } else {
-      // Si es la última unidad, vacía el slot
-      slot.empty = true; slot.xuxe = undefined; slot.cantidad = 0;
-    }
-    this._slots$.next(current);
-  }
-
-  // ── En este método se crea una copia de los slots para no modificar el original ────
-  private CopiarSlots(): Slot[] {
-    return this.slots.map(s => ({ ...s, xuxe: s.xuxe ? { ...s.xuxe } : undefined }));
   }
 }

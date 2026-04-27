@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { XuxemonService, Xuxemon } from '../services/xuxemon.service';
 import { AdminConfigService, SystemConfigItem, XuxemonNivell } from '../services/admin-config.service';
 import { AdminService, UsuarioAdmin, XuxeItem } from '../services/admin.service';
+import { API_URL } from '../config/api.config';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -14,6 +15,7 @@ import { finalize } from 'rxjs';
   styleUrl: './admin.css',
 })
 export class Admin implements OnInit {
+  readonly baseUrl = API_URL.replace('/api', '');
   usuarios: UsuarioAdmin[] = [];
   usuarioSeleccionado: number | null = null;
   xuxemons: Xuxemon[] = [];
@@ -127,7 +129,7 @@ export class Admin implements OnInit {
       next: (response) => {
         this.xuxemons = (response || []).map(x => ({
           ...x,
-          imagen: x.imagen ? `http://localhost:8000/${x.imagen}` : null
+          imagen: x.imagen ? `${this.baseUrl}/${x.imagen}` : null
         }));
         this.cargandoXuxemons = false;
           this.cdr.detectChanges();
@@ -257,17 +259,11 @@ export class Admin implements OnInit {
     return '/Imatges/Xuxemons/' + avatar;
   }
 
-  // Función para obtener las iniciales del usuario a partir de su nombre y apellidos
-  getIniciales(nombre: string, apellidos: string): string {
-    const n = (nombre || '').trim().charAt(0);
-    const a = (apellidos || '').trim().charAt(0);
-    return `${n}${a}`.toUpperCase();
-  }
-
   // Función para salir del panel de administración y volver al menú principal
   salir(): void {
     this.router.navigate(['/menu-principal']);
   }
+
 
   // ── INVENTARI ──────────────────────────────────────────────────────────────
 

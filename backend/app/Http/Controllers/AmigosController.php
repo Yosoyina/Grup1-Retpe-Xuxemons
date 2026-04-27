@@ -101,9 +101,20 @@ class AmigosController extends Controller
     }
 
     // Elimina l'amistat entre dos usuaris (en les dues direccions)
+    // També marca la petició d'amistat associada com a 'rechazado' perquè
+    // qualsevol dels dos pugui tornar a enviar una nova sol·licitud en el futur.
     public function eliminarAmigo(User $user, int $friendId): void
     {
         Amigos::where('user_id', $user->id)->where('id_amigo', $friendId)->delete();
         Amigos::where('user_id', $friendId)->where('id_amigo', $user->id)->delete();
+
+        // Netegem la petició acceptada per permetre futures sol·licituds d'amistat
+        Peticiones_amistad::where('estado', 'aceptado')
+            ->where(function ($q) use ($user, $friendId) {
+                $q->where('id_remitente', $user->id)->where('id_destinatario', $friendId);
+            })->orWhere(function ($q) use ($user, $friendId) {
+                $q->where('id_remitente', $friendId)->where('id_destinatario', $user->id)
+                  ->where('estado', 'aceptado');
+            })->update(['estado' => 'rechazado']);
     }
 }

@@ -14,7 +14,6 @@ export class InfoUsuari {
 
   usuari: any = null;
   errorMessage = '';
-  successMessage = '';
   mostrarConfirmacio = false;
   mostrarSeleccioAvatar = false;
   mostrarModalActualitzat = false;

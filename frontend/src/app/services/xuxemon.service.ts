@@ -100,7 +100,7 @@ export class XuxemonService {
     return this.http.post(`${this.adminUrl}`, { user_id: userId });
   }
 
-  // Mètodes per obtenir les classes CSS segons el tipus i mida del Xuxemon
+  // Obté la cadena evolutiva completa d'un Xuxemon donat el seu ID
   getEvoluciones(id: number): Observable<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }> {
     return this.http.get<{ cadena_evolutiva: EtapaEvoluciones[], total_etapes: number }>(`${API_URL}/xuxemons/${id}/evolucions`).pipe(
       map(res => ({

@@ -21,6 +21,11 @@
 
       <!-- AMICS -->
       <button class="btn-menu" routerLink="/amics">
+        @if ((peticionsCount$ | async)?.length) {
+          <span class="badge-notif" aria-label="{{ (peticionsCount$ | async)?.length }} sol·licituds pendents">
+            {{ (peticionsCount$ | async)?.length }}
+          </span>
+        }
         <img src="/Amics.webp" alt="Amics" />
         <span>AMICS</span>
       </button>
@@ -62,6 +67,11 @@
     </button>
   </footer>
 </section>
+
+<!-- Botó de testing fix a baix a la dreta: simula la recompensa sense cridar el backend -->
+<button class="btn-simular-recompensa" type="button" (click)="simularRecompensa()" title="Simular recompensa diària (testing)">
+  🧪 Simular recompensa
+</button>
 
 @if (rewardModalVisible && dailyReward) {
 <div class="reward-modal-overlay" (click)="closeRewardModal()">

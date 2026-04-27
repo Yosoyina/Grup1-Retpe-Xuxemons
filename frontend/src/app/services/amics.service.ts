@@ -81,13 +81,4 @@ export class AmicsService {
       tap(() => this.carregarAmics())
     );
   }
-
-  // retorna el valor actual sense subscripció observable
-  getAmics(): Amic[] {
-    return this.amics$.getValue();
-  }
-
-  getPeticionsRebudes(): PeticioAmistat[] {
-    return this.peticionsRebudes$.getValue();
-  }
 }

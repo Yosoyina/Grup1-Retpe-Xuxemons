@@ -1,13 +1,14 @@
-import { Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, filter, merge, switchMap, Subscription, Subject } from 'rxjs';
 import { AmicsService, Amic, PeticioAmistat } from '../services/amics.service';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-amics',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent],
   templateUrl: './amics.html',
   styleUrl: './amics.css',
 })
@@ -48,6 +49,8 @@ export class Amics implements OnDestroy {
   // Timers para controlar la duración de las animaciones de entrada y salida
   private timeoutAnimacioEntrada: ReturnType<typeof setTimeout> | null = null;
   private timeoutAnimacioSortida: ReturnType<typeof setTimeout> | null = null;
+  // Interval per refrescar la llista d'amics periòdicament
+  private refreshInterval: ReturnType<typeof setInterval> | null = null;
 
   // Inyectamos el servicio de amigos, el router para navegación y el ChangeDetectorRef para actualizar la vista.
   constructor(
@@ -55,9 +58,15 @@ export class Amics implements OnDestroy {
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {
-    // Al iniciar el componente pedimos los datos al servicio
+    // Al iniciar el component demanem les dades al servei
     this.amicsService.carregarAmics();
     this.amicsService.carregarPeticionsRebudes();
+
+    // Refresc periòdic cada 30 s per detectar si un altre usuari ens ha esborrat
+    this.refreshInterval = setInterval(() => {
+      this.amicsService.carregarAmics();
+      this.amicsService.carregarPeticionsRebudes();
+    }, 30_000);
 
     this.subs.push(
       // Nos suscribimos a la lista de amigos del servicio para mantenerla actualizada
@@ -123,12 +132,20 @@ export class Amics implements OnDestroy {
     );
   }
 
+  // Refresca la llista quan l'usuari torna a la pestaña (cas: l'amic ha esborrat mentre estava en una altra pestaña)
+  @HostListener('window:focus')
+  onWindowFocus(): void {
+    this.amicsService.carregarAmics();
+    this.amicsService.carregarPeticionsRebudes();
+  }
+
   // Limpieza al destruir el componente: cancelamos suscripciones y timers pendientes
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe());
     this.cercaManual$.complete();
     if (this.timeoutAnimacioEntrada) clearTimeout(this.timeoutAnimacioEntrada);
     if (this.timeoutAnimacioSortida) clearTimeout(this.timeoutAnimacioSortida);
+    if (this.refreshInterval) clearInterval(this.refreshInterval);
   }
 
   // Comprueba si un usuario ya está en la lista de amigos
@@ -173,6 +190,18 @@ export class Amics implements OnDestroy {
       next: () => this.mostrarExit('Solicitud rechazada.'),
       error: () => this.mostrarError('Error al rechazar la solicitud.'),
     });
+  }
+
+  // Retorna l'amic pendent de confirmar eliminació (usat al ConfirmDialogComponent)
+  get amicAConfirmar(): Amic | null {
+    return this.amics.find(a => a.id === this.confirmantEliminar) ?? null;
+  }
+
+  // Rep l'òrden de confirmació del ConfirmDialogComponent i executa l'eliminació
+  onConfirmatEliminar(): void {
+    const amic = this.amicAConfirmar;
+    if (amic) this.eliminarAmic(amic);
+    else this.confirmantEliminar = null;
   }
 
   // Marca el amigo como pendiente de confirmación antes de eliminarlo

@@ -14,6 +14,11 @@
         @if (isFieldInvalid('nombre')) {
           <span class="missatge-error">{{ getErrorMessage('nombre') }}</span>
         }
+        @if (previewId) {
+          <span class="preview-id" aria-label="Preview del teu ID de jugador">
+            El teu ID serà similar a: <strong>{{ previewId }}</strong>
+          </span>
+        }
     </div>
 
     <!-- cognoms del jugador -->
@@ -69,11 +74,6 @@
     <!-- missatge d'error que ve del backend -->
     @if (errorMessage) {
     <span class="missatge-error">{{ errorMessage }}</span>
-    }
-
-    <!-- missatge d'exit amb l'ID de jugador generat -->
-    @if (successMessage) {
-    <span class="missatge-exit">{{ successMessage }}</span>
     }
 
       <p>Ja tens conta? <a routerLink="/login">Login</a></p>

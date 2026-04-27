@@ -3,6 +3,14 @@
   --yellow:       rgba(255, 208, 0, .95);
   --yellow-focus: rgba(255, 204, 0, .26);
   --ink:          #1f2a44;
+
+/* Preview ID de jugador */
+.preview-id {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.82rem;
+  color: #6b7280;
+}
   --ink-dark:     #1E2A78;
   --pill:         999px;
   --font-ui:      Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
