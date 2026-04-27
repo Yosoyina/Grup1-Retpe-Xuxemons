@@ -6,10 +6,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
+/**
+ * Controlador d'usuaris.
+ *
+ * Gestiona el perfil, l'edició, l'eliminació i la cerca d'usuaris.
+ * Inclou accions d'administrador per llistar, habilitar/deshabilitar i canviar el rol dels usuaris.
+ */
 class UserController extends Controller
 {
     // ── HOME ──────────────────────────────────────────────
-
+    // Retorna un missatge de benvinguda i les dades de l'usuari autenticat
     public function home()
     {
         return response()->json([
@@ -19,7 +25,7 @@ class UserController extends Controller
     }
 
     // ── PROFILE ───────────────────────────────────────────
-
+    // Retorna les dades del perfil de l'usuari autenticat
     public function perfil()
     {
         return response()->json([
@@ -28,7 +34,7 @@ class UserController extends Controller
     }
 
     // ── UPDATE PROFILE ────────────────────────────────────
-
+    // Actualitza les dades del perfil (nom, cognoms, email, password, avatar)
     public function updatePerfil(Request $request)
     {
         $user = Auth::guard('api')->user();
@@ -64,7 +70,7 @@ class UserController extends Controller
     }
 
     // ── DELETE USER ───────────────────────────────────────
-
+    // Inhabilita el compte de l'usuari i tanca la sessió activa
     public function eliminarUsuario()
     {
         $user = Auth::guard('api')->user();
@@ -79,7 +85,7 @@ class UserController extends Controller
         ]);
     }
     // ── CERCA D'USUARIS PER ID ──────────────────────────────────────────
-
+    // Cerca usuaris per id_jugador. Requereix mínim 3 caràcters per a la cerca
     public function search(Request $request)
     {
         $q = trim($request->query('q', ''));
@@ -100,7 +106,7 @@ class UserController extends Controller
         return response()->json($users);
     }
     // ── LIST USERS (ADMIN) ────────────────────────────────
-
+    // Retorna la llista completa d'usuaris per al panell d'administració
     public function listUsers()
     {
         $users = \App\Models\User::select('id', 'nombre', 'apellidos', 'email', 'id_jugador', 'role', 'actiu', 'avatar')
@@ -113,7 +119,13 @@ class UserController extends Controller
 
     public function toggleActiu(int $id)
     {
-        $user = \App\Models\User::where('id', $id)->where('role', '!=', 'admin')->firstOrFail();
+        $currentUser = \Illuminate\Support\Facades\Auth::guard('api')->user();
+
+        if ((int)$id === $currentUser->id) {
+            return response()->json(['message' => 'No pots deshabilitar el teu propi compte.'], 403);
+        }
+
+        $user = \App\Models\User::findOrFail($id);
         $user->actiu = !$user->actiu;
         $user->save();
 

@@ -5,8 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Inventario;
+    // Elimina el use redundant (Inventario està al mateix namespace)
 
+/**
+ * Model Xuxes.
+ *
+ * Representa un ítem del catàleg de Xuxes (llaminadures i vacunes).
+ * - Apilable (apilable = true): són les Xuxes normals, es poden acumular fins a MAX_STACK per slot.
+ * - No apilable (apilable = false): són les Vacunes, cada unitat ocupa un slot propi.
+ */
 class Xuxes extends Model
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */

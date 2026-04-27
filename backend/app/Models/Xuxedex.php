@@ -5,6 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * Model Xuxedex.
+ *
+ * Representa l'entrada d'un Xuxemon al Xuxedex d'un usuari concret.
+ * Cada fila indica si el Xuxemon està capturat (esta_capturado)
+ * i si té una malaltia activa (enfermedad).
+ * Els Xuxemons no capturats apareixen com a '???' al frontend.
+ */
 class Xuxedex extends Model
 {
     use HasFactory;
@@ -25,23 +33,15 @@ class Xuxedex extends Model
         ];
     }
  
-    // Relació amb el xuxemon
+    // Retorna el Xuxemon del catàleg associat a aquesta entrada
     public function xuxemon()
     {
         return $this->belongsTo(Xuxemons::class, 'id_xuxemon');
     }
- 
-    // Relació amb l'usuari
+
+    // Retorna l'usuari propietari d'aquesta entrada del Xuxedex
     public function user()
     {
         return $this->belongsTo(User::class, 'id_usuario');
-    }
-
-    
-    //Un xuxemon puede tener muchas enfermedades.
-     
-    public function malalties()
-    {
-        return $this->hasMany(Malalties::class, 'xuxedex_id');
     }
 }

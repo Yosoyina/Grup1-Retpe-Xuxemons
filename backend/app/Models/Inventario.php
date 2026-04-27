@@ -5,9 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use App\Models\User;
-use App\Models\Xuxes;
 
+/**
+ * Model Inventario.
+ *
+ * Representa un slot de la motxilla d'un usuari.
+ * Cada fila és un espai ocupat per un tipus de Xuxa.
+ * - MAX_STACK: màxim d'unitats per slot en ítems apilables.
+ * - MAX_SLOTS: màxim de slots totals per usuari.
+ */
 class Inventario extends Model
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -25,20 +31,20 @@ class Inventario extends Model
         'apilable',
     ];
 
-    // Relaciones de Xuxemon y Xuxes
-    public function xuxemon()
+    // Relaciones
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    // Retorna la Xuxa associada a aquest slot
     public function xuxe()
     {
         return $this->belongsTo(Xuxes::class, 'xuxe_id');
 
     }
 
-    // Espacios que ocupa aquest item
-
+    // Retorna el nombre de slots ocupats per un usuari
     public static function slotsUtilizados(int $userId): int
     {
         return self::where('user_id', $userId)->count();

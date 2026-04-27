@@ -3,17 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\InventarioService;
 use App\Services\XuxedexService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Controlador d'autenticació.
+ *
+ * Gestiona el registre, login i logout d'usuaris.
+ * Utilitza JWT per a la gestió de tokens de sessió.
+ */
 class AuthController extends Controller
 {
     public function __construct(
         private XuxedexService $xuxedexService,
-        private InventarioService $inventarioService,
     ) {
     }
 
@@ -48,7 +52,6 @@ class AuthController extends Controller
         ]);
 
         $this->xuxedexService->ensureStarterXuxedex($user->id);
-        $this->inventarioService->ensureStarterInventario($user->id);
 
         $token = Auth::guard('api')->login($user);
 

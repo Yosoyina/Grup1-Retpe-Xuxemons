@@ -8,6 +8,12 @@ use App\Models\SystemConfig;
 use App\Services\XuxedexService;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Controlador de Xuxemons.
+ *
+ * Gestiona el catàleg de Xuxemons, el Xuxedex per usuari, l'alimentació,
+ * les malalties, l'evolució i les vacunes. Inclou accions d'administrador.
+ */
 class XuxemonsController extends Controller
 {
     public function __construct(private XuxedexService $xuxedexService)
@@ -243,8 +249,7 @@ class XuxemonsController extends Controller
         ], 200);
     }
 
-    // Evoluciones Xuxemons
-
+    // Retorna la cadena evolutiva completa d'un xuxemon (Petit → Mitja → Gran)
     public function Evoluciones(string $id)
     {
         $xuxemon = Xuxemons::findOrFail($id);

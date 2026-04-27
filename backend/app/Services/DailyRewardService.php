@@ -10,6 +10,16 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Servei de recompenses diàries.
+ *
+ * Gestiona la lògica de les dues recompenses diàries de l'usuari:
+ *   1. Xuxes: un lot aleatori de llaminadures de l'inventari.
+ *   2. Xuxemon: desbloqueja un Xuxemon Petit aleatori del Xuxedex.
+ *
+ * Les hores de disponibilitat es llegeixen de SystemConfig.
+ * Cada recompensa té el seu propi timestamp per ser independent.
+ */
 class DailyRewardService
 {
     private const REWARD_TIMEZONE = 'Europe/Madrid';
@@ -18,6 +28,7 @@ class DailyRewardService
     {
     }
 
+    // Comprova si hi ha recompenses disponibles i les atorga a l'usuari
     public function claimFor(User $user): array
     {
         $now = Carbon::now(self::REWARD_TIMEZONE);
@@ -85,6 +96,7 @@ class DailyRewardService
         });
     }
 
+    // Genera una col·lecció aleatòria de Xuxes del catàleg fins arribar al total diari
     private function buildRandomXuxesReward(int $totalXuxes = 10): Collection
     {
         $catalog = Xuxes::query()->get(['id', 'nombre_xuxes', 'imagen', 'apilable']);
@@ -109,6 +121,7 @@ class DailyRewardService
             ->values();
     }
 
+    // Afegeix al inventari les Xuxes guanyades i retorna un resum d'añadides i descartades
     private function storeXuxesReward(int $userId, Collection $rewardXuxes): array
     {
         $items = [];
@@ -137,6 +150,7 @@ class DailyRewardService
         ];
     }
 
+    // Afegeix un ítem a l'inventari respectant MAX_STACK i MAX_SLOTS. Retorna les unitats añadides i descartades
     private function addItemToInventory(int $userId, int $xuxeId, int $cantidad): array
     {
         $xuxe = Xuxes::findOrFail($xuxeId);
@@ -189,6 +203,7 @@ class DailyRewardService
         ];
     }
 
+    // Desbloqueja un Xuxemon Petit aleatori no capturat de l'usuari. Retorna null si ja els té tots
     private function unlockRandomSmallXuxemon(int $userId): ?array
     {
         $blockedEntry = DB::table('xuxedex')

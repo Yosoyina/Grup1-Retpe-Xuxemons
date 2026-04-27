@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Amigos;
 use App\Models\Peticiones_amistad;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Controlador intern de la lògica d'amistats.
+ *
+ * Conté la lògica de negoci per crear, acceptar, rebutjar i eliminar amistats.
+ * No és cridat directament per les rutes: és un servei intern usat per PeticionesAmistadController.
+ */
 class AmigosController extends Controller
 {
+    // Crea una nova petició d'amistat del remitent cap al destinatari
     public function crearPeticion(User $remitente, int $destinatarioId): Peticiones_amistad
     {
         if ($remitente->id === $destinatarioId) {
@@ -48,6 +54,7 @@ class AmigosController extends Controller
         ]);
     }
 
+    // Accepta una petició d'amistat pendent i crea l'amistat bidireccional
     public function aceptarPeticion(User $user, int $requestId): void
     {
         $request = Peticiones_amistad::where('id', $requestId)
@@ -66,6 +73,7 @@ class AmigosController extends Controller
         });
     }
 
+    // Rebutja una petició d'amistat pendent
     public function rechazarPeticion(User $user, int $requestId): void
     {
         $request = Peticiones_amistad::where('id', $requestId)
@@ -76,6 +84,7 @@ class AmigosController extends Controller
         $request->update(['estado' => 'rechazado']);
     }
 
+    // Retorna totes les peticions d'amistat pendents rebudes per l'usuari
     public function listarPendientes(User $user)
     {
         return Peticiones_amistad::with('remitente')
@@ -85,11 +94,13 @@ class AmigosController extends Controller
             ->get();
     }
 
+    // Retorna la llista d'amics de l'usuari
     public function listarAmigos(User $user)
     {
         return $user->friends()->get();
     }
 
+    // Elimina l'amistat entre dos usuaris (en les dues direccions)
     public function eliminarAmigo(User $user, int $friendId): void
     {
         Amigos::where('user_id', $user->id)->where('id_amigo', $friendId)->delete();

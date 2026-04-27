@@ -7,8 +7,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Inventario;
 
+/**
+ * Controlador de vacunes.
+ *
+ * Gestiona l'aplicació de vacunes per curar les malalties dels Xuxemons.
+ * Valida la compatibilitat entre la vacuna i la malaltia activa del Xuxemon.
+ *
+ * Mapa de vacunes:
+ *   'Xocolatina'     → cura 'Bajon de azucar'
+ *   'Xal de fruites' → cura 'Atracon'
+ *   'Inxulina'       → cura qualsevol malaltia
+ */
 class VacunesController extends Controller
 {
+    // Aplica una vacuna de l'inventari de l'usuari per curar la malaltia d'un Xuxemon
     public function aplicar(Request $request)
     {
         $userId = Auth::guard('api')->user()->id;

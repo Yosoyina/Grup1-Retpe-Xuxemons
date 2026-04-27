@@ -6,6 +6,13 @@ use App\Models\SystemConfig;
 use App\Models\Xuxemons;
 use Illuminate\Http\Request;
 
+/**
+ * Controlador de configuració global del sistema (admin).
+ *
+ * Permet als administradors consultar i modificar els paràmetres del joc:
+ * hores de recompensa, quantitats diàries i probabilitats d'infecció.
+ * També gestiona les Xuxes necessàries per fer créixer cada Xuxemon.
+ */
 class AdminConfigController extends Controller
 {
     // Claus vàlides i els seus tipus de validació

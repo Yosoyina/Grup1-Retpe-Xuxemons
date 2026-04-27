@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * Model Xuxemons.
+ *
+ * Representa un Xuxemon del catàleg global del joc.
+ * Cada Xuxemon té un tipus d'element (Aigua/Terra/Aire), una mida (Petit/Mitja/Gran)
+ * i pertany a una línia evolutiva identificada pel camp 'evolucion_xuxemon'.
+ * El camp 'xuxes_per_pujar' indica quantes Xuxes cal consumir per fer-lo evolucionar.
+ */
 class Xuxemons extends Model
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -34,19 +42,6 @@ class Xuxemons extends Model
             'evolucion_xuxemon' => 'string',
             'xuxes_per_pujar' => 'integer',
         ];
-    }
-
-    // Un xuxemon pertany a un usuari
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    
-    // Xuxemons de la mateixa línia evolutiva
-    public function liniaEvolutiva()
-    {
-        return $this->hasMany(Xuxemons::class, 'evolucion_xuxemon', 'evolucion_xuxemon');
     }
 
 }

@@ -10,6 +10,13 @@ use App\Models\Inventario;
 use App\Models\Xuxemons;
 use App\Models\Xuxes;
 
+/**
+ * Controlador d'inventari.
+ *
+ * Gestiona els ítems de la motxilla del jugador: Xuxes (apilables) i Vacunes (no apilables).
+ * Inclou l'acció d'alimentar un Xuxemon des de l'inventari.
+ * Les accions de creació, edició i eliminació estan reservades per a administradors.
+ */
 class InventarioController extends Controller
 {
     // ── INVENTARIO DEL JUGADOR ───────────────────────────────────
@@ -224,12 +231,7 @@ class InventarioController extends Controller
         }
  
         // ── BLOQUEIG INVENTARI ( ENFERMETAT ATRACÓN ) ──────────────────────────────────────────────────
-        $Atracon = DB::table('malalties')
-            ->where('xuxedex_id', $xuxedex_id)
-            ->where('tipo_enfermedad', 'Atracon')
-            ->exists();
- 
-        if ($Atracon) {
+        if ($entrada->enfermedad === 'Atracon') {
             return response()->json([
                 'message' => 'No pots alimentar aquest xuxemon: té la malaltia "Atracón" activa. Cura\'l primer amb una vacuna.',
             ], 422);

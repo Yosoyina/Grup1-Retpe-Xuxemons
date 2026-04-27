@@ -5,8 +5,17 @@ namespace App\Services;
 use App\Models\Xuxemons;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Servei del Xuxedex.
+ *
+ * S'encarrega d'inicialitzar el Xuxedex d'un usuari nou.
+ * En registrar-se, s'afegeixen al Xuxedex tots els Xuxemons Petits
+ * de cada tipus (Aigua/Terra/Aire) en estat 'no capturat'.
+ * Els Xuxemons Mitja i Gran s'obtenen per evolució.
+ */
 class XuxedexService
 {
+    // Crea les entrades inicials del Xuxedex per a un usuari nou. No fa res si ja existeixen
     public function ensureStarterXuxedex(int $userId): bool
     {
         $existingEntries = DB::table('xuxedex')

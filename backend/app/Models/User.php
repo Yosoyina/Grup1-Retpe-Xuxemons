@@ -4,12 +4,18 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Services\XuxedexService;
-use App\Models\Peticiones_amistad;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * Model User.
+ *
+ * Representa un usuari del sistema. Implementa JWTSubject per a l'autenticació amb JWT.
+ * En crear-se, s'inicialitza automàticament el seu Xuxedex inicial via XuxedexService.
+ * Inclou relacions per al sistema d'amistats i sol·licituds.
+ */
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -56,6 +62,7 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    // Inicialitza el Xuxedex de l'usuari automàticament en crear el compte
     protected static function booted(): void
     {
         static::created(function (self $user): void {
@@ -63,23 +70,19 @@ class User extends Authenticatable implements JWTSubject
         });
     }
 
+    // Requerit per JWT: retorna l'identificador único de l'usuari
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
 
+    // Requerit per JWT: retorna els claims addicionals del token (buit per defecte)
     public function getJWTCustomClaims()
     {
         return [];
     }
 
-
-    // Un usuari té molts xuxemons
-    public function xuxemons()
-    {
-        return $this->hasMany(Xuxemons::class, 'user_id');
-    }
 
     // ── Sistema de amigos ─────────────────────────────────────
 
