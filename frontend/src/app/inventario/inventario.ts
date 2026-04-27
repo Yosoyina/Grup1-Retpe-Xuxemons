@@ -47,12 +47,6 @@ export class Inventario implements OnInit, OnDestroy {
     return this.inventarioService.InventarioLleno();
   }
 
-  // Mètode per eliminar un Xuxemon del slot, aturant la propagació de l'event per evitar altres accions
-  removeOne(slot: Slot, event: MouseEvent): void {
-    event.stopPropagation();
-    this.inventarioService.EliminarXuxesinv(slot.id);
-  }
-
   // Mètode per obtenir les classes CSS d'un slot
   slotClasses(slot: Slot): Record<string, boolean> {
     return {

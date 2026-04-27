@@ -71,7 +71,6 @@ export class Admin implements OnInit {
     return this.xuxemons.filter(x => x.tipo_elemento === 'Terra');
   }
 
-  // Getters para filtrar xuxemons por tipo
   constructor(
     private adminService: AdminService,
     private xuxemonService: XuxemonService,
