@@ -1,9 +1,7 @@
-﻿<section class="admin-wrapper" aria-labelledby="admin-title">
-  <header>
-    <h1 class="admin-titulo" id="admin-title">PANEL ADMINISTRADOR</h1>
-  </header>
+﻿<div class="admin-wrapper">
+  <h1 class="admin-titulo">PANEL ADMINISTRADOR</h1>
 
-  <nav class="admin-nav" aria-label="Navegacio del panel administrador">
+  <div class="admin-nav">
     <button class="nav-tab" [class.activa]="pestanyaActiva === 'usuaris'" (click)="canviarPestanya('usuaris')">
       Gestió d'Usuaris
     </button>
@@ -13,19 +11,19 @@
     <button class="nav-tab" [class.activa]="pestanyaActiva === 'xuxemons'" (click)="canviarPestanya('xuxemons')">
       Xuxes per Créixer
     </button>
-  </nav>
+  </div>
 
   @if (mensajeExito && pestanyaActiva === 'usuaris') {
-  <div class="mensaje exito">âœ“ {{ mensajeExito }}</div>
+  <div class="mensaje exito">✓ {{ mensajeExito }}</div>
   }
   @if (mensajeError && pestanyaActiva === 'usuaris') {
-  <div class="mensaje error">âœ— {{ mensajeError }}</div>
+  <div class="mensaje error">✗ {{ mensajeError }}</div>
   }
 
   <div class="admin-main-layout">
     @if (pestanyaActiva === 'usuaris') {
-    <!-- SECCIÃ“ ÃšNICA USUARIS -->
-    <section class="seccio seccio-usuaris" aria-labelledby="admin-users-title">
+    <!-- SECCIÓ ÚNICA USUARIS -->
+    <div class="seccio seccio-usuaris">
       <div class="seccio-header">
         <span class="seccio-icon"></span>
         <h2>Gestió d'Usuaris</h2>
@@ -49,10 +47,10 @@
             <div class="usuario-info">
               <div class="avatar" [class.avatar-amb-img]="true">
                 @if (!usuario.avatar || usuario.avatar.startsWith('avatarpordefecto')) {
-                  <img src="/avatarpordefecto.webp" [alt]="usuario.nombre" class="avatar-img avatar-img-default">
+                <img src="/avatarpordefecto.webp" [alt]="usuario.nombre" class="avatar-img avatar-img-default">
                 } @else {
-                  <img [src]="getAvatarSrc(usuario.avatar)" [alt]="usuario.nombre" class="avatar-img"
-                    (error)="$event.target['src']='/avatarpordefecto.webp'; $event.target['className']='avatar-img avatar-img-default'">
+                <img [src]="getAvatarSrc(usuario.avatar)" [alt]="usuario.nombre" class="avatar-img"
+                  (error)="$event.target['src']='/avatarpordefecto.webp'; $event.target['className']='avatar-img avatar-img-default'">
                 }
               </div>
               <div class="datos">
@@ -62,43 +60,52 @@
                   <span class="rol-badge">{{ usuario.role }}</span>
                 </div>
                 <span class="estado" [class.inactivo]="!usuario.actiu">
-                  {{ usuario.actiu ? 'â— Actiu' : 'â— Inactiu' }}
+                  {{ usuario.actiu ? '● Actiu' : '● Inactiu' }}
                 </span>
               </div>
             </div>
 
             <!-- Accions -->
+            @if (usuario.actiu) {
             <div class="acciones">
               <div class="acciones-grup">
                 <span class="acciones-label">Xuxemons</span>
                 <button class="btn-accio btn-xuxemon" (click)="agregarXuxemonAleatorio(usuario.id)"
                   [disabled]="agregandoParaUsuarioId === usuario.id">
-                  <span class="btn-icon">ðŸ¾</span>
                   {{ agregandoParaUsuarioId === usuario.id ? 'Assignant...' : 'Donar' }}
                 </button>
                 <button class="btn-accio btn-ver" (click)="cargarXuxemonsUsuario(usuario.id)">
-                  <span class="btn-icon">ðŸ‘</span>
                   Veure
                 </button>
               </div>
               <div class="acciones-grup">
                 <span class="acciones-label">Inventari</span>
                 <button class="btn-accio btn-inventari" (click)="obrirModalInventari(usuario.id)">
-                  <span class="btn-icon">ðŸŽ’</span>
                   Afegir Xuxes
+                </button>
+                <button class="btn-accio btn-vacunes" (click)="obrirModalVacunes(usuario.id)">
+                  Afegir Vacunes
                 </button>
               </div>
               <div class="acciones-grup">
                 <span class="acciones-label">Compte</span>
-                <button class="btn-accio btn-toggle"
-                  [class.btn-habilitar]="!usuario.actiu"
-                  [class.btn-deshabilitar]="usuario.actiu"
-                  (click)="pedirConfirmacionToggle(usuario)">
-                  <span class="btn-icon">{{ usuario.actiu ? 'ðŸ”’' : 'ðŸ”“' }}</span>
-                  {{ usuario.actiu ? 'Deshabilitar' : 'Habilitar' }}
+                <button class="btn-accio btn-toggle btn-deshabilitar" (click)="pedirConfirmacionToggle(usuario)">
+                  Deshabilitar
+                </button>
+                <button class="btn-accio btn-rol" [class.btn-fer-admin]="usuario.role !== 'admin'"
+                  [class.btn-treure-admin]="usuario.role === 'admin'" (click)="pedirConfirmacionRol(usuario)">
+                  {{ usuario.role === 'admin' ? 'Treure Admin' : 'Fer Admin' }}
                 </button>
               </div>
             </div>
+            } @else {
+            <div class="acciones acciones-inactiva">
+              <span class="usuari-deshabilitat-text">Usuari deshabilitat</span>
+              <button class="btn-accio btn-toggle btn-habilitar" (click)="pedirConfirmacionToggle(usuario)">
+                Habilitar
+              </button>
+            </div>
+            }
 
           </div>
           }
@@ -111,23 +118,23 @@
         </div>
         }
       </div>
-    </section>
+    </div>
     }
 
     @if (pestanyaActiva === 'config') {
-    <!-- â”€â”€ SECCIÃ“ CONFIGURACIÃ“ GLOBAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-    <section class="seccio seccio-config" aria-labelledby="admin-config-title">
+    <!-- ── SECCIÓ CONFIGURACIÓ GLOBAL ───────────────────────────── -->
+    <div class="seccio seccio-config">
       <div class="seccio-header">
-        <span class="seccio-icon">âš™ï¸</span>
-        <h2 id="admin-config-title">ConfiguraciÃ³ del Sistema</h2>
+        <span class="seccio-icon"></span>
+        <h2>Configuració del Sistema</h2>
       </div>
 
       <div class="seccio-body">
         @if (configMissatgeExito) {
-        <div class="mensaje exito">âœ“ {{ configMissatgeExito }}</div>
+        <div class="mensaje exito">✓ {{ configMissatgeExito }}</div>
         }
         @if (configMissatgeError) {
-        <div class="mensaje error">âœ— {{ configMissatgeError }}</div>
+        <div class="mensaje error">✗ {{ configMissatgeError }}</div>
         }
 
         <div class="config-grid">
@@ -140,18 +147,10 @@
               }
             </div>
             <div class="config-accio">
-              <input
-                type="number"
-                [(ngModel)]="configEdits[item.clave]"
-                [min]="0"
-                [max]="getConfigMax(item.clave)"
-                class="config-input"
-              >
-              <button
-                class="btn-accio btn-config-save"
-                (click)="guardarConfig(item.clave)"
-                [disabled]="guardantConfig[item.clave]"
-              >
+              <input type="number" [(ngModel)]="configEdits[item.clave]" [min]="0" [max]="getConfigMax(item.clave)"
+                class="config-input">
+              <button class="btn-accio btn-config-save" (click)="guardarConfig(item.clave)"
+                [disabled]="guardantConfig[item.clave]">
                 {{ guardantConfig[item.clave] ? 'Desant...' : 'Desar' }}
               </button>
             </div>
@@ -160,106 +159,75 @@
         </div>
 
         <div class="config-nota">
-          <strong>Nota:</strong> La suma dels tres percentatges d'infecciÃ³ no pot superar el 100%.
+          <strong>Nota:</strong> La suma dels tres percentatges d'infecció no pot superar el 100%.
         </div>
       </div>
-    </section>
+    </div>
     }
 
     @if (pestanyaActiva === 'xuxemons') {
-    <!-- â”€â”€ SECCIÃ“ XUXES PER CRÃ‰IXER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-    <section class="seccio seccio-nivell" aria-labelledby="admin-growth-title">
+    <!-- ── SECCIÓ XUXES PER CRÉIXER ──────────────────────────────── -->
+    <div class="seccio seccio-nivell">
       <div class="seccio-header">
-        <span class="seccio-icon">ðŸŒ±</span>
-        <h2 id="admin-growth-title">Xuxes per CrÃ©ixer</h2>
+        <span class="seccio-icon"></span>
+        <h2>Xuxes per Créixer</h2>
         <span class="seccio-badge">Petits i Mitja</span>
       </div>
 
       <div class="seccio-body">
         @if (nivellMissatgeExito) {
-        <div class="mensaje exito">âœ“ {{ nivellMissatgeExito }}</div>
+        <div class="mensaje exito">✓ {{ nivellMissatgeExito }}</div>
         }
         @if (nivellMissatgeError) {
-        <div class="mensaje error">âœ— {{ nivellMissatgeError }}</div>
+        <div class="mensaje error">✗ {{ nivellMissatgeError }}</div>
         }
 
         @if (xuxemonsNivell.length > 0) {
         <div class="nivell-taula">
 
-          <div class="nivell-grup-titol">ðŸ£ Xuxemons Petits â†’ Mitja</div>
+          <div class="nivell-grup-titol">Xuxemons Petits → Mitja</div>
           <div class="nivell-grid">
             @for (x of xuxemonsNivellPetit; track x.id) {
             <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
               @if (x.imagen) {
               <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
               } @else {
-              <div class="nivell-img-placeholder">ðŸ£</div>
+              <div class="nivell-img-placeholder"></div>
               }
               <div class="nivell-nom">{{ x.nombre_xuxemon }}</div>
               <div class="nivell-tipus">{{ x.tipo_elemento }}</div>
               <div class="nivell-accio">
-                <input
-                  type="number"
-                  [(ngModel)]="xuxesPerPujarEdits[x.id]"
-                  min="1" max="999"
-                  class="qty-input"
-                >
-                <button
-                  class="btn-accio btn-config-save"
-                  (click)="guardarXuxesPerPujar(x)"
-                  [disabled]="guardantNivell[x.id]"
-                >
-                  {{ guardantNivell[x.id] ? '...' : 'ðŸ’¾' }}
+                <input type="number" [(ngModel)]="xuxesPerPujarEdits[x.id]" min="1" max="999" class="qty-input">
+                <button class="btn-accio btn-config-save" (click)="guardarXuxesPerPujar(x)"
+                  [disabled]="guardantNivell[x.id]">
+                  {{ guardantNivell[x.id] ? '...' : '💾' }}
                 </button>
               </div>
             </div>
             }
           </div>
 
-          <!-- Accions -->
-          @if (usuario.actiu) {
-          <div class="acciones">
-            <div class="acciones-grup">
-              <span class="acciones-label">Xuxemons</span>
-              <button class="btn-accio btn-xuxemon" (click)="agregarXuxemonAleatorio(usuario.id)"
-                [disabled]="agregandoParaUsuarioId === usuario.id">
-                {{ agregandoParaUsuarioId === usuario.id ? 'Assignant...' : 'Donar' }}
-              </button>
-              <button class="btn-accio btn-ver" (click)="cargarXuxemonsUsuario(usuario.id)">
-                Veure
-              </button>
-            </div>
-            <div class="acciones-grup">
-              <span class="acciones-label">Inventari</span>
-              <button class="btn-accio btn-inventari" (click)="obrirModalInventari(usuario.id)">
-                Afegir Xuxes
-              </button>
-              <button class="btn-accio btn-vacunes" (click)="obrirModalVacunes(usuario.id)">
-                Afegir Vacunes
-              </button>
-            </div>
-            <div class="acciones-grup">
-              <span class="acciones-label">Compte</span>
-              <button class="btn-accio btn-toggle btn-deshabilitar" (click)="pedirConfirmacionToggle(usuario)">
-                Deshabilitar
-              </button>
-              <button class="btn-accio btn-rol"
-                [class.btn-fer-admin]="usuario.role !== 'admin'"
-                [class.btn-treure-admin]="usuario.role === 'admin'"
-                (click)="pedirConfirmacionRol(usuario)">
-                {{ usuario.role === 'admin' ? 'Treure Admin' : 'Fer Admin' }}
-              </button>
+          <div class="nivell-grup-titol">Xuxemons Mitja → Gran</div>
+          <div class="nivell-grid">
+            @for (x of xuxemonsNivellMitja; track x.id) {
+            <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
+              @if (x.imagen) {
+              <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
+              } @else {
+              <div class="nivell-img-placeholder"></div>
+              }
+              <div class="nivell-nom">{{ x.nombre_xuxemon }}</div>
+              <div class="nivell-tipus">{{ x.tipo_elemento }}</div>
+              <div class="nivell-accio">
+                <input type="number" [(ngModel)]="xuxesPerPujarEdits[x.id]" min="1" max="999" class="qty-input">
+                <button class="btn-accio btn-config-save" (click)="guardarXuxesPerPujar(x)"
+                  [disabled]="guardantNivell[x.id]">
+                  {{ guardantNivell[x.id] ? '...' : '💾' }}
+                </button>
+              </div>
             </div>
             }
           </div>
-          } @else {
-          <div class="acciones acciones-inactiva">
-            <span class="usuari-deshabilitat-text">Usuari deshabilitat</span>
-            <button class="btn-accio btn-toggle btn-habilitar" (click)="pedirConfirmacionToggle(usuario)">
-              Habilitar
-            </button>
-          </div>
-          }
 
         </div>
         } @else {
@@ -269,159 +237,8 @@
         </div>
         }
       </div>
-      }
-
-      @if (!cargandoUsuarios && usuarios.length === 0) {
-      <div class="sin-xuxemons">
-        <p>No hi ha usuaris per mostrar.</p>
-      </div>
-      }
     </div>
-  </div>
-  }
-
-  @if (pestanyaActiva === 'config') {
-  <!-- ── SECCIÓ CONFIGURACIÓ GLOBAL ───────────────────────────── -->
-  <div class="seccio seccio-config">
-    <div class="seccio-header">
-      <span class="seccio-icon"></span>
-      <h2>Configuració del Sistema</h2>
-    </div>
-
-    <div class="seccio-body">
-      @if (configMissatgeExito) {
-      <div class="mensaje exito">✓ {{ configMissatgeExito }}</div>
-      }
-      @if (configMissatgeError) {
-      <div class="mensaje error">✗ {{ configMissatgeError }}</div>
-      }
-
-      <div class="config-grid">
-        @for (item of configItems; track item.clave) {
-        <div class="config-row">
-          <div class="config-info">
-            <span class="config-label">{{ getConfigLabel(item.clave) }}</span>
-            @if (item.descripcio) {
-            <span class="config-desc">{{ item.descripcio }}</span>
-            }
-          </div>
-          <div class="config-accio">
-            <input
-              type="number"
-              [(ngModel)]="configEdits[item.clave]"
-              [min]="0"
-              [max]="getConfigMax(item.clave)"
-              class="config-input"
-            >
-            <button
-              class="btn-accio btn-config-save"
-              (click)="guardarConfig(item.clave)"
-              [disabled]="guardantConfig[item.clave]"
-            >
-              {{ guardantConfig[item.clave] ? 'Desant...' : 'Desar' }}
-            </button>
-          </div>
-        </div>
-        }
-      </div>
-
-      <div class="config-nota">
-        <strong>Nota:</strong> La suma dels tres percentatges d'infecció no pot superar el 100%.
-      </div>
-    </div>
-  </div>
-  }
-
-  @if (pestanyaActiva === 'xuxemons') {
-  <!-- ── SECCIÓ XUXES PER CRÉIXER ──────────────────────────────── -->
-  <div class="seccio seccio-nivell">
-    <div class="seccio-header">
-      <span class="seccio-icon"></span>
-      <h2>Xuxes per Créixer</h2>
-      <span class="seccio-badge">Petits i Mitja</span>
-    </div>
-
-    <div class="seccio-body">
-      @if (nivellMissatgeExito) {
-      <div class="mensaje exito">✓ {{ nivellMissatgeExito }}</div>
-      }
-      @if (nivellMissatgeError) {
-      <div class="mensaje error">✗ {{ nivellMissatgeError }}</div>
-      }
-
-      @if (xuxemonsNivell.length > 0) {
-      <div class="nivell-taula">
-
-        <div class="nivell-grup-titol">Xuxemons Petits → Mitja</div>
-        <div class="nivell-grid">
-          @for (x of xuxemonsNivellPetit; track x.id) {
-          <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
-            @if (x.imagen) {
-            <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
-            } @else {
-            <div class="nivell-img-placeholder"></div>
-            }
-            <div class="nivell-nom">{{ x.nombre_xuxemon }}</div>
-            <div class="nivell-tipus">{{ x.tipo_elemento }}</div>
-            <div class="nivell-accio">
-              <input
-                type="number"
-                [(ngModel)]="xuxesPerPujarEdits[x.id]"
-                min="1" max="999"
-                class="qty-input"
-              >
-              <button
-                class="btn-accio btn-config-save"
-                (click)="guardarXuxesPerPujar(x)"
-                [disabled]="guardantNivell[x.id]"
-              >
-                {{ guardantNivell[x.id] ? '...' : '💾' }}
-              </button>
-            </div>
-          </div>
-          }
-        </div>
-
-        <div class="nivell-grup-titol">Xuxemons Mitja → Gran</div>
-        <div class="nivell-grid">
-          @for (x of xuxemonsNivellMitja; track x.id) {
-          <div class="nivell-card" [class]="'nivell-card-' + x.tipo_elemento.toLowerCase()">
-            @if (x.imagen) {
-            <img [src]="'http://localhost:8000/' + x.imagen" [alt]="x.nombre_xuxemon" class="nivell-img">
-            } @else {
-            <div class="nivell-img-placeholder"></div>
-            }
-            <div class="nivell-nom">{{ x.nombre_xuxemon }}</div>
-            <div class="nivell-tipus">{{ x.tipo_elemento }}</div>
-            <div class="nivell-accio">
-              <input
-                type="number"
-                [(ngModel)]="xuxesPerPujarEdits[x.id]"
-                min="1" max="999"
-                class="qty-input"
-              >
-              <button
-                class="btn-accio btn-config-save"
-                (click)="guardarXuxesPerPujar(x)"
-                [disabled]="guardantNivell[x.id]"
-              >
-                {{ guardantNivell[x.id] ? '...' : '💾' }}
-              </button>
-            </div>
-          </div>
-          }
-        </div>
-
-      </div>
-      } @else {
-      <div class="cargando">
-        <span class="cargando-spinner"></span>
-        Carregant Xuxemons...
-      </div>
-      }
-    </div>
-  </div>
-  }
+    }
   </div> <!-- Fi Admin Main Layout -->
 
   <div class="admin-footer">
@@ -430,13 +247,13 @@
     </button>
   </div>
 
-  <!-- MODAL CONFIRMACIÃ“ TOGGLE -->
+  <!-- MODAL CONFIRMACIÓ TOGGLE -->
   @if (usuarioAConfirmar) {
   <div class="overlay" (click)="cancelarConfirmacion()">
     <div class="modal modal-confirm" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>{{ usuarioAConfirmar!.actiu ? 'Deshabilitar compte' : 'Habilitar compte' }}</h2>
-        <button class="btn-cerrar" (click)="cancelarConfirmacion()">âœ•</button>
+        <button class="btn-cerrar" (click)="cancelarConfirmacion()">✕</button>
       </div>
       <div class="confirm-body">
         <p>
@@ -445,10 +262,10 @@
           l'usuari <strong>{{ usuarioAConfirmar!.nombre }} {{ usuarioAConfirmar!.apellidos }}</strong>?
         </p>
         <div class="confirm-accions">
-          <button class="btn-cancel" (click)="cancelarConfirmacion()">CancelÂ·lar</button>
+          <button class="btn-cancel" (click)="cancelarConfirmacion()">Cancel·lar</button>
           <button [class]="usuarioAConfirmar!.actiu ? 'btn-deshabilitar confirm-btn' : 'btn-habilitar confirm-btn'"
             (click)="confirmarToggle()">
-            {{ usuarioAConfirmar!.actiu ? 'SÃ­, deshabilitar' : 'SÃ­, habilitar' }}
+            {{ usuarioAConfirmar!.actiu ? 'Sí, deshabilitar' : 'Sí, habilitar' }}
           </button>
         </div>
       </div>
@@ -467,7 +284,8 @@
       <div class="confirm-body">
         <p>
           Segur que vols
-          <strong>{{ usuarioRolAConfirmar!.role === 'admin' ? 'treure els permisos d\'admin a' : 'donar permisos d\'admin a' }}</strong>
+          <strong>{{ usuarioRolAConfirmar!.role === 'admin' ? 'treure els permisos d\'admin a' : 'donar permisos
+            d\'admin a' }}</strong>
           <strong>{{ usuarioRolAConfirmar!.nombre }} {{ usuarioRolAConfirmar!.apellidos }}</strong>?
         </p>
         <div class="confirm-accions">
@@ -494,10 +312,10 @@
 
       <div class="inventari-form">
         @if (mensajeExito) {
-        <div class="mensaje exito">âœ“ {{ mensajeExito }}</div>
+        <div class="mensaje exito">✓ {{ mensajeExito }}</div>
         }
         @if (mensajeError) {
-        <div class="mensaje error">âš  {{ mensajeError }}</div>
+        <div class="mensaje error">⚠ {{ mensajeError }}</div>
         }
 
         <div class="xuxes-lista">
@@ -505,9 +323,9 @@
           <div class="xuxa-row">
             <div class="xuxa-info">
               @if (xuxa.imagen) {
-                <img class="xuxa-img" [src]="'http://localhost:8000/' + xuxa.imagen" [alt]="xuxa.nombre_xuxes">
+              <img class="xuxa-img" [src]="'http://localhost:8000/' + xuxa.imagen" [alt]="xuxa.nombre_xuxes">
               } @else {
-                <div class="xuxa-img-placeholder"></div>
+              <div class="xuxa-img-placeholder"></div>
               }
               <div class="xuxa-text">
                 <span class="xuxa-nom">{{ xuxa.nombre_xuxes }}</span>
@@ -548,9 +366,9 @@
           <div class="xuxa-row">
             <div class="xuxa-info">
               @if (vacuna.imagen) {
-                <img class="xuxa-img" [src]="'http://localhost:8000/' + vacuna.imagen" [alt]="vacuna.nombre_xuxes">
+              <img class="xuxa-img" [src]="'http://localhost:8000/' + vacuna.imagen" [alt]="vacuna.nombre_xuxes">
               } @else {
-                <div class="xuxa-img-placeholder"></div>
+              <div class="xuxa-img-placeholder"></div>
               }
               <div class="xuxa-text">
                 <span class="xuxa-nom">{{ vacuna.nombre_xuxes }}</span>
@@ -577,7 +395,7 @@
 
       <div class="modal-header">
         <h2>Xuxemons de {{ getNombreUsuario(usuarioSeleccionado!) }}</h2>
-        <button class="btn-cerrar" (click)="cerrarModal()">âœ•</button>
+        <button class="btn-cerrar" (click)="cerrarModal()">✕</button>
       </div>
 
       @if (cargandoXuxemons) {
@@ -591,7 +409,7 @@
       <div class="modal-body">
 
         <div class="tipo-seccion tipo-aigua">
-          <h3>ðŸ’§ Aigua</h3>
+          <h3>💧 Aigua</h3>
           @if (xuxemonsAgua.length === 0) {
           <p class="sin-tipo">Cap xuxemon d'Aigua</p>
           }
@@ -615,7 +433,7 @@
         </div>
 
         <div class="tipo-seccion tipo-aire">
-          <h3>ðŸ’¨ Aire</h3>
+          <h3>💨 Aire</h3>
           @if (xuxemonsAire.length === 0) {
           <p class="sin-tipo">Cap xuxemon d'Aire</p>
           }
@@ -639,7 +457,7 @@
         </div>
 
         <div class="tipo-seccion tipo-terra">
-          <h3>ðŸŒ¿ Terra</h3>
+          <h3>🌿 Terra</h3>
           @if (xuxemonsTerra.length === 0) {
           <p class="sin-tipo">Cap xuxemon de Terra</p>
           }
@@ -667,4 +485,4 @@
     </div>
   </div>
   }
-</section>
+</div>
