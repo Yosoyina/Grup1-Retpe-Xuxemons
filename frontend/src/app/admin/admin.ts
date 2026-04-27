@@ -1,29 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { XuxemonService, Xuxemon } from '../services/xuxemon.service';
 import { AdminConfigService, SystemConfigItem, XuxemonNivell } from '../services/admin-config.service';
+import { AdminService, UsuarioAdmin, XuxeItem } from '../services/admin.service';
 import { finalize } from 'rxjs';
-
-interface UsuarioAdmin {
-  id: number;
-  nombre: string;
-  apellidos: string;
-  email: string;
-  id_jugador: string | null;
-  role: string;
-  actiu: boolean;
-  avatar: string | null;
-}
-
-interface XuxeItem {
-  id: number;
-  nombre_xuxes: string;
-  apilable: boolean;
-  imagen?: string;
-}
 
 @Component({
   selector: 'app-admin',
@@ -42,14 +24,20 @@ export class Admin implements OnInit {
   mensajeError = '';
   modalAbierto = false;
   usuarioAConfirmar: UsuarioAdmin | null = null;
-  private apiUrl = 'http://localhost:8000/api/admin';
-
+  usuarioRolAConfirmar: UsuarioAdmin | null = null;
   // Inventari
   xuxesDisponibles: XuxeItem[] = [];
   xuxesQuantitats: Record<number, number> = {};
   modalInventariAbierto = false;
   usuarioInventariId: number | null = null;
   afegindoXuxes = false;
+
+  // Vacunes
+  vacunesDisponibles: XuxeItem[] = [];
+  vacunesQuantitats: Record<number, number> = {};
+  modalVacunesAbierto = false;
+  usuarioVacunesId: number | null = null;
+  afegindoVacunes = false;
 
   // Configuració global del sistema
   configItems: SystemConfigItem[] = [];
@@ -68,7 +56,7 @@ export class Admin implements OnInit {
   // Pestanya activa ('usuaris', 'config', 'xuxemons')
   pestanyaActiva: string = 'usuaris';
 
-  // Getters para filtrar xuxemons por tipo
+  // Getters para filtrar xuxemons per tipus
   get xuxemonsAgua(): Xuxemon[] {
     return this.xuxemons.filter(x => x.tipo_elemento === 'Aigua');
   }
@@ -85,7 +73,7 @@ export class Admin implements OnInit {
 
   // Getters para filtrar xuxemons por tipo
   constructor(
-    private http: HttpClient,
+    private adminService: AdminService,
     private xuxemonService: XuxemonService,
     private adminConfigService: AdminConfigService,
     private cdr: ChangeDetectorRef,
@@ -104,25 +92,23 @@ export class Admin implements OnInit {
   cargarUsuarios(): void {
     this.cargandoUsuarios = true;
 
-    this.http.get<any>(`${this.apiUrl}/usuarios`).subscribe({
+    this.adminService.getUsuarios().subscribe({
       next: (response) => {
-        this.usuarios = Array.isArray(response)
-          ? response
-          : (response?.users ?? response?.data ?? []);
+        this.usuarios = Array.isArray(response) ? response : ((response as any)?.users ?? (response as any)?.data ?? []);
         this.cargandoUsuarios = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error cargando usuarios', err);
-        if (err.status === 401) {
-          this.mensajeError = 'Sesion caducada. Vuelve a iniciar sesion.';
-        } else if (err.status === 403) {
-          this.mensajeError = 'No tienes permisos de admin para ver usuarios.';
-        } else {
-          this.mensajeError = 'Error al cargar usuarios';
-        }
-        this.cargandoUsuarios = false;
-        this.cdr.detectChanges();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando usuarios', err);
+          if (err.status === 401) {
+            this.mensajeError = 'Sesion caducada. Vuelve a iniciar sesion.';
+          } else if (err.status === 403) {
+            this.mensajeError = 'No tienes permisos de admin para ver usuarios.';
+          } else {
+            this.mensajeError = 'Error al cargar usuarios';
+          }
+          this.cargandoUsuarios = false;
+          this.cdr.detectChanges();
       }
     });
   }
@@ -145,13 +131,13 @@ export class Admin implements OnInit {
           imagen: x.imagen ? `http://localhost:8000/${x.imagen}` : null
         }));
         this.cargandoXuxemons = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error cargando xuxemons', err);
-        this.mensajeError = 'Error al cargar Xuxemons';
-        this.cargandoXuxemons = false;
-        this.cdr.detectChanges();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando xuxemons', err);
+          this.mensajeError = 'Error al cargar Xuxemons';
+          this.cargandoXuxemons = false;
+          this.cdr.detectChanges();
       }
     });
   }
@@ -214,9 +200,7 @@ export class Admin implements OnInit {
     const usuario = this.usuarioAConfirmar;
     this.usuarioAConfirmar = null;
 
-    this.http.put<{ message: string; actiu: boolean }>(
-      `${this.apiUrl}/usuarios/${usuario.id}/toggle`, {}
-    ).subscribe({
+    this.adminService.toggleActiu(usuario.id).subscribe({
       next: (res) => {
         usuario.actiu = res.actiu;
         this.mensajeExito = res.message;
@@ -226,6 +210,36 @@ export class Admin implements OnInit {
       error: (err) => {
         console.error('Error toggling usuario', err);
         this.mensajeError = 'Error al cambiar el estado del usuario';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Obre el modal de confirmació per canviar el rol d'un usuari
+  pedirConfirmacionRol(usuario: UsuarioAdmin): void {
+    this.usuarioRolAConfirmar = usuario;
+  }
+
+  // Cancel·la el canvi de rol
+  cancelarConfirmacionRol(): void {
+    this.usuarioRolAConfirmar = null;
+  }
+
+  // Confirma el canvi de rol i crida la API
+  confirmarToggleRole(): void {
+    if (!this.usuarioRolAConfirmar) return;
+    const usuario = this.usuarioRolAConfirmar;
+    this.usuarioRolAConfirmar = null;
+
+    this.adminService.toggleRole(usuario.id).subscribe({
+      next: (res) => {
+        usuario.role = res.role;
+        this.mensajeExito = res.message;
+        this.mensajeError = '';
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.mensajeError = err.error?.message ?? 'Error al canviar el rol.';
         this.cdr.detectChanges();
       }
     });
@@ -254,10 +268,14 @@ export class Admin implements OnInit {
 
   // Carga la lista de Xuxes disponibles para agregar al inventario
   cargarXuxesDisponibles(): void {
-    this.http.get<{ xuxemons: any[]; xuxes: XuxeItem[] }>(`${this.apiUrl}/inventario/items`).subscribe({
+    this.adminService.getInventarioItems().subscribe({
       next: (res) => {
-        this.xuxesDisponibles = res.xuxes;
-        res.xuxes.forEach(x => { this.xuxesQuantitats[x.id] = 1; });
+        this.xuxesDisponibles  = res.xuxes.filter(x => x.apilable);
+        this.vacunesDisponibles = res.xuxes.filter(x => !x.apilable);
+        res.xuxes.forEach(x => {
+          this.xuxesQuantitats[x.id]  = 1;
+          this.vacunesQuantitats[x.id] = 1;
+        });
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error carregant Xuxes disponibles', err),
@@ -279,16 +297,29 @@ export class Admin implements OnInit {
     this.usuarioInventariId = null;
   }
 
+  // Abre el modal de vacunes para un usuario específico
+  obrirModalVacunes(userId: number): void {
+    this.usuarioVacunesId = userId;
+    this.modalVacunesAbierto = true;
+    this.vacunesDisponibles.forEach(x => { this.vacunesQuantitats[x.id] = 1; });
+    this.mensajeExito = '';
+    this.mensajeError = '';
+  }
+
+  // Cierra el modal de vacunes y resetea las variables relacionadas
+  tancarModalVacunes(): void {
+    this.modalVacunesAbierto = false;
+    this.usuarioVacunesId = null;
+  }
+
   // Agrega una Xuxa específica al inventario del usuario
   afegirXuxa(xuxeId: number): void {
     const cantidad = this.xuxesQuantitats[xuxeId] ?? 1;
     if (!this.usuarioInventariId || !xuxeId || cantidad < 1) return;
     this.afegindoXuxes = true;
 
-    this.http.post<{ mensaje: string; descartado: number; slots_utilizados: number; max_slots: number }>(
-      `${this.apiUrl}/inventario`,
-      { user_id: this.usuarioInventariId, xuxe_id: xuxeId, cantidad }
-    ).pipe(finalize(() => { this.afegindoXuxes = false; this.cdr.detectChanges(); }))
+    this.adminService.afegirItem(this.usuarioInventariId, xuxeId, cantidad)
+      .pipe(finalize(() => { this.afegindoXuxes = false; this.cdr.detectChanges(); }))
       .subscribe({
         next: (res) => {
           if (res.descartado > 0) {
@@ -303,6 +334,34 @@ export class Admin implements OnInit {
         },
         error: (err) => {
           this.mensajeError = err.error?.message ?? 'Error afegint Xuxes';
+          this.mensajeExito = '';
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  // Agrega una Vacuna específica al inventario del usuario
+  afegirVacuna(xuxeId: number): void {
+    const cantidad = this.vacunesQuantitats[xuxeId] ?? 1;
+    if (!this.usuarioVacunesId || !xuxeId || cantidad < 1) return;
+    this.afegindoVacunes = true;
+
+    this.adminService.afegirItem(this.usuarioVacunesId, xuxeId, cantidad)
+      .pipe(finalize(() => { this.afegindoVacunes = false; this.cdr.detectChanges(); }))
+      .subscribe({
+        next: (res) => {
+          if (res.descartado > 0) {
+            this.mensajeError = res.mensaje;
+            this.mensajeExito = '';
+          } else {
+            this.mensajeExito = res.mensaje;
+            this.mensajeError = '';
+          }
+          this.vacunesQuantitats[xuxeId] = 1;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.mensajeError = err.error?.message ?? 'Error afegint Vacunes';
           this.mensajeExito = '';
           this.cdr.detectChanges();
         }
@@ -332,7 +391,7 @@ export class Admin implements OnInit {
     this.configMissatgeError = '';
 
     this.adminConfigService.updateConfig(clave, valor).pipe(
-      finalize(() => { this.guardantConfig[clave] = false; this.cdr.detectChanges(); })
+        finalize(() => { this.guardantConfig[clave] = false; this.cdr.detectChanges(); })
     ).subscribe({
       next: (res) => {
         this.configMissatgeExito = res.message;
@@ -388,7 +447,7 @@ export class Admin implements OnInit {
     this.nivellMissatgeError = '';
 
     this.adminConfigService.updateXuxesPerPujar(xuxemon.id, valor).pipe(
-      finalize(() => { this.guardantNivell[xuxemon.id] = false; this.cdr.detectChanges(); })
+        finalize(() => { this.guardantNivell[xuxemon.id] = false; this.cdr.detectChanges(); })
     ).subscribe({
       next: (res) => {
         this.nivellMissatgeExito = res.message;

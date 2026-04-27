@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 export interface SystemConfigItem {
   clave: string;
@@ -21,7 +22,7 @@ export interface XuxemonNivell {
   providedIn: 'root',
 })
 export class AdminConfigService {
-  private adminUrl = 'http://localhost:8000/api/admin';
+  private adminUrl = `${API_URL}/admin`;
 
   constructor(private http: HttpClient) {}
 

@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, map, catchError, of } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = API_URL;
 
   // BehaviorSubject que guarda l'usuari actual (null si no esta logejat)
   private usuariActual = new BehaviorSubject<any>(null);

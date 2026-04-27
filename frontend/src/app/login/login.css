@@ -1,4 +1,4 @@
-﻿/* ── HOST + VARIABLES ────────────────────────────── */
+/* -- HOST + VARIABLES ------------------------------ */
 :host {
   --yellow:       rgba(255, 208, 0, .95);
   --yellow-focus: rgba(255, 204, 0, .26);
@@ -11,7 +11,7 @@
   overflow: hidden;
   display: grid;
   place-items: center;
-  background: url("/Login-Fondo.png") 50% 12% / cover no-repeat #0b2d84;
+  background: url("/Login-Fondo.webp") 50% 12% / cover no-repeat #0b2d84;
   padding: clamp(12px, 2.5vh, 28px) 16px;
   box-sizing: border-box;
   font-family: var(--font-ui);
@@ -35,7 +35,7 @@
   z-index: -1;
 }
 
-/* ── H1 OCULT (accessibilitat) ───────────────────── */
+/* -- H1 OCULT (accessibilitat) --------------------- */
 h1 {
   position: absolute;
   width: 1px; height: 1px;
@@ -46,7 +46,7 @@ h1 {
   border: 0;
 }
 
-/* ── FORMULARI ───────────────────────────────────── */
+/* -- FORMULARI ------------------------------------- */
 form {
   width: min(560px, 92vw);
   padding: clamp(18px, 2.2vh, 26px) clamp(16px, 2.2vw, 26px) clamp(16px, 2vh, 22px);
@@ -62,7 +62,7 @@ form {
 
 form > div { margin-bottom: 14px; }
 
-/* ── LABELS OCULTS (accessibilitat) ─────────────── */
+/* -- LABELS OCULTS (accessibilitat) --------------- */
 label {
   position: absolute;
   width: 1px; height: 1px;
@@ -73,7 +73,7 @@ label {
   border: 0;
 }
 
-/* ── INPUTS ──────────────────────────────────────── */
+/* -- INPUTS ---------------------------------------- */
 input {
   width: 100%;
   height: 52px;
@@ -92,7 +92,7 @@ input {
 input::placeholder { color: rgba(40, 40, 40, .55); }
 input:focus { border-color: #ffcc00; box-shadow: 0 0 0 6px var(--yellow-focus); }
 
-/* ── MISSATGES ───────────────────────────────────── */
+/* -- MISSATGES ------------------------------------- */
 .missatge-error,
 .missatge-exit {
   display: block;
@@ -104,12 +104,12 @@ input:focus { border-color: #ffcc00; box-shadow: 0 0 0 6px var(--yellow-focus); 
 .missatge-error { color: #dc2626; }
 .missatge-exit  { color: #16a34a; }
 
-/* ── LINK REGISTRE ───────────────────────────────── */
+/* -- LINK REGISTRE --------------------------------- */
 p { margin: 8px 0 4px; font-size: 14px; color: #2b2b2b; }
 p a { color: #2b2b2b; text-decoration: none; font-weight: 600; }
 p a:hover { text-decoration: underline; }
 
-/* ── BOTO SUBMIT ─────────────────────────────────── */
+/* -- BOTO SUBMIT ----------------------------------- */
 button[type="submit"] {
   width: 100%;
   height: 56px;
@@ -132,7 +132,7 @@ button[type="submit"]:hover  { filter: brightness(1.03); transform: translateY(-
 button[type="submit"]:active { transform: translateY(0) scale(.99); }
 button[disabled]             { opacity: .65; cursor: not-allowed; box-shadow: none; }
 
-/* ── RESPONSIVE ──────────────────────────────────── */
+/* -- RESPONSIVE ------------------------------------ */
 @media (max-width: 520px) {
-  :host { background-image: url("/23.png"); background-position: 50% 6%; }
+  :host { background-image: url("/23.webp"); background-position: 50% 6%; }
 }

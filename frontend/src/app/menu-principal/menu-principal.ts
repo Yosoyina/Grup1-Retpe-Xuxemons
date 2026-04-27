@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
@@ -11,29 +11,22 @@ import { DailyRewardResponse, RewardService } from '../services/reward.service';
   templateUrl: './menu-principal.html',
   styleUrl: './menu-principal.css',
 })
-export class MenuPrincipal {
-  carregant = true;
+export class MenuPrincipal implements OnInit {
   rewardModalVisible = false;
   dailyReward: DailyRewardResponse | null = null;
 
-  // En el constructor, verificamos que el backend está disponible y que el token es válido
   constructor(
     public authService: AuthService,
     private router: Router,
     private rewardService: RewardService,
     private inventarioService: InventarioService,
     private cdr: ChangeDetectorRef,
-  ) {
-    // verificar que el backend esta disponible i el token es valid
-    this.authService.getPerfil().subscribe({
-      next: () => {
-        this.checkDailyReward();
-      },
-      error: () => {
-        localStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      }
-    });
+  ) {}
+
+  // intentarAutoLogin a app.component ja ha validat el token abans d'arribar aquí.
+  // Només cal comprovar la recompensa diària.
+  ngOnInit(): void {
+    this.checkDailyReward();
   }
 
   closeRewardModal() {
@@ -41,7 +34,7 @@ export class MenuPrincipal {
   }
 
   getRewardImage(path?: string | null): string {
-    return path ? `/${path}` : '/23.png';
+    return path ? `/${path}` : '/23.webp';
   }
 
   // Función para cerrar sesión
@@ -65,12 +58,10 @@ export class MenuPrincipal {
           this.inventarioService.cargarInventario();
         }
 
-        this.carregant = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error obteniendo la recompensa diaria:', error);
-        this.carregant = false;
         this.cdr.detectChanges();
       }
     });

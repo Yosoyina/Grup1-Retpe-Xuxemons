@@ -62,6 +62,7 @@ Route::middleware('auth:api')->group(function () {
         // ── USUARIOS ───────────────────────────────────────
         Route::get('/usuarios', [UserController::class, 'listUsers']);
         Route::put('/usuarios/{id}/toggle', [UserController::class, 'toggleActiu']);
+        Route::put('/usuarios/{id}/toggle-role', [UserController::class, 'toggleRole']);
 
         // ── POKEDEX DE XUXEMONS ADMIN ───────────────────────────────────
         Route::get('/xuxedex', [XuxemonsController::class, 'getAdminXuxedex']);

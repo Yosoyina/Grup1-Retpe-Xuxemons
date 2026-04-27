@@ -21,25 +21,25 @@ export class InfoUsuari {
 
   // Llista d'avatars disponibles
   avatars = [
-    'avatarpordefecto.png',
-    'Aigua-Petit-Bulleta.png',
-    'Aigua-Petit-Esquitx.png',
-    'Aigua-Petit-Goteta.png',
-    'Aigua-Petit-Gotim.png',
-    'Aigua-Petit-Perleta.png',
-    'Aigua-Petit-Regalim.png',
-    'Terra-Petit-Fanguet.png',
-    'Terra-Petit-Graveta.png',
-    'Terra-Petit-Grumoll.png',
-    'Terra-Petit-Pedrot.png',
-    'Terra-Petit-Sorreta.png',
-    'Terra-Petit-Terros.png',
-    'Vent-Petit-Airos.png',
-    'Vent-Petit-Alenat.png',
-    'Vent-Petit-Briseta.png',
-    'Vent-Petit-Bufet.png',
-    'Vent-Petit-Sospir.png',
-    'Vent-Petit-Xiulet.png',
+    'avatarpordefecto.webp',
+    'Aigua-Petit-Bulleta.webp',
+    'Aigua-Petit-Esquitx.webp',
+    'Aigua-Petit-Goteta.webp',
+    'Aigua-Petit-Gotim.webp',
+    'Aigua-Petit-Perleta.webp',
+    'Aigua-Petit-Regalim.webp',
+    'Terra-Petit-Fanguet.webp',
+    'Terra-Petit-Graveta.webp',
+    'Terra-Petit-Grumoll.webp',
+    'Terra-Petit-Pedrot.webp',
+    'Terra-Petit-Sorreta.webp',
+    'Terra-Petit-Terros.webp',
+    'Vent-Petit-Airos.webp',
+    'Vent-Petit-Alenat.webp',
+    'Vent-Petit-Briseta.webp',
+    'Vent-Petit-Bufet.webp',
+    'Vent-Petit-Sospir.webp',
+    'Vent-Petit-Xiulet.webp',
   ];
 
   // FormGroup para editar el perfil del usuario
@@ -96,8 +96,8 @@ export class InfoUsuari {
 
   // retorna la URL correcta per a cada avatar
   getAvatarSrc(avatar: string): string {
-    if (!avatar || avatar === 'avatarpordefecto.png') {
-      return '/avatarpordefecto.png';
+    if (!avatar || avatar === 'avatarpordefecto.webp') {
+      return '/avatarpordefecto.webp';
     }
     return '/Imatges/Xuxemons/' + avatar;
   }

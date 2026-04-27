@@ -122,4 +122,24 @@ class UserController extends Controller
             'actiu'   => $user->actiu,
         ], 200);
     }
+
+    // ── TOGGLE ROLE (ADMIN) ───────────────────────────────
+
+    public function toggleRole($id)
+    {
+        $currentUser = \Illuminate\Support\Facades\Auth::guard('api')->user();
+
+        if ((int)$id === $currentUser->id) {
+            return response()->json(['message' => 'No pots canviar el teu propi rol.'], 403);
+        }
+
+        $user = \App\Models\User::findOrFail($id);
+        $user->role = $user->role === 'admin' ? 'user' : 'admin';
+        $user->save();
+
+        return response()->json([
+            'message' => $user->role === 'admin' ? 'Usuari ascendit a admin.' : 'Rol canviat a usuari.',
+            'role'    => $user->role,
+        ], 200);
+    }
 }

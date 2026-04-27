@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 export type Tipus = 'Aigua' | 'Terra' | 'Aire';
 export type Mida = 'Petit' | 'Mitjà' | 'Gran';
@@ -34,7 +35,7 @@ interface InventarioItemApi {
   apilable: boolean;
 }
 
-const API_URL = 'http://localhost:8000/api';
+// API_URL importada de api.config
 const MAX_STACK = 5;
 const APILABLE_SLOTS = 10;
 const NO_APILABLE_SLOTS = 10;

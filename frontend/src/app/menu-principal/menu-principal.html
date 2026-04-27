@@ -9,37 +9,37 @@
 
       <!-- XUXEDEX -->
       <button class="btn-menu" routerLink="/xuxedex">
-        <img src="/Xuxedex.png" alt="Xuxedex" decoding="async" />
+        <img src="/Xuxedex.webp" alt="Xuxedex" />
         <span>XUXEDEX</span>
       </button>
 
       <!-- MOTXILLA -->
       <button class="btn-menu" routerLink="/inventario">
-        <img src="/Moxilla.png" alt="Motxilla" decoding="async" />
+        <img src="/Moxilla.webp" alt="Motxilla" />
         <span>MOTXILLA</span>
       </button>
 
       <!-- AMICS -->
       <button class="btn-menu" routerLink="/amics">
-        <img src="/Amics.png" alt="Amics" decoding="async" />
+        <img src="/Amics.webp" alt="Amics" />
         <span>AMICS</span>
       </button>
 
       <!-- BATALLA -->
       <button class="btn-menu" routerLink="/batalla">
-        <img src="/Batalla.png" alt="Batalla" decoding="async" />
+        <img src="/Batalla.webp" alt="Batalla" />
         <span>BATALLA</span>
       </button>
 
       <!-- XAT -->
       <button class="btn-menu" routerLink="/xat">
-        <img src="/Xat.png" alt="Xat" decoding="async" />
+        <img src="/Xat.webp" alt="Xat" />
         <span>XAT</span>
       </button>
 
       <!-- INFO USUARIO -->
       <button class="btn-menu" routerLink="/info-usuari">
-        <img src="/Perfil.png" alt="Perfil" decoding="async" />
+        <img src="/Perfil.webp" alt="Perfil" />
         <span>PERFIL</span>
       </button>
 
@@ -51,13 +51,13 @@
     <!-- ADMIN (solo visible si es admin) -->
     @if ((authService.usuari$ | async)?.role === 'admin') {
       <button class="btn-admin" routerLink="/admin">
-        <img src="/admin.png" alt="Admin" decoding="async" />
+        <img src="/admin.webp" alt="Admin" />
         <span>ADMIN</span>
       </button>
     }
 
     <button class="btn-sortir" (click)="logout()">
-      <img src="/Sortir.png" alt="Sortir" />
+      <img src="/Sortir.webp" alt="Sortir" />
       <span>SORTIR</span>
     </button>
   </footer>

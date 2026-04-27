@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 export interface Amic {
   id: number;
@@ -23,7 +24,7 @@ export interface PeticioAmistat {
 })
 export class AmicsService {
 
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = API_URL;
 
   private amics$ = new BehaviorSubject<Amic[]>([]);
   amics = this.amics$.asObservable();

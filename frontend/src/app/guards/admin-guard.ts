@@ -15,7 +15,7 @@ export const adminGuard: CanActivateFn = async (route, state) => {
   }
 
   // Si el perfil del usuario no está cargado, intenta cargarlo
-  if (!authService.usuari$) {
+  if (!authService.getUsuariActual()) {
     try {
       await firstValueFrom(authService.getPerfil());
     } catch {
