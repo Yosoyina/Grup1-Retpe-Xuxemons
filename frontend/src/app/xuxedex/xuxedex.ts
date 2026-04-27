@@ -1,6 +1,5 @@
 import { Component, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { XuxemonService, Xuxemon, EtapaEvoluciones, FeedResult, AplicarVacunaResult } from '../services/xuxemon.service';
@@ -9,7 +8,7 @@ import { InventarioService, Slot } from '../services/inventario.service';
 @Component({
   selector: 'app-xuxedex',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, FormsModule],
+  imports: [CommonModule, AsyncPipe],
   templateUrl: './xuxedex.html',
   styleUrl: './xuxedex.css',
 })
@@ -24,7 +23,6 @@ export class Xuxedex implements OnDestroy {
   mostrarEvolucion = false;
   cargarEvolucion = false;
   errorEvolucion: string | null = null;
-  xuxeEvoSlot: Slot | null = null;
   mostrarPanellAlimentar = false;
   mostrarPanellVacuna = false;
 
@@ -69,7 +67,6 @@ export class Xuxedex implements OnDestroy {
 
     this.inventarioService.cargarInventario();
     this.slotsSub = this.inventarioService.slots$.subscribe(() => {
-      this.xuxeEvoSlot = this.getXuxeEvo();
       this.cdr.markForCheck();
     });
 

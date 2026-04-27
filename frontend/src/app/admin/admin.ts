@@ -71,7 +71,6 @@ export class Admin implements OnInit {
     return this.xuxemons.filter(x => x.tipo_elemento === 'Terra');
   }
 
-  // Getters para filtrar xuxemons por tipo
   constructor(
     private adminService: AdminService,
     private xuxemonService: XuxemonService,
@@ -251,6 +250,12 @@ export class Admin implements OnInit {
     return usuario ? `${usuario.nombre} ${usuario.apellidos}` : '';
   }
 
+
+  // Retorna la URL correcta de l'avatar de l'usuari
+  getAvatarSrc(avatar: string | null): string {
+    if (!avatar || avatar.startsWith('avatarpordefecto')) return '/avatarpordefecto.webp';
+    return '/Imatges/Xuxemons/' + avatar;
+  }
 
   // Función para obtener las iniciales del usuario a partir de su nombre y apellidos
   getIniciales(nombre: string, apellidos: string): string {

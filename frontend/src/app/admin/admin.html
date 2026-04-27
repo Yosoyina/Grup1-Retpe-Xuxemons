@@ -1,4 +1,4 @@
-<section class="admin-wrapper" aria-labelledby="admin-title">
+﻿<section class="admin-wrapper" aria-labelledby="admin-title">
   <header>
     <h1 class="admin-titulo" id="admin-title">PANEL ADMINISTRADOR</h1>
   </header>
@@ -47,11 +47,12 @@
 
             <!-- Avatar + Dades -->
             <div class="usuario-info">
-              <div class="avatar">
-                {{ getIniciales(usuario.nombre, usuario.apellidos) }}
-                @if (usuario.avatar) {
-                <img [src]="'/' + usuario.avatar" [alt]="usuario.nombre" class="avatar-img"
-                  (error)="$event.target['style'].display='none'">
+              <div class="avatar" [class.avatar-amb-img]="true">
+                @if (!usuario.avatar || usuario.avatar.startsWith('avatarpordefecto')) {
+                  <img src="/avatarpordefecto.webp" [alt]="usuario.nombre" class="avatar-img avatar-img-default">
+                } @else {
+                  <img [src]="getAvatarSrc(usuario.avatar)" [alt]="usuario.nombre" class="avatar-img"
+                    (error)="$event.target['src']='/avatarpordefecto.webp'; $event.target['className']='avatar-img avatar-img-default'">
                 }
               </div>
               <div class="datos">

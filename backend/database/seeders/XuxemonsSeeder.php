@@ -23,7 +23,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Petit',
                 'descripcio' => "Una petita gota d'aigua que salta alegrement.",
-                'imagen' => 'Imatges/Xuxemons/Ev1-Aigua-Petit-Goteta.png',
+                'imagen' => 'Imatges/Xuxemons/Ev1-Aigua-Petit-Goteta.webp',
                 'evolucion_xuxemon' => 'linia-aigua-1',
             ],
             [
@@ -31,7 +31,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Petit',
                 'descripcio' => 'Un bassiot profund ple de misteris aquàtics.',
-                'imagen' => 'Imatges/Xuxemons/Ev2-Aigua-Petit-Bulleta.png',
+                'imagen' => 'Imatges/Xuxemons/Ev2-Aigua-Petit-Bulleta.webp',
                 'evolucion_xuxemon' => 'linia-aigua-2',
             ],
             [
@@ -39,7 +39,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Petit',
                 'descripcio' => "Una laguna ancestral plena d'energia hidden.",
-                'imagen' => 'Imatges/Xuxemons/Ev3-Aigua-Petit-Esquitx.png',
+                'imagen' => 'Imatges/Xuxemons/Ev3-Aigua-Petit-Esquitx.webp',
                 'evolucion_xuxemon' => 'linia-aigua-3',
             ],
             [
@@ -47,7 +47,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Petit',
                 'descripcio' => "Una petita gota d'aigua que salta alegrement.",
-                'imagen' => 'Imatges/Xuxemons/Ev6-Aigua-Petit-Regalim.png',
+                'imagen' => 'Imatges/Xuxemons/Ev6-Aigua-Petit-Regalim.webp',
                 'evolucion_xuxemon' => 'linia-aigua-4',
             ],
             [
@@ -55,7 +55,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Petit',
                 'descripcio' => 'Un bassiot profund ple de misteris aquàtics.',
-                'imagen' => 'Imatges/Xuxemons/Ev4-Aigua-Petit-Gotim.png',
+                'imagen' => 'Imatges/Xuxemons/Ev4-Aigua-Petit-Gotim.webp',
                 'evolucion_xuxemon' => 'linia-aigua-5',
             ],
             [
@@ -63,7 +63,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Petit',
                 'descripcio' => "Una laguna ancestral plena d'energia hidden.",
-                'imagen' => 'Imatges/Xuxemons/Ev5-Aigua-Petit-Perleta.png',
+                'imagen' => 'Imatges/Xuxemons/Ev5-Aigua-Petit-Perleta.webp',
                 'evolucion_xuxemon' => 'linia-aigua-6',
             ],
 
@@ -74,7 +74,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Petit',
                 'descripcio' => 'Un sospir de vent calent que escampa les llavors.',
-                'imagen' => 'Imatges/Xuxemons/Ev16-Vent-Petit-Bufet.png',
+                'imagen' => 'Imatges/Xuxemons/Ev16-Vent-Petit-Bufet.webp',
                 'evolucion_xuxemon' => 'linia-aire-1',
             ],
             [
@@ -82,7 +82,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Petit',
                 'descripcio' => 'Una ratxa de vent que apareix de forma inesperada.',
-                'imagen' => 'Imatges/Xuxemons/Ev15-Vent-Petit-Briseta.png',
+                'imagen' => 'Imatges/Xuxemons/Ev15-Vent-Petit-Briseta.webp',
                 'evolucion_xuxemon' => 'linia-aire-2',
             ],
             [
@@ -90,7 +90,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Petit',
                 'descripcio' => "Un ésser de l'estratosfera amb poder il·limitat.",
-                'imagen' => 'Imatges/Xuxemons/Ev18-Vent-Petit-Xiulet.png',
+                'imagen' => 'Imatges/Xuxemons/Ev18-Vent-Petit-Xiulet.webp',
                 'evolucion_xuxemon' => 'linia-aire-3',
             ],
             [
@@ -98,7 +98,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Petit',
                 'descripcio' => 'Un sospir de vent calent que escampa les llavors.',
-                'imagen' => 'Imatges/Xuxemons/Ev13-Vent-Petit-Airos.png',
+                'imagen' => 'Imatges/Xuxemons/Ev13-Vent-Petit-Airos.webp',
                 'evolucion_xuxemon' => 'linia-aire-4',
             ],
             [
@@ -106,7 +106,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Petit',
                 'descripcio' => 'Una ratxa de vent que apareix de forma inesperada.',
-                'imagen' => 'Imatges/Xuxemons/Ev14-Vent-Petit-Alenat.png',
+                'imagen' => 'Imatges/Xuxemons/Ev14-Vent-Petit-Alenat.webp',
                 'evolucion_xuxemon' => 'linia-aire-5',
             ],
             [
@@ -114,7 +114,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Petit',
                 'descripcio' => "Un ésser de l'estratosfera amb poder il·limitat.",
-                'imagen' => 'Imatges/Xuxemons/Ev17-Vent-Petit-Sospir.png',
+                'imagen' => 'Imatges/Xuxemons/Ev17-Vent-Petit-Sospir.webp',
                 'evolucion_xuxemon' => 'linia-aire-6',
             ],
 
@@ -125,7 +125,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Petit',
                 'descripcio' => "Un fanguet tou que s'infiltra per qualsevol escletxa.",
-                'imagen' => 'Imatges/Xuxemons/Ev12-Terra-Petit-Fanguet.png',
+                'imagen' => 'Imatges/Xuxemons/Ev12-Terra-Petit-Fanguet.webp',
                 'evolucion_xuxemon' => 'linia-terra-1',
             ],
             [
@@ -133,7 +133,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Petit',
                 'descripcio' => 'Una graveta petita que salta alegrement.',
-                'imagen' => 'Imatges/Xuxemons/Ev11-Terra-Petit-Graveta.png',
+                'imagen' => 'Imatges/Xuxemons/Ev11-Terra-Petit-Graveta.webp',
                 'evolucion_xuxemon' => 'linia-terra-2',
             ],
             [
@@ -141,7 +141,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Petit',
                 'descripcio' => 'Un grumoll de terra compacta i sòlida.',
-                'imagen' => 'Imatges/Xuxemons/Ev8-Terra-Petit-Grumoll.png',
+                'imagen' => 'Imatges/Xuxemons/Ev8-Terra-Petit-Grumoll.webp',
                 'evolucion_xuxemon' => 'linia-terra-3',
             ],
             [
@@ -149,7 +149,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Petit',
                 'descripcio' => 'Un pedrot rodó i lleuger que roda pels camps.',
-                'imagen' => 'Imatges/Xuxemons/Ev7-Terra-Petit-Pedrot.png',
+                'imagen' => 'Imatges/Xuxemons/Ev7-Terra-Petit-Pedrot.webp',
                 'evolucion_xuxemon' => 'linia-terra-4',
             ],
             [
@@ -157,7 +157,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Petit',
                 'descripcio' => 'Una sorreta fina que flueix amb elegància.',
-                'imagen' => 'Imatges/Xuxemons/Ev9-Terra-Petit-Sorreta.png',
+                'imagen' => 'Imatges/Xuxemons/Ev9-Terra-Petit-Sorreta.webp',
                 'evolucion_xuxemon' => 'linia-terra-5',
             ],
             [
@@ -165,7 +165,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Petit',
                 'descripcio' => 'Un terroset petit i acomodatici que viu sous terra.',
-                'imagen' => 'Imatges/Xuxemons/Ev10-Terra-Petit-Terros.png',
+                'imagen' => 'Imatges/Xuxemons/Ev10-Terra-Petit-Terros.webp',
                 'evolucion_xuxemon' => 'linia-terra-6',
             ],
 
@@ -177,7 +177,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un rierol decidit que avança per camins rocosos.",
-                'imagen' => 'Imatges/Xuxemons/Ev1-Aigua-Mitja-Rierol.png',
+                'imagen' => 'Imatges/Xuxemons/Ev1-Aigua-Mitja-Rierol.webp',
                 'evolucion_xuxemon' => 'linia-aigua-1',
             ],
             [
@@ -185,7 +185,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un glop d'aigua que acumula força sota la superfície.",
-                'imagen' => 'Imatges/Xuxemons/Ev2-Aigua-Mitja-Glopet.png',
+                'imagen' => 'Imatges/Xuxemons/Ev2-Aigua-Mitja-Glopet.webp',
                 'evolucion_xuxemon' => 'linia-aigua-2',
             ],
             [
@@ -193,7 +193,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un bassot profund que reflecteix el cel nocturn.",
-                'imagen' => 'Imatges/Xuxemons/Ev3-Aigua-MItja-Bassot.png',
+                'imagen' => 'Imatges/Xuxemons/Ev3-Aigua-MItja-Bassot.webp',
                 'evolucion_xuxemon' => 'linia-aigua-3',
             ],
             [
@@ -201,7 +201,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un torrent que s'escola ràpid entre les pedres.",
-                'imagen' => 'Imatges/Xuxemons/Ev6-Aigua-Mitja-Torrent.png',
+                'imagen' => 'Imatges/Xuxemons/Ev6-Aigua-Mitja-Torrent.webp',
                 'evolucion_xuxemon' => 'linia-aigua-4',
             ],
             [
@@ -209,7 +209,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un aiguat sobtós que omple els barrancs.",
-                'imagen' => 'Imatges/Xuxemons/Ev4-Aigua-Mitja-Aiguat.png',
+                'imagen' => 'Imatges/Xuxemons/Ev4-Aigua-Mitja-Aiguat.webp',
                 'evolucion_xuxemon' => 'linia-aigua-5',
             ],
             [
@@ -217,7 +217,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un remolí d'aigua que arrossega tot al seu pas.",
-                'imagen' => 'Imatges/Xuxemons/Ev5-Aigua-Mitja-Remoli.png',
+                'imagen' => 'Imatges/Xuxemons/Ev5-Aigua-Mitja-Remoli.webp',
                 'evolucion_xuxemon' => 'linia-aigua-6',
             ],
 
@@ -227,7 +227,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un ventroll potent que esculpeix les muntanyes.",
-                'imagen' => 'Imatges/Xuxemons/Ev16-Vent-Mitja-Ventroll.png',
+                'imagen' => 'Imatges/Xuxemons/Ev16-Vent-Mitja-Ventroll.webp',
                 'evolucion_xuxemon' => 'linia-aire-1',
             ],
             [
@@ -235,7 +235,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Mitja',
                 'descripcio' => "Una ratxa d'aire que dobla els arbres centenaris.",
-                'imagen' => 'Imatges/Xuxemons/Ev15-Vent-Mitjar-Ratxot.png',
+                'imagen' => 'Imatges/Xuxemons/Ev15-Vent-Mitjar-Ratxot.webp',
                 'evolucion_xuxemon' => 'linia-aire-2',
             ],
             [
@@ -243,7 +243,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Mitja',
                 'descripcio' => "Uns remolins sinuosos que danssen a l'aire.",
-                'imagen' => 'Imatges/Xuxemons/Ev18-Vent-Mitja-Remolins.png',
+                'imagen' => 'Imatges/Xuxemons/Ev18-Vent-Mitja-Remolins.webp',
                 'evolucion_xuxemon' => 'linia-aire-3',
             ],
             [
@@ -251,7 +251,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Mitja',
                 'descripcio' => "Una borrasca que porta pluja de terra llunyana.",
-                'imagen' => 'Imatges/Xuxemons/Ev13-Vent-Mitja-Borrasca.png',
+                'imagen' => 'Imatges/Xuxemons/Ev13-Vent-Mitja-Borrasca.webp',
                 'evolucion_xuxemon' => 'linia-aire-4',
             ],
             [
@@ -259,7 +259,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un ventijol capaç de desviar qualsevol trajecte.",
-                'imagen' => 'Imatges/Xuxemons/Ev14-Vent-Mitjar-Ventijol.png',
+                'imagen' => 'Imatges/Xuxemons/Ev14-Vent-Mitjar-Ventijol.webp',
                 'evolucion_xuxemon' => 'linia-aire-5',
             ],
             [
@@ -267,7 +267,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un corrent d'aire que connecta cel i terra.",
-                'imagen' => 'Imatges/Xuxemons/Ev17-Vent-Mitjar-Corrent.png',
+                'imagen' => 'Imatges/Xuxemons/Ev17-Vent-Mitjar-Corrent.webp',
                 'evolucion_xuxemon' => 'linia-aire-6',
             ],
 
@@ -277,7 +277,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un ésser d'argila que modela la terra al seu gust.",
-                'imagen' => 'Imatges/Xuxemons/Ev12-Terra-Mitja-Argilos.png',
+                'imagen' => 'Imatges/Xuxemons/Ev12-Terra-Mitja-Argilos.webp',
                 'evolucion_xuxemon' => 'linia-terra-1',
             ],
             [
@@ -285,7 +285,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un escarpat esmolat que resisteix qualsevol erosió.",
-                'imagen' => 'Imatges/Xuxemons/Ev11-Terra-Mitja-Escarpat.png',
+                'imagen' => 'Imatges/Xuxemons/Ev11-Terra-Mitja-Escarpat.webp',
                 'evolucion_xuxemon' => 'linia-terra-2',
             ],
             [
@@ -293,7 +293,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un codol ben rodat que porta la memòria del riu.",
-                'imagen' => 'Imatges/Xuxemons/Ev8-Terra-Mitja-Codol.png',
+                'imagen' => 'Imatges/Xuxemons/Ev8-Terra-Mitja-Codol.webp',
                 'evolucion_xuxemon' => 'linia-terra-3',
             ],
             [
@@ -301,7 +301,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un rocall desglaçat d'una muntanya antiga.",
-                'imagen' => 'Imatges/Xuxemons/Ev7-Terra-Mitja-Rocall.png',
+                'imagen' => 'Imatges/Xuxemons/Ev7-Terra-Mitja-Rocall.webp',
                 'evolucion_xuxemon' => 'linia-terra-4',
             ],
             [
@@ -309,7 +309,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un arenal canviant que mai conserva la mateixa forma.",
-                'imagen' => 'Imatges/Xuxemons/Ev9-Terra-Mitja-Arenal.png',
+                'imagen' => 'Imatges/Xuxemons/Ev9-Terra-Mitja-Arenal.webp',
                 'evolucion_xuxemon' => 'linia-terra-5',
             ],
             [
@@ -317,7 +317,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Mitja',
                 'descripcio' => "Un lotus de pedra que floreix a les zones humides.",
-                'imagen' => 'Imatges/Xuxemons/Ev10-Terra-Mitja-Llotos.png',
+                'imagen' => 'Imatges/Xuxemons/Ev10-Terra-Mitja-Llotos.webp',
                 'evolucion_xuxemon' => 'linia-terra-6',
             ],
 
@@ -329,7 +329,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Gran',
                 'descripcio' => "Un maregot colossal que sacseja els continents.",
-                'imagen' => 'Imatges/Xuxemons/Ev1-Aigua-Gran-Maregot.png',
+                'imagen' => 'Imatges/Xuxemons/Ev1-Aigua-Gran-Maregot.webp',
                 'evolucion_xuxemon' => 'linia-aigua-1',
             ],
             [
@@ -337,7 +337,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Gran',
                 'descripcio' => "Una onada gegantina que ressona com un tro.",
-                'imagen' => 'Imatges/Xuxemons/Ev2-Aigua-Gran-Onada.png',
+                'imagen' => 'Imatges/Xuxemons/Ev2-Aigua-Gran-Onada.webp',
                 'evolucion_xuxemon' => 'linia-aigua-2',
             ],
             [
@@ -345,7 +345,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Gran',
                 'descripcio' => "Una cascada interminable que neix al cim del món.",
-                'imagen' => 'Imatges/Xuxemons/Ev3-Aigua-Gran-Cascada.png',
+                'imagen' => 'Imatges/Xuxemons/Ev3-Aigua-Gran-Cascada.webp',
                 'evolucion_xuxemon' => 'linia-aigua-3',
             ],
             [
@@ -353,7 +353,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Gran',
                 'descripcio' => "Un diluvi devastador que transforma el paisatge.",
-                'imagen' => 'Imatges/Xuxemons/Ev6-Aigua-Gran-Diluviet.png',
+                'imagen' => 'Imatges/Xuxemons/Ev6-Aigua-Gran-Diluviet.webp',
                 'evolucion_xuxemon' => 'linia-aigua-4',
             ],
             [
@@ -361,7 +361,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Gran',
                 'descripcio' => "Un abisme aquàtic sense fi ple de secrets.",
-                'imagen' => 'Imatges/Xuxemons/Ev4-Aigua-Gran-Abisme.png',
+                'imagen' => 'Imatges/Xuxemons/Ev4-Aigua-Gran-Abisme.webp',
                 'evolucion_xuxemon' => 'linia-aigua-5',
             ],
             [
@@ -369,7 +369,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aigua',
                 'tamano' => 'Gran',
                 'descripcio' => "Una laguna primordial plena d'energia ancestral.",
-                'imagen' => 'Imatges/Xuxemons/Ev5-Aigua-Gran-Laguna.png',
+                'imagen' => 'Imatges/Xuxemons/Ev5-Aigua-Gran-Laguna.webp',
                 'evolucion_xuxemon' => 'linia-aigua-6',
             ],
 
@@ -379,7 +379,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Gran',
                 'descripcio' => "Una tempesta elèctrica que il·lumina la nit.",
-                'imagen' => 'Imatges/Xuxemons/Ev16-Vent-Gran-Tempestos.png',
+                'imagen' => 'Imatges/Xuxemons/Ev16-Vent-Gran-Tempestos.webp',
                 'evolucion_xuxemon' => 'linia-aire-1',
             ],
             [
@@ -387,7 +387,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Gran',
                 'descripcio' => "Un cicló que neteja el camí davant seu.",
-                'imagen' => 'Imatges/Xuxemons/Ev15-Vent-Gran-Ciclo.png',
+                'imagen' => 'Imatges/Xuxemons/Ev15-Vent-Gran-Ciclo.webp',
                 'evolucion_xuxemon' => 'linia-aire-2',
             ],
             [
@@ -395,7 +395,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Gran',
                 'descripcio' => "Un tifó que neix al mar i creix sense aturar-se.",
-                'imagen' => 'Imatges/Xuxemons/Ev18-Vent-Gran-Tifo.png',
+                'imagen' => 'Imatges/Xuxemons/Ev18-Vent-Gran-Tifo.webp',
                 'evolucion_xuxemon' => 'linia-aire-3',
             ],
             [
@@ -403,7 +403,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Gran',
                 'descripcio' => "Un huracà de força devastadora i incontrolable.",
-                'imagen' => 'Imatges/Xuxemons/Ev13-Vent-Gran-Huracas.png',
+                'imagen' => 'Imatges/Xuxemons/Ev13-Vent-Gran-Huracas.webp',
                 'evolucion_xuxemon' => 'linia-aire-4',
             ],
             [
@@ -411,7 +411,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Gran',
                 'descripcio' => "Un tornado que dansa sobre la terra erma.",
-                'imagen' => 'Imatges/Xuxemons/Ev14-Vent-Gran-Tornadas.png',
+                'imagen' => 'Imatges/Xuxemons/Ev14-Vent-Gran-Tornadas.webp',
                 'evolucion_xuxemon' => 'linia-aire-5',
             ],
             [
@@ -419,7 +419,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Aire',
                 'tamano' => 'Gran',
                 'descripcio' => "Un ésser de les capes altes que controla els vents.",
-                'imagen' => 'Imatges/Xuxemons/Ev17-Vent-Gran-Estratos.png',
+                'imagen' => 'Imatges/Xuxemons/Ev17-Vent-Gran-Estratos.webp',
                 'evolucion_xuxemon' => 'linia-aire-6',
             ],
 
@@ -429,7 +429,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Gran',
                 'descripcio' => "Un volcà colossal que dorm sota els continents.",
-                'imagen' => 'Imatges/Xuxemons/Ev12-Terra-Gran-Volcanot.png',
+                'imagen' => 'Imatges/Xuxemons/Ev12-Terra-Gran-Volcanot.webp',
                 'evolucion_xuxemon' => 'linia-terra-1',
             ],
             [
@@ -437,7 +437,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Gran',
                 'descripcio' => "Un cim que toca els núvols i guarda secrets antics.",
-                'imagen' => 'Imatges/Xuxemons/Ev11-Terra-Gran-Cimas.png',
+                'imagen' => 'Imatges/Xuxemons/Ev11-Terra-Gran-Cimas.webp',
                 'evolucion_xuxemon' => 'linia-terra-2',
             ],
             [
@@ -445,7 +445,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Gran',
                 'descripcio' => "Un megalit que empeny la terra i desafia el temps.",
-                'imagen' => 'Imatges/Xuxemons/Ev8-Terra-Gran-Megalit.png',
+                'imagen' => 'Imatges/Xuxemons/Ev8-Terra-Gran-Megalit.webp',
                 'evolucion_xuxemon' => 'linia-terra-3',
             ],
             [
@@ -453,7 +453,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Gran',
                 'descripcio' => "Una terramunt invencible que trenca qualsevol roca.",
-                'imagen' => 'Imatges/Xuxemons/Ev7-Terra-Gran-Terramunt.png',
+                'imagen' => 'Imatges/Xuxemons/Ev7-Terra-Gran-Terramunt.webp',
                 'evolucion_xuxemon' => 'linia-terra-4',
             ],
             [
@@ -461,7 +461,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Gran',
                 'descripcio' => "Un desert viu que absorbeix tota la humitat del món.",
-                'imagen' => 'Imatges/Xuxemons/Ev9-Terra-Gran-Desertor.png',
+                'imagen' => 'Imatges/Xuxemons/Ev9-Terra-Gran-Desertor.webp',
                 'evolucion_xuxemon' => 'linia-terra-5',
             ],
             [
@@ -469,7 +469,7 @@ class XuxemonsSeeder extends Seeder
                 'tipo_elemento' => 'Terra',
                 'tamano' => 'Gran',
                 'descripcio' => "Unes pantanes eternes que amaguen criatures antigues.",
-                'imagen' => 'Imatges/Xuxemons/Ev10-Terra-Gran-Pantanas.png',
+                'imagen' => 'Imatges/Xuxemons/Ev10-Terra-Gran-Pantanas.webp',
                 'evolucion_xuxemon' => 'linia-terra-6',
             ],
         ];
