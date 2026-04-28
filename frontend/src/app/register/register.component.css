@@ -1,226 +1,388 @@
-/* -- HOST + VARIABLES ------------------------------ */
+/* ═══════════════════════════════════════════════════════
+   REGISTER  –  Variables + Estils
+   Tipografies: Fredoka (H1) · Nunito (H2-H4) · Inter (UI)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Variables ───────────────────────────────────────── */
 :host {
-  --yellow:       rgba(255, 208, 0, .95);
-  --yellow-focus: rgba(255, 204, 0, .26);
-  --ink:          #1f2a44;
+  /* Colors */
+  --clr-brand:          #fed430;
+  --clr-brand-hover:    #ffe46b;
+  --clr-brand-active:   #d4aa1e;
+  --clr-brand-disabled: #e0d8b6;
+  --clr-brand-focus:    rgba(255, 204, 0, .28);
+  --clr-brand-border:   rgba(255, 208, 0, .95);
+  --clr-text:         #1c1c1c;
+  --clr-text-soft:    #2b2b2b;
+  --clr-text-dark:    #1e2a78;
+  --clr-placeholder:  rgba(40, 40, 40, .52);
+  --clr-error:        #dc2626;
+  --clr-success:      #16a34a;
+  --clr-form-bg:      rgba(255, 255, 255, .58);
+  --clr-input-bg:     rgba(255, 255, 255, .86);
+  --clr-overlay-1:    rgba(255, 255, 255, .08);
+  --clr-overlay-2:    rgba(255, 255, 255, .60);
+  --clr-modal-bg:     rgba(255, 255, 255, .88);
+  --clr-modal-shadow: rgba(15, 25, 60, .55);
 
-/* Preview ID de jugador */
-.preview-id {
-  display: block;
-  margin-top: 0.3rem;
-  font-size: 0.82rem;
-  color: #6b7280;
-}
-  --ink-dark:     #1E2A78;
-  --pill:         999px;
-  --font-ui:      Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  /* Tipografies */
+  --font-title:   'Fredoka',  system-ui, sans-serif;
+  --font-heading: 'Nunito',   system-ui, sans-serif;
+  --font-ui:      'Inter',    system-ui, -apple-system, Segoe UI, sans-serif;
 
+  /* Mides de text */
+  --fs-h1:        72px;
+  --fs-modal-h2:  clamp(24px, 3vw, 32px);
+  --fs-body:      14px;
+  --fs-caption:   14px;
+  --fs-small:     12px;
+
+  /* Pesos */
+  --fw-regular:   400;
+  --fw-semibold:  600;
+  --fw-bold:      700;
+  --fw-extrabold: 800;
+  --fw-black:     900;
+
+  /* Forma */
+  --radius-pill: 999px;
+  --radius-card: 26px;
+  --radius-box:  14px;
+
+  /* Transicions */
+  --ease-quick: .12s ease;
+  --ease-std:   .18s ease;
+
+  /* Layout */
   min-height: 100dvh;
   height: 100dvh;
   width: 100%;
   overflow: hidden;
   display: grid;
   place-items: center;
-  background: url("/Registre-Fondo.webp") 50% 12% / cover no-repeat #0b2d84;
   padding: clamp(12px, 2.5vh, 28px) 16px;
   box-sizing: border-box;
   font-family: var(--font-ui);
+  font-size: var(--fs-body);
+  color: var(--clr-text);
+  background: url("/Registre-Fondo.webp") 50% 12% / cover no-repeat #0b2d84;
   position: relative;
   isolation: isolate;
 }
 
+/* Capa de superposició del fons */
 :host::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.10), rgba(255,255,255,.04) 55%, rgba(0,0,0,.08) 100%);
+  background: radial-gradient(
+    circle at 50% 40%,
+    rgba(255, 255, 255, .10),
+    rgba(255, 255, 255, .04) 55%,
+    rgba(0, 0, 0, .08) 100%
+  );
   z-index: -1;
 }
 
-/* -- H1 OCULT (accessibilitat) --------------------- */
+/* ── H1 (sr-only) · Fredoka Bold 72px ───────────────── */
 h1 {
+  font-family: var(--font-title);
+  font-weight: var(--fw-bold);
+  font-size:   var(--fs-h1);
   position: absolute;
   width: 1px; height: 1px;
   padding: 0; margin: -1px;
   overflow: hidden;
-  clip: rect(0,0,0,0);
+  clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
 }
 
-/* -- FORMULARI ------------------------------------- */
+/* ── Formulari ───────────────────────────────────────── */
 form {
   width: min(560px, 92vw);
-  padding: clamp(18px, 2.2vh, 26px) clamp(16px, 2.2vw, 26px) clamp(16px, 2vh, 22px);
-  border-radius: 26px;
-  box-sizing: border-box;
-  background: rgba(255, 255, 255, .58);
-  border: 4px solid var(--yellow);
-  box-shadow: 0 18px 40px rgba(0,0,0,.26), inset 0 0 0 1px rgba(255,255,255,.60);
+  padding:
+    clamp(18px, 2.2vh, 26px)
+    clamp(16px, 2.2vw, 26px)
+    clamp(16px, 2vh, 22px);
+  border-radius:   var(--radius-card);
+  box-sizing:      border-box;
+  background:      var(--clr-form-bg);
+  border:          4px solid var(--clr-brand-border);
+  box-shadow:      0 18px 40px rgba(0, 0, 0, .26),
+                   inset 0 0 0 1px var(--clr-overlay-2);
   backdrop-filter: blur(12px);
   max-height: calc(100dvh - 40px);
-  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
-form > div { margin-bottom: 14px; }
+form::-webkit-scrollbar { display: none; }
+form > div { margin-bottom: 12px; }
 
-/* -- LABELS OCULTS (accessibilitat) --------------- */
+/* ── Labels (sr-only) ────────────────────────────────── */
 label {
   position: absolute;
   width: 1px; height: 1px;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0,0,0,0);
+  clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
 }
 
-/* -- INPUTS ---------------------------------------- */
+/* ── Inputs · Inter Regular 16px (Paràfo) ────────────── */
 input {
   width: 100%;
   height: 52px;
   padding: 0 18px;
-  border-radius: var(--pill);
-  box-sizing: border-box;
-  background: rgba(255, 255, 255, .86);
-  border: 3px solid var(--yellow);
-  font-family: var(--font-ui);
-  font-size: 16px;
-  color: #1c1c1c;
+  border-radius: var(--radius-pill);
+  box-sizing:    border-box;
+  background:    var(--clr-input-bg);
+  border:        3px solid var(--clr-brand-border);
+  font-family:   var(--font-ui);
+  font-weight:   var(--fw-regular);
+  font-size:     var(--fs-body);
+  color:         var(--clr-text);
   outline: none;
-  transition: box-shadow .18s ease, border-color .18s ease;
+  transition: box-shadow var(--ease-std), border-color var(--ease-std);
 }
 
-input::placeholder { color: rgba(40, 40, 40, .55); }
-input:focus { border-color: #ffcc00; box-shadow: 0 0 0 6px var(--yellow-focus); }
+/* Placeholder · Inter Regular 14px (Caption) */
+input::placeholder {
+  font-family: var(--font-ui);
+  font-weight: var(--fw-regular);
+  font-size:   var(--fs-caption);
+  color:       var(--clr-placeholder);
+}
 
-/* -- MISSATGES ERROR / EXIT ------------------------ */
+input:focus {
+  border-color: var(--clr-brand-hover);
+  box-shadow:   0 0 0 6px var(--clr-brand-focus);
+}
+
+/* ── Preview ID · Inter Regular 12px (small) ─────────── */
+.preview-id {
+  display: block;
+  margin-top: 5px;
+  padding-left: 18px;
+  font-family: var(--font-ui);
+  font-weight: var(--fw-regular);
+  font-size:   var(--fs-small);
+  color:       rgba(40, 40, 40, .55);
+  line-height: 1.3;
+}
+
+.preview-id strong {
+  font-weight: var(--fw-semibold);
+  color:       var(--clr-text-soft);
+}
+
+/* ── Missatges · Inter Regular 14px (Caption) ────────── */
 .missatge-error,
 .missatge-exit {
-  display: block;
-  margin-top: 4px;
-  font-size: 12px;
-  line-height: 1.2;
+  display:      block;
+  margin-top:   4px;
+  padding-left: 18px;
+  font-family:  var(--font-ui);
+  font-weight:  var(--fw-regular);
+  font-size:    var(--fs-caption);
+  line-height:  1.3;
 }
 
-.missatge-error { color: #dc2626; }
-.missatge-exit  { color: #16a34a; }
+.missatge-error { color: var(--clr-error);   }
+.missatge-exit  { color: var(--clr-success); }
 
-/* -- LINK LOGIN ------------------------------------ */
-p { margin: 8px 0 4px; font-size: 14px; color: #2b2b2b; }
-p a { color: #2b2b2b; text-decoration: none; font-weight: 600; }
+/* ── Paràgraf i link ─────────────────────────────────── */
+p {
+  margin:       8px 0 4px;
+  padding-left: 18px;
+  font-family:  var(--font-ui);
+  font-weight:  var(--fw-regular);
+  font-size:    var(--fs-body);
+  color:        var(--clr-text-soft);
+}
+
+p a {
+  font-family:     var(--font-ui);
+  font-weight:     var(--fw-semibold);
+  font-size:       var(--fs-caption);
+  color:           var(--clr-text-soft);
+  text-decoration: none;
+}
+
 p a:hover { text-decoration: underline; }
 
-/* -- BOTO SUBMIT ----------------------------------- */
+/* ── Botó Submit · Inter SemiBold 16px (Bold) ────────── */
+/* Default: #FED430 · Hover: #FFE46B · Active: #D4AA1E · Focus ring: #8A38F5 · Disabled: #E0D8B6 */
 button[type="submit"] {
-  width: 100%;
-  height: 56px;
-  margin-top: 8px;
-  border: none;
-  border-radius: var(--pill);
-  background: #ffd21f;
-  color: #111;
-  font-family: var(--font-ui);
-  font-weight: 800;
-  font-size: 16px;
+  width:          100%;
+  height:         56px;
+  margin-top:     8px;
+  border:         none;
+  border-radius:  var(--radius-pill);
+  background:     var(--clr-brand);
+  color:          #000;
+  font-family:    var(--font-ui);
+  font-weight:    var(--fw-semibold);
+  font-size:      var(--fs-body);
   letter-spacing: .8px;
   text-transform: uppercase;
-  box-shadow: 0 14px 26px rgba(0,0,0,.22);
-  cursor: pointer;
-  transition: filter .15s ease;
+  box-shadow:     0 14px 26px rgba(0, 0, 0, .22);
+  cursor:         pointer;
+  outline:        none;
+  transition:     background var(--ease-std), transform var(--ease-quick),
+                  box-shadow var(--ease-std);
 }
 
-button[type="submit"]:hover  { filter: brightness(1.03); }
-button[type="submit"]:active { filter: brightness(.98); }
-button[disabled]             { opacity: .65; cursor: not-allowed; box-shadow: none; }
+/* Hover: groc clar #FFE46B */
+button[type="submit"]:hover:not(:disabled) {
+  background: var(--clr-brand-hover);
+  transform:  translateY(-2px);
+}
 
-/* -- RESPONSIVE ------------------------------------ */
+/* Active: groc fosc #D4AA1E */
+button[type="submit"]:active:not(:disabled) {
+  background: var(--clr-brand-active);
+  transform:  translateY(0) scale(.98);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
+}
+
+/* Focus (teclat): ring morat #8A38F5 */
+button[type="submit"]:focus-visible {
+  outline:        3px solid #8a38f5;
+  outline-offset: 3px;
+}
+
+/* Disabled: beix #E0D8B6 */
+button:disabled {
+  background:   var(--clr-brand-disabled);
+  border-color: rgba(0, 0, 0, .25);
+  color:        rgba(0, 0, 0, .40);
+  cursor:       not-allowed;
+  box-shadow:   none;
+  transform:    none;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 520px) {
-  :host { background-image: url("/Fondo-Registre-Responsive.webp"); background-position: 50% 6%; padding: 14px; }
+  :host {
+    background-image:    url("/Fondo-Registre-Responsive.webp");
+    background-position: 50% 6%;
+    padding: 14px;
+  }
 }
 
-/* -- MODAL OVERLAY --------------------------------- */
+/* ════════════════════════════════════════════════════════
+   MODAL DE REGISTRE CORRECTE
+   ════════════════════════════════════════════════════════ */
+
+/* ── Overlay ─────────────────────────────────────────── */
 .modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
+  position:        fixed;
+  inset:           0;
+  z-index:         9999;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  background: rgba(15, 25, 60, 0.55);
+  background:      var(--clr-modal-shadow);
   backdrop-filter: blur(6px);
 }
 
-/* -- MODAL ----------------------------------------- */
+/* ── Modal card ──────────────────────────────────────── */
 .modal {
-  width: min(520px, 92vw);
-  padding: 32px 28px;
+  width:         min(520px, 92vw);
+  padding:       32px 28px;
   border-radius: 28px;
-  background: rgba(255, 255, 255, .85);
-  border: 6px solid #FFD400;
-  box-shadow: 0 30px 70px rgba(0,0,0,.35);
-  text-align: center;
+  background:    var(--clr-modal-bg);
+  border:        6px solid var(--clr-brand);
+  box-shadow:    0 30px 70px rgba(0, 0, 0, .35);
+  text-align:    center;
 }
 
+/* Títol modal · Fredoka Black, stroke */
 .modal h2 {
-  font-family: var(--font-ui);
-  font-size: clamp(26px, 3vw, 34px);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: .03em;
-  color: #ffd200;
+  font-family:      var(--font-title);
+  font-size:        var(--fs-modal-h2);
+  font-weight:      var(--fw-black);
+  text-transform:   uppercase;
+  letter-spacing:   .03em;
+  color:            var(--clr-brand);
   -webkit-text-stroke: 5px rgba(25, 40, 95, .95);
-  paint-order: stroke fill;
-  margin-bottom: 14px;
+  paint-order:      stroke fill;
+  margin-bottom:    14px;
 }
 
-.modal p { font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+/* Text modal · Inter SemiBold 17px */
+.modal > p {
+  padding-left: 0;
+  font-family:  var(--font-ui);
+  font-weight:  var(--fw-semibold);
+  font-size:    17px;
+  color:        var(--clr-text-dark);
+  margin-bottom: 8px;
+}
 
-/* -- CAIXA ID -------------------------------------- */
+/* ── Caixa ID ────────────────────────────────────────── */
 .id-box {
-  display: flex;
-  align-items: center;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, .85);
-  border: 3px solid #FFD400;
-  border-radius: 14px;
-  padding: 12px 16px;
-  margin-bottom: 12px;
+  gap:             10px;
+  background:      var(--clr-input-bg);
+  border:          3px solid var(--clr-brand);
+  border-radius:   var(--radius-box);
+  padding:         12px 16px;
+  margin-bottom:   12px;
 }
 
-.id-box strong { font-size: 22px; font-weight: 900; letter-spacing: .08em; color: var(--ink-dark); }
+.id-box strong {
+  font-family:    var(--font-ui);
+  font-weight:    var(--fw-black);
+  font-size:      22px;
+  letter-spacing: .08em;
+  color:          var(--clr-text-dark);
+}
 
-/* -- BOTO COPIAR ----------------------------------- */
+/* ── Botó copiar ─────────────────────────────────────── */
 .btn-copy {
-  border: none;
-  cursor: pointer;
-  background: #FFD400;
+  border:        none;
+  cursor:        pointer;
+  background:    var(--clr-brand);
   border-radius: 10px;
-  padding: 6px 10px;
-  font-size: 16px;
-  transition: transform .1s ease;
+  padding:       6px 10px;
+  font-size:     var(--fs-body);
+  transition:    transform var(--ease-quick);
 }
 
 .btn-copy:hover { transform: scale(1.1); }
 
-/* -- FEEDBACK COPIAT ------------------------------- */
-.copy-feedback { display: block; font-size: 14px; font-weight: 600; color: #16a34a; margin-bottom: 16px; }
+/* ── Feedback copiat · Inter SemiBold 14px ───────────── */
+.copy-feedback {
+  display:       block;
+  margin-bottom: 16px;
+  font-family:   var(--font-ui);
+  font-weight:   var(--fw-semibold);
+  font-size:     var(--fs-caption);
+  color:         var(--clr-success);
+}
 
-/* -- BOTO ANAR AL LOGIN ---------------------------- */
+/* ── Botó anar al login ──────────────────────────────── */
 .btn-login {
-  border: none;
-  cursor: pointer;
-  padding: 14px 30px;
-  border-radius: var(--pill);
-  background: #5bc16a;
-  border: 3px solid rgba(0, 0, 0, .85);
-  font-family: var(--font-ui);
-  font-weight: 900;
+  border:         none;
+  cursor:         pointer;
+  padding:        14px 30px;
+  border-radius:  var(--radius-pill);
+  background:     #5bc16a;
+  border:         3px solid rgba(0, 0, 0, .85);
+  font-family:    var(--font-ui);
+  font-weight:    var(--fw-black);
+  font-size:      var(--fs-body);
   letter-spacing: .05em;
   text-transform: uppercase;
-  box-shadow: 0 16px 28px rgba(0,0,0,.28), inset 0 2px 0 rgba(255,255,255,.35);
-  transition: transform .12s ease;
+  box-shadow:     0 16px 28px rgba(0, 0, 0, .28),
+                  inset 0 2px 0 rgba(255, 255, 255, .35);
+  transition:     transform var(--ease-quick);
 }
 
 .btn-login:hover { transform: translateY(-2px); }
