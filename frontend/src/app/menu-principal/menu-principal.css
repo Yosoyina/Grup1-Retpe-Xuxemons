@@ -1,45 +1,77 @@
-/* -- HOST + VARIABLES ------------------------------ */
+/* ═══════════════════════════════════════════════════════
+   MENU PRINCIPAL  –  Variables + Estils
+   Tipografies: Fredoka (H1/títols) · Nunito (H2-H4) · Inter (UI)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Variables ───────────────────────────────────────── */
 :host {
+  /* Colors */
+  --clr-brand:          #fed430;
+  --clr-brand-border:   rgba(255, 208, 0, .95);
+
+  /* Botó Sortir (vermell) */
+  --clr-sortir-default:  #e26a5a;
+  --clr-sortir-hover:    #f08475;
+  --clr-sortir-active:   #c65142;
+  --clr-sortir-disabled: #d0b5b1;
+  --clr-text:           #1f2a44;
+  --clr-text-dark:      #1e2a78;
+  --clr-overlay-light:  rgba(255, 255, 255, .80);
+  --clr-panel-bg:       rgba(255, 255, 255, .80);
+  --clr-btn-bg:         rgba(255, 255, 255, .80);
+  --clr-admin:          #4a6cf7;
+  --clr-sortir:         #e46b5f;
+  --clr-reward-close:   #2fb35f;
+  --clr-modal-overlay:  rgba(7, 12, 27, .78);
+
+  /* Tipografies */
+  --font-title:   'Fredoka', system-ui, sans-serif;
+  --font-heading: 'Nunito',  system-ui, sans-serif;
+  --font-ui:      'Inter',   system-ui, -apple-system, Segoe UI, sans-serif;
+
+  /* Mides de text */
+  --fs-h1:     clamp(42px, 4.8vw, 72px);
+  --fs-btn:    clamp(16px, 1.9vw, 20px);
+  --fs-body:   16px;
+  --fs-caption: 14px;
+  --fs-small:  0.78rem;
+
+  /* Pesos */
+  --fw-regular:  400;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+  --fw-extrabold:800;
+  --fw-black:    900;
+
+  /* Forma */
+  --radius-pill: 999px;
+  --radius-card: 30px;
+  --radius-btn:  22px;
+
+  /* Ombres */
+  --shadow-btn: 0 16px 28px rgba(0, 0, 0, .28), inset 0 2px 0 rgba(255, 255, 255, .30);
+
+  /* Transicions */
+  --ease-quick: .12s ease;
+  --ease-std:   .18s ease;
+  --transition-btn: transform var(--ease-quick), box-shadow var(--ease-quick), filter var(--ease-quick);
+
   display: block;
   min-height: 100dvh;
-
-  --yellow:      rgba(255, 214, 0, .95);
-  --ink:         #1f2a44;
-  --ink-dark:    #1E2A78;
-  --pill:        999px;
-  --font-ui:     Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-
-/* Botó de testing: simular recompensa (fix baix dreta) */
-.btn-simular-recompensa {
-  position: fixed;
-  bottom: 1.2rem;
-  right: 1.2rem;
-  padding: 0.4rem 1rem;
-  font-size: 0.78rem;
-  background: #f0f0f0;
-  border: 1px dashed #aaa;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #555;
-  opacity: 0.75;
-  z-index: 999;
-}
-.btn-simular-recompensa:hover { opacity: 1; background: #e8e8e8; }
-  --shadow-btn:  0 16px 28px rgba(0, 0, 0, .28), inset 0 2px 0 rgba(255, 255, 255, .30);
-  --transition-btn: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  font-family: var(--font-ui);
 }
 
-/* -- CONTENIDOR ------------------------------------ */
+/* ── Contenidor principal ────────────────────────────── */
 .menu-general-container {
   min-height: 100dvh;
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  align-items: center;
+  align-items:    center;
   justify-content: center;
-  padding: clamp(18px, 4vh, 42px) 16px;
+  padding:   clamp(18px, 4vh, 42px) 16px;
   background: url("/Menu-Fondo.webp") center / cover no-repeat;
-  position: relative;
-  overflow: hidden;
+  position:  relative;
+  overflow:  hidden;
   font-family: var(--font-ui);
 }
 
@@ -53,94 +85,67 @@
   pointer-events: none;
 }
 
-/* -- T�TOL ----------------------------------------- */
+/* ── H1 · Fredoka ExtraBold, stroke blau ────────────── */
 .titulo-general {
-  position: relative;
-  z-index: 2;
-  margin: 0 0 24px;
-  text-align: center;
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 800;
+  position:       relative;
+  z-index:        2;
+  margin:         0 0 24px;
+  text-align:     center;
+  font-family:    var(--font-title);
+  font-weight:    var(--fw-extrabold);
+  font-size:      var(--fs-h1);
   text-transform: uppercase;
   letter-spacing: .03em;
-  font-size: clamp(42px, 4.8vw, 72px);
-  color: #FFD400;
-  -webkit-text-stroke: 7px var(--ink-dark);
-  paint-order: stroke fill;
-  text-shadow: 0 8px 0 rgba(30, 42, 120, .40), 0 16px 28px rgba(0, 0, 0, .28);
+  color:          #FFD400;
+  -webkit-text-stroke: 7px var(--clr-text-dark);
+  paint-order:    stroke fill;
+  text-shadow:    0 8px 0 rgba(30, 42, 120, .40), 0 16px 28px rgba(0, 0, 0, .28);
 }
 
-/* -- PANEL CENTRAL --------------------------------- */
+/* ── Panel central · grid 2 columnes ─────────────────── */
 .menu-grid-container {
-  width: min(860px, 92vw);
-  position: relative;
-  z-index: 2;
-  border-radius: 30px;
-  background: rgba(255, 255, 255, .80);
-  border: 6px solid var(--yellow);
-  box-shadow: 0 22px 55px rgba(0, 0, 0, .26);
-  padding: 22px;
+  width:         min(860px, 92vw);
+  position:      relative;
+  z-index:       2;
+  border-radius: var(--radius-card);
+  background:    var(--clr-panel-bg);
+  border:        6px solid var(--clr-brand);
+  box-shadow:    0 22px 55px rgba(0, 0, 0, .26);
+  padding:       22px;
 }
 
 .menu-grid {
   border-radius: 22px;
-  background: transparent;
-  padding: 0;
-  display: grid;
+  background:    transparent;
+  padding:       0;
+  display:       grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap:           18px;
 }
 
-/* -- BOTONS MEN� ----------------------------------- */
+/* ── Botons de menú ──────────────────────────────────── */
 .btn-menu {
   appearance: none;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  display: flex;
+  border:     none;
+  cursor:     pointer;
+  width:      100%;
+  display:        flex;
   flex-direction: column;
-  align-items: center;
+  align-items:    center;
   justify-content: center;
-  gap: 12px;
-  min-height: 150px;
-  padding: 18px 16px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, .80);
-  border: 4px solid var(--yellow);
-  box-shadow: 0 12px 22px rgba(0, 0, 0, .16);
-  transition: var(--transition-btn);
-  position: relative;
-  overflow: visible;
+  gap:         12px;
+  min-height:  150px;
+  padding:     18px 16px;
+  border-radius: var(--radius-btn);
+  background:  var(--clr-btn-bg);
+  border:      4px solid var(--clr-brand);
+  box-shadow:  0 12px 22px rgba(0, 0, 0, .16);
+  transition:  var(--transition-btn);
+  position:    relative;
+  overflow:    visible;
 }
 
-.badge-notif {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  min-width: 26px;
-  height: 26px;
-  padding: 0 7px;
-  border-radius: 999px;
-  background: var(--yellow);
-  color: var(--ink-dark);
-  font-family: var(--font-ui);
-  font-weight: 900;
-  font-size: 0.78rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid var(--ink-dark);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
-  z-index: 10;
-  pointer-events: none;
-  animation: badgePop .3s cubic-bezier(.2,.8,.2,1);
-}
-
-@keyframes badgePop {
-  from { transform: scale(0); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
-}
-
+/* Reflex intern */
 .btn-menu::after {
   content: "";
   position: absolute;
@@ -152,127 +157,228 @@
 }
 
 .btn-menu:hover {
-  transform: translateY(-2px);
+  transform:  translateY(-2px);
   box-shadow: 0 18px 30px rgba(0, 0, 0, .20), 0 0 0 5px rgba(255, 214, 0, .18);
-  filter: saturate(1.05);
+  filter:     saturate(1.05);
 }
 
 .btn-menu:active { transform: translateY(0) scale(.99); }
 
+/* Imatge del botó */
 .btn-menu img {
-  width: clamp(110px, 12vw, 160px);
-  height: auto;
-  display: block;
-  user-select: none;
+  width:          clamp(110px, 12vw, 160px);
+  height:         auto;
+  display:        block;
+  user-select:    none;
   pointer-events: none;
-  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, .16));
+  filter:         drop-shadow(0 10px 12px rgba(0, 0, 0, .16));
 }
 
+/* Text del botó · Inter Black uppercase */
 .btn-menu span {
-  font-family: var(--font-ui);
-  font-weight: 900;
+  font-family:    var(--font-ui);
+  font-weight:    var(--fw-black);
   letter-spacing: .05em;
   text-transform: uppercase;
-  font-size: clamp(16px, 1.9vw, 20px);
-  color: var(--ink);
-  text-shadow: 0 2px 0 rgba(255, 255, 255, .92), 0 8px 16px rgba(0, 0, 0, .10);
+  font-size:      var(--fs-btn);
+  color:          var(--clr-text);
+  text-shadow:    0 2px 0 rgba(255, 255, 255, .92), 0 8px 16px rgba(0, 0, 0, .10);
 }
 
-/* -- FOOTER (ADMIN + SORTIR) ----------------------- */
-.menu-footer {
-  position: relative;
-  z-index: 2;
-  margin-top: 10px;
-  width: min(860px, 92vw);
-  display: flex;
+/* ── Badge de notificació ────────────────────────────── */
+.badge-notif {
+  position:    absolute;
+  top:         -10px;
+  right:       -10px;
+  min-width:   26px;
+  height:      26px;
+  padding:     0 7px;
+  border-radius: var(--radius-pill);
+  background:  var(--clr-brand);
+  color:       var(--clr-text-dark);
+  font-family: var(--font-ui);
+  font-weight: var(--fw-black);
+  font-size:   var(--fs-small);
+  display:     flex;
+  align-items: center;
   justify-content: center;
-  gap: 14px;
+  border:      3px solid var(--clr-text-dark);
+  box-shadow:  0 3px 8px rgba(0, 0, 0, .25);
+  z-index:     10;
+  pointer-events: none;
+  animation:   badgePop .3s cubic-bezier(.2, .8, .2, 1);
+}
+
+@keyframes badgePop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ── Footer (Admin + Sortir) ─────────────────────────── */
+.menu-footer {
+  position:   relative;
+  z-index:    2;
+  margin-top: 10px;
+  width:      min(860px, 92vw);
+  display:    flex;
+  justify-content: center;
+  gap:        14px;
 }
 
 .btn-admin,
 .btn-sortir {
-  display: flex;
+  display:     flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 14px 34px;
-  border-radius: var(--pill);
-  border: 3px solid rgba(0, 0, 0, .82);
+  gap:         12px;
+  padding:     14px 34px;
+  border-radius: var(--radius-pill);
+  border:      3px solid rgba(0, 0, 0, .82);
   font-family: var(--font-ui);
-  font-weight: 900;
+  font-weight: var(--fw-black);
   letter-spacing: .06em;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: var(--shadow-btn);
-  transition: var(--transition-btn);
+  font-size:   var(--fs-body);
+  cursor:      pointer;
+  box-shadow:  var(--shadow-btn);
+  transition:  var(--transition-btn);
 }
 
-.btn-admin  { background: #4a6cf7; color: #fff; }
-.btn-sortir { background: #e46b5f; color: #101010; }
+.btn-admin  { background: var(--clr-admin);           color: #fff; }
+.btn-sortir { background: var(--clr-sortir-default); color: #000000; transition: var(--transition-btn); }
 
-.btn-admin:hover,
-.btn-sortir:hover { transform: translateY(-2px); filter: saturate(1.06); box-shadow: 0 20px 34px rgba(0, 0, 0, .30), inset 0 2px 0 rgba(255, 255, 255, .28); }
+.btn-admin:hover { transform: translateY(-2px); filter: saturate(1.06); box-shadow: 0 20px 34px rgba(0, 0, 0, .30), inset 0 2px 0 rgba(255, 255, 255, .28); }
+.btn-admin:active { transform: translateY(0) scale(.99); }
 
-.btn-admin:active,
-.btn-sortir:active { transform: translateY(0) scale(.99); }
+/* Sortir: vermell #E26A5A · Hover: #F08475 · Active: #C65142 · Focus: ring · Disabled: #D0B5B1 */
+.btn-sortir:hover:not(:disabled) {
+  background: var(--clr-sortir-hover);
+  transform:  translateY(-2px);
+  box-shadow: 0 20px 34px rgba(0, 0, 0, .30), inset 0 2px 0 rgba(255, 255, 255, .28);
+}
+
+.btn-sortir:active:not(:disabled) {
+  background: var(--clr-sortir-active);
+  transform:  translateY(0) scale(.98);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
+}
+
+.btn-sortir:focus-visible {
+  outline:        3px solid #8a38f5;
+  outline-offset: 3px;
+}
+
+.btn-sortir:disabled {
+  background:   var(--clr-sortir-disabled);
+  border-color: rgba(0, 0, 0, .25);
+  color:        rgba(255, 255, 255, .50);
+  cursor:       not-allowed;
+  box-shadow:   none;
+  transform:    none;
+}
 
 .btn-admin img,
 .btn-sortir img { width: 24px; height: 24px; display: block; }
 
-/* -- MODAL RECOMPENSA ------------------------------ */
+/* ── Botó testing (simular recompensa) ───────────────── */
+.btn-simular-recompensa {
+  position:     fixed;
+  bottom:       1.2rem;
+  right:        1.2rem;
+  padding:      0.4rem 1rem;
+  font-size:    var(--fs-small);
+  background:   #f0f0f0;
+  border:       1px dashed #aaa;
+  border-radius: 8px;
+  cursor:       pointer;
+  color:        #555;
+  opacity:      0.75;
+  z-index:      999;
+}
+.btn-simular-recompensa:hover { opacity: 1; background: #e8e8e8; }
+
+/* ═══════════════════════════════════════════════════════
+   MODAL RECOMPENSA DIÀRIA
+   ═══════════════════════════════════════════════════════ */
+
 .reward-modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  display: flex;
-  align-items: center;
+  position:        fixed;
+  inset:           0;
+  z-index:         10000;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  padding: 24px 16px;
-  background: rgba(7, 12, 27, 0.78);
+  padding:         24px 16px;
+  background:      var(--clr-modal-overlay);
   backdrop-filter: blur(6px);
 }
 
 .reward-modal {
-  width: min(760px, 96vw);
-  max-height: min(88dvh, 900px);
-  overflow-y: auto;
-  position: relative;
-  padding: 28px;
-  border-radius: 30px;
-  border: 5px solid var(--yellow);
+  width:       min(760px, 96vw);
+  max-height:  min(88dvh, 900px);
+  overflow-y:  auto;
+  position:    relative;
+  padding:     28px;
+  border-radius: var(--radius-card);
+  border:      5px solid var(--clr-brand);
   background:
     radial-gradient(circle at top, rgba(255, 223, 118, .32), rgba(255, 255, 255, 0) 32%),
     linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(244, 248, 255, .95));
-  box-shadow: 0 30px 70px rgba(0, 0, 0, .38);
-  text-align: center;
+  box-shadow:  0 30px 70px rgba(0, 0, 0, .38);
+  text-align:  center;
 }
 
+/* Badge "Recompensa diaria" */
 .reward-badge {
-  display: inline-flex;
-  align-items: center;
+  display:      inline-flex;
+  align-items:  center;
   justify-content: center;
   margin-bottom: 12px;
-  padding: 8px 18px;
-  border-radius: var(--pill);
-  background: var(--ink-dark);
-  color: #fff;
-  font-weight: 800;
+  padding:      8px 18px;
+  border-radius: var(--radius-pill);
+  background:   var(--clr-text-dark);
+  color:        #fff;
+  font-family:  var(--font-ui);
+  font-weight:  var(--fw-extrabold);
   letter-spacing: .04em;
   text-transform: uppercase;
 }
 
-.reward-modal h2 { margin: 0; color: var(--ink); font-family: 'Fredoka', sans-serif; font-size: clamp(28px, 4vw, 42px); }
-.reward-text { margin: 12px auto 24px; max-width: 560px; color: #31415f; font-size: 1.02rem; font-weight: 700; }
-
-.reward-section {
-  margin-top: 22px;
-  padding: 18px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, .78);
-  border: 3px solid rgba(255, 214, 0, .45);
+/* H2 modal · Fredoka ExtraBold */
+.reward-modal h2 {
+  margin:      0;
+  font-family: var(--font-title);
+  font-weight: var(--fw-extrabold);
+  font-size:   clamp(28px, 4vw, 42px);
+  color:       var(--clr-text);
 }
 
-.reward-section h3 { margin: 0 0 16px; color: var(--ink-dark); font-size: 1.15rem; text-transform: uppercase; letter-spacing: .05em; }
+.reward-text {
+  margin:      12px auto 24px;
+  max-width:   560px;
+  color:       #31415f;
+  font-family: var(--font-ui);
+  font-weight: var(--fw-bold);
+  font-size:   1.02rem;
+}
+
+/* Seccions internes */
+.reward-section {
+  margin-top:    22px;
+  padding:       18px;
+  border-radius: 24px;
+  background:    rgba(255, 255, 255, .78);
+  border:        3px solid rgba(255, 214, 0, .45);
+}
+
+.reward-section h3 {
+  margin:         0 0 16px;
+  font-family:    var(--font-ui);
+  font-weight:    var(--fw-extrabold);
+  font-size:      1.15rem;
+  color:          var(--clr-text-dark);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
 
 .reward-xuxes-grid {
   display: grid;
@@ -280,57 +386,111 @@
   gap: 14px;
 }
 
+/* Cards de recompensa */
 .reward-item-card,
 .reward-xuxemon-card {
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(240, 245, 255, .94));
-  border: 3px solid rgba(30, 42, 120, .12);
-  box-shadow: 0 14px 26px rgba(0, 0, 0, .10);
+  background:    linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(240, 245, 255, .94));
+  border:        3px solid rgba(30, 42, 120, .12);
+  box-shadow:    0 14px 26px rgba(0, 0, 0, .10);
 }
 
-.reward-item-card { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 12px; }
+.reward-item-card {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            8px;
+  padding:        14px 12px;
+}
 
 .reward-item-card img,
-.reward-xuxemon-card img { width: 88px; height: 88px; object-fit: contain; filter: drop-shadow(0 10px 12px rgba(0, 0, 0, .14)); }
-
-.reward-item-card strong,
-.reward-xuxemon-card strong { color: var(--ink); font-size: .98rem; }
-
-.reward-item-card span  { color: #d44232; font-weight: 900; font-size: 1.1rem; }
-.reward-item-card small { color: #6f4b11; font-weight: 700; line-height: 1.3; }
-
-.reward-xuxemon-card { display: flex; align-items: center; justify-content: center; gap: 18px; padding: 18px; text-align: left; }
-
-.reward-xuxemon-card p,
-.reward-empty-text { margin: 6px 0 0; color: #43506d; font-weight: 700; }
-
-.reward-warning { margin: 18px 0 0; color: #9a5200; font-weight: 800; }
-
-.reward-close-button {
-  margin-top: 22px;
-  padding: 14px 34px;
-  border: 3px solid rgba(0, 0, 0, .82);
-  border-radius: var(--pill);
-  background: #2fb35f;
-  color: #101010;
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: .04em;
-  cursor: pointer;
-  box-shadow: 0 16px 26px rgba(0, 0, 0, .22);
+.reward-xuxemon-card img {
+  width:       88px;
+  height:      88px;
+  object-fit:  contain;
+  filter:      drop-shadow(0 10px 12px rgba(0, 0, 0, .14));
 }
 
-.reward-close-button:hover { filter: brightness(1.04); }
+.reward-item-card strong,
+.reward-xuxemon-card strong {
+  font-family: var(--font-ui);
+  font-weight: var(--fw-bold);
+  color:       var(--clr-text);
+  font-size:   .98rem;
+}
 
-/* -- RESPONSIVE ------------------------------------ */
+.reward-item-card span  { color: #d44232; font-weight: var(--fw-black); font-size: 1.1rem; }
+.reward-item-card small { color: #6f4b11; font-weight: var(--fw-bold); line-height: 1.3; }
+
+.reward-xuxemon-card {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             18px;
+  padding:         18px;
+  text-align:      left;
+}
+
+.reward-xuxemon-card p,
+.reward-empty-text {
+  margin:      6px 0 0;
+  color:       #43506d;
+  font-family: var(--font-ui);
+  font-weight: var(--fw-bold);
+}
+
+.reward-warning {
+  margin:      18px 0 0;
+  color:       #9a5200;
+  font-weight: var(--fw-extrabold);
+}
+
+/* Botó tancar modal */
+.reward-close-button {
+  margin-top:     22px;
+  padding:        14px 34px;
+  border:         3px solid rgba(0, 0, 0, .82);
+  border-radius:  var(--radius-pill);
+  background:     var(--clr-reward-close);
+  color:          #101010;
+  font-family:    var(--font-ui);
+  font-size:      var(--fs-body);
+  font-weight:    var(--fw-black);
+  letter-spacing: .04em;
+  cursor:         pointer;
+  box-shadow:     0 16px 26px rgba(0, 0, 0, .22);
+  transition:     var(--transition-btn);
+}
+
+.reward-close-button:hover  { filter: brightness(1.06); transform: translateY(-1px); }
+.reward-close-button:active { transform: translateY(0) scale(.99); }
+
+/* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 560px) {
-  .menu-general-container  { justify-content: flex-start; padding: 18px 14px 26px; }
-  .titulo-general          { -webkit-text-stroke: 7px rgba(25, 40, 95, .95); font-size: clamp(34px, 9vw, 52px); }
-  .menu-grid-container     { width: min(520px, 94vw); padding: 16px; border-radius: 24px; }
-  .menu-grid               { grid-template-columns: 1fr; gap: 14px; }
-  .btn-menu                { min-height: 140px; padding: 16px 14px; border-radius: 20px; }
-  .btn-menu img            { width: 140px; }
-  .btn-sortir              { padding: 13px 28px; font-size: 15px; }
-  .reward-modal            { padding: 22px 16px; border-radius: 24px; }
-  .reward-xuxemon-card     { flex-direction: column; text-align: center; }
+  .menu-general-container {
+    justify-content: flex-start;
+    padding: 18px 14px 26px;
+  }
+  .titulo-general {
+    -webkit-text-stroke: 7px rgba(25, 40, 95, .95);
+    font-size: clamp(34px, 9vw, 52px);
+  }
+  .menu-grid-container {
+    width: min(520px, 94vw);
+    padding: 16px;
+    border-radius: 24px;
+  }
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .btn-menu {
+    min-height: 140px;
+    padding: 16px 14px;
+    border-radius: 20px;
+  }
+  .btn-menu img    { width: 140px; }
+  .btn-sortir      { padding: 13px 28px; font-size: 15px; }
+  .reward-modal    { padding: 22px 16px; border-radius: 24px; }
+  .reward-xuxemon-card { flex-direction: column; text-align: center; }
 }
