@@ -36,9 +36,11 @@ class AmigosController extends Controller
         }
 
         $existing = Peticiones_amistad::where(function ($q) use ($remitente, $destinatarioId) {
-            $q->where('id_remitente', $remitente->id)->where('id_destinatario', $destinatarioId);
-        })->orWhere(function ($q) use ($remitente, $destinatarioId) {
-            $q->where('id_remitente', $destinatarioId)->where('id_destinatario', $remitente->id);
+            $q->where(function ($inner) use ($remitente, $destinatarioId) {
+                $inner->where('id_remitente', $remitente->id)->where('id_destinatario', $destinatarioId);
+            })->orWhere(function ($inner) use ($remitente, $destinatarioId) {
+                $inner->where('id_remitente', $destinatarioId)->where('id_destinatario', $remitente->id);
+            });
         })->whereIn('estado', ['pendiente', 'aceptado'])->first();
 
         if ($existing) {
