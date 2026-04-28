@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Services\XuxedexService;
+use App\Models\DailyReward;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -59,7 +60,6 @@ class User extends Authenticatable implements JWTSubject
             'actiu'                         => 'boolean',
             'ultima_recompensa_at'          => 'datetime',
             'ultima_recompensa_xuxemon_at'  => 'datetime',
-            'last_reward_summary'           => 'array',
         ];
     }
 
@@ -86,6 +86,12 @@ class User extends Authenticatable implements JWTSubject
 
 
     // ── Sistema de amigos ─────────────────────────────────────
+
+    // Resum de l'última recompensa diària
+    public function dailyReward()
+    {
+        return $this->hasOne(DailyReward::class);
+    }
 
     /* Solicitudes que este usuario ha enviado */
     public function sentRequests()

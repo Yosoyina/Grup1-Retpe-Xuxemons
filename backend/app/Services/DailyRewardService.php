@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\DailyReward;
 use App\Models\Inventario;
 use App\Models\SystemConfig;
 use App\Models\User;
@@ -86,8 +87,13 @@ class DailyRewardService
                 $user->ultima_recompensa_xuxemon_at = $now->copy()->setTimezone('UTC');
             }
 
-            $user->last_reward_summary = $this->extractRewardSummary($response);
             $user->save();
+
+            // Guardar el resum a la taula separada
+            DailyReward::updateOrCreate(
+                ['user_id' => $user->id],
+                $this->extractRewardSummary($response)
+            );
 
             return $response;
         });
@@ -258,7 +264,7 @@ class DailyRewardService
 
     private function buildBaseResponse(User $user, Carbon $xuxesAvailableAt, Carbon $xuxemonAvailableAt, Carbon $now): array
     {
-        $lastRewardSummary = $user->last_reward_summary ?? [];
+        $lastRewardSummary = $user->dailyReward ? $user->dailyReward->toArray() : [];
 
         return [
             'status' => 'already_claimed',
