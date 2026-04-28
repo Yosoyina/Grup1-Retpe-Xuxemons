@@ -49,6 +49,18 @@ class AmigosController extends Controller
             ]);
         }
 
+        // Si hi ha una petició prèvia rebutjada en la mateixa direcció (A→B),
+        // la reutilitzem per evitar violar el UNIQUE (id_remitente, id_destinatario)
+        $rejected = Peticiones_amistad::where('id_remitente', $remitente->id)
+            ->where('id_destinatario', $destinatarioId)
+            ->where('estado', 'rechazado')
+            ->first();
+
+        if ($rejected) {
+            $rejected->update(['estado' => 'pendiente']);
+            return $rejected->fresh();
+        }
+
         return Peticiones_amistad::create([
             'id_remitente'   => $remitente->id,
             'id_destinatario' => $destinatarioId,
@@ -91,6 +103,16 @@ class AmigosController extends Controller
     {
         return Peticiones_amistad::with('remitente')
             ->where('id_destinatario', $user->id)
+            ->where('estado', 'pendiente')
+            ->latest()
+            ->get();
+    }
+
+    // Retorna totes les peticions d'amistat pendents enviades per l'usuari
+    public function listarEnviadas(User $user)
+    {
+        return Peticiones_amistad::with('destinatario')
+            ->where('id_remitente', $user->id)
             ->where('estado', 'pendiente')
             ->latest()
             ->get();

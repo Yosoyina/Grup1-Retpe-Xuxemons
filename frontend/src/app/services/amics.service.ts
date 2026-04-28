@@ -19,6 +19,14 @@ export interface PeticioAmistat {
   remitente: Amic;
 }
 
+export interface PeticioAmistadEnviada {
+  id: number;
+  id_remitente: number;
+  id_destinatario: number;
+  estado: 'pendiente';
+  destinatario: Amic;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,6 +39,9 @@ export class AmicsService {
 
   private peticionsRebudes$ = new BehaviorSubject<PeticioAmistat[]>([]);
   peticionsRebudes = this.peticionsRebudes$.asObservable();
+
+  private peticionsEnviades$ = new BehaviorSubject<PeticioAmistadEnviada[]>([]);
+  peticionsEnviades = this.peticionsEnviades$.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -53,32 +64,45 @@ export class AmicsService {
     });
   }
 
-  // envia una sol·licitud d'amistat
-  enviarPeticio(destinatarioId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/amigos/peticion`, { id_destinatario: destinatarioId });
+  // carrega les peticions enviades pendents i actualitza el BehaviorSubject
+  carregarPeticionsEnviades(): void {
+    this.http.get<PeticioAmistadEnviada[]>(`${this.apiUrl}/amigos/peticiones-enviadas`).subscribe({
+      next: (peticions) => this.peticionsEnviades$.next(peticions),
+    });
   }
 
-  // accepta una petició d'amistat i recarrega amics i peticions
+  // envia una sol·licitud d'amistat i recarrega les enviades
+  enviarPeticio(destinatarioId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/amigos/peticion`, { id_destinatario: destinatarioId }).pipe(
+      tap(() => this.carregarPeticionsEnviades())
+    );
+  }
+
+  // accepta una petició d'amistat i recarrega amics, rebudes i enviades
   acceptarPeticio(id: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/amigos/peticion/${id}/aceptar`, {}).pipe(
       tap(() => {
         this.carregarAmics();
         this.carregarPeticionsRebudes();
+        this.carregarPeticionsEnviades();
       })
     );
   }
 
-  // rebutja una petició d'amistat i recarrega les peticions
+  // rebutja una petició d'amistat i recarrega les rebudes
   rebutjarPeticio(id: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/amigos/peticion/${id}/rechazar`, {}).pipe(
       tap(() => this.carregarPeticionsRebudes())
     );
   }
 
-  // elimina un amic i recarrega la llista
+  // elimina un amic i recarrega la llista i les enviades
   eliminarAmic(friendId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/amigos/${friendId}`).pipe(
-      tap(() => this.carregarAmics())
+      tap(() => {
+        this.carregarAmics();
+        this.carregarPeticionsEnviades();
+      })
     );
   }
 }

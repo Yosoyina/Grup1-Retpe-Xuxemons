@@ -53,6 +53,8 @@
               <div class="card-accions">
                 @if (esAmic(usuari.id)) {
                 <span class="badge-ja-amic">Ja es amic</span>
+                } @else if (peticioPendentEnviada(usuari.id)) {
+                <span class="badge-ja-amic">Sol·licitud enviada</span>
                 } @else {
                 <button
                   type="button"

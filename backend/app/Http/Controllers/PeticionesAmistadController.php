@@ -46,6 +46,14 @@ class PeticionesAmistadController extends Controller
         return response()->json(['message' => 'Solicitud rechazada.']);
     }
 
+    // Retorna les peticions d'amistat pendents enviades per l'usuari autenticat
+    public function peticionesEnviadas(Request $request): JsonResponse
+    {
+        $requests = $this->amigosController->listarEnviadas($request->user());
+
+        return response()->json($requests);
+    }
+
     // Retorna les peticions d'amistat pendents de l'usuari autenticat
     public function peticionesPendientes(Request $request): JsonResponse
     {

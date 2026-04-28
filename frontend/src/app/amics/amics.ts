@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, filter, merge, switchMap, Subscription, Subject } from 'rxjs';
-import { AmicsService, Amic, PeticioAmistat } from '../services/amics.service';
+import { AmicsService, Amic, PeticioAmistat, PeticioAmistadEnviada } from '../services/amics.service';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog';
 
 @Component({
@@ -28,6 +28,8 @@ export class Amics implements OnDestroy {
   amicsVisibles: Amic[] = [];
   // Peticiones de amistad pendientes recibidas
   peticionsRebudes: PeticioAmistat[] = [];
+  // Peticiones de amistad pendientes enviadas
+  peticionsEnviades: PeticioAmistadEnviada[] = [];
 
   // Mensajes de feedback para el usuario (éxito o error)
   missatgeExit = '';
@@ -61,11 +63,13 @@ export class Amics implements OnDestroy {
     // Al iniciar el component demanem les dades al servei
     this.amicsService.carregarAmics();
     this.amicsService.carregarPeticionsRebudes();
+    this.amicsService.carregarPeticionsEnviades();
 
     // Refresc periòdic cada 30 s per detectar si un altre usuari ens ha esborrat
     this.refreshInterval = setInterval(() => {
       this.amicsService.carregarAmics();
       this.amicsService.carregarPeticionsRebudes();
+      this.amicsService.carregarPeticionsEnviades();
     }, 30_000);
 
     this.subs.push(
@@ -92,6 +96,11 @@ export class Amics implements OnDestroy {
       // Nos suscribimos a las peticiones recibidas para tenerlas siempre al día
       this.amicsService.peticionsRebudes.subscribe(peticions => {
         this.peticionsRebudes = peticions;
+        this.cdr.markForCheck();
+      }),
+      // Nos suscribimos a las peticiones enviadas para saber a quién ya invitamos
+      this.amicsService.peticionsEnviades.subscribe(peticions => {
+        this.peticionsEnviades = peticions;
         this.cdr.markForCheck();
       }),
     );
@@ -137,6 +146,7 @@ export class Amics implements OnDestroy {
   onWindowFocus(): void {
     this.amicsService.carregarAmics();
     this.amicsService.carregarPeticionsRebudes();
+    this.amicsService.carregarPeticionsEnviades();
   }
 
   // Limpieza al destruir el componente: cancelamos suscripciones y timers pendientes
@@ -153,9 +163,14 @@ export class Amics implements OnDestroy {
     return this.amics.some(amic => amic.id === id);
   }
 
-  // Comprueba si hay una petición de amistad pendiente por parte de ese usuario
+  // Comprueba si hay una petición de amistad pendiente por parte de ese usuario (recibida)
   peticioPendent(id: number): boolean {
     return this.peticionsRebudes.some(peticio => peticio.remitente.id === id);
+  }
+
+  // Comprueba si hemos enviado una petición de amistad pendiente a ese usuario
+  peticioPendentEnviada(id: number): boolean {
+    return this.peticionsEnviades.some(peticio => peticio.destinatario.id === id);
   }
 
   // Envía una solicitud de amistad al usuario seleccionado
@@ -163,7 +178,6 @@ export class Amics implements OnDestroy {
     this.amicsService.enviarPeticio(destinatari.id).subscribe({
       next: () => {
         this.mostrarExit(`Solicitud enviada a ${destinatari.nombre}!`);
-        this.amicsService.carregarPeticionsRebudes();
       },
       error: err => {
         this.mostrarError(err.error?.errors?.destinatarioId?.[0] ?? err.error?.message ?? 'Error al enviar la solicitud.');
