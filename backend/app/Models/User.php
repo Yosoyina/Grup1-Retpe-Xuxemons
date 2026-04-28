@@ -59,6 +59,7 @@ class User extends Authenticatable implements JWTSubject
             'actiu'                         => 'boolean',
             'ultima_recompensa_at'          => 'datetime',
             'ultima_recompensa_xuxemon_at'  => 'datetime',
+            'last_reward_summary'           => 'array',
         ];
     }
 

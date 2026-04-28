@@ -11,117 +11,123 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Servei de recompenses diàries.
+ * Servicio de recompensas diarias.
  *
- * Gestiona la lògica de les dues recompenses diàries de l'usuari:
- *   1. Xuxes: un lot aleatori de llaminadures de l'inventari.
- *   2. Xuxemon: desbloqueja un Xuxemon Petit aleatori del Xuxedex.
- *
- * Les hores de disponibilitat es llegeixen de SystemConfig.
- * Cada recompensa té el seu propi timestamp per ser independent.
+ * Mantiene una respuesta simple para el frontend:
+ * - Reparte como maximo 5 xuxes distintas.
+ * - Puede devolver el ultimo resumen guardado aunque hoy ya este reclamado.
  */
 class DailyRewardService
 {
     private const REWARD_TIMEZONE = 'Europe/Madrid';
+    private const MAX_REWARD_ITEMS = 5;
 
     public function __construct(private XuxedexService $xuxedexService)
     {
     }
 
-    // Comprova si hi ha recompenses disponibles i les atorga a l'usuari
     public function claimFor(User $user): array
     {
         $now = Carbon::now(self::REWARD_TIMEZONE);
-        
+
         $xuxesHour = (int) SystemConfig::get('xuxes_hora_recompensa', 8);
         $xuxemonHour = (int) SystemConfig::get('xuxemon_hora_recompensa', 8);
-        
-        $xuxesAvailableAt = $now->copy()->startOfDay()->setHour($xuxesHour);
-        if ($now->lessThan($xuxesAvailableAt)) {
-            $xuxesAvailableAt->subDay();
-        }
-        $xuxemonAvailableAt = $now->copy()->startOfDay()->setHour($xuxemonHour);
-        if ($now->lessThan($xuxemonAvailableAt)) {
-            $xuxemonAvailableAt->subDay();
-        }
+
+        $xuxesAvailableAt = $this->resolveCurrentWindowStart($now, $xuxesHour);
+        $xuxemonAvailableAt = $this->resolveCurrentWindowStart($now, $xuxemonHour);
 
         $lastXuxesRewardAt = $user->ultima_recompensa_at?->copy()->timezone(self::REWARD_TIMEZONE);
         $lastXuxemonRewardAt = $user->ultima_recompensa_xuxemon_at?->copy()->timezone(self::REWARD_TIMEZONE);
 
         $canClaimXuxes = !$lastXuxesRewardAt || $lastXuxesRewardAt->lessThan($xuxesAvailableAt);
-                         
         $canClaimXuxemon = !$lastXuxemonRewardAt || $lastXuxemonRewardAt->lessThan($xuxemonAvailableAt);
 
+        $baseResponse = $this->buildBaseResponse($user, $xuxesAvailableAt, $xuxemonAvailableAt, $now);
+
         if (!$canClaimXuxes && !$canClaimXuxemon) {
-            return [
+            return array_merge($baseResponse, [
                 'status' => 'not_available_yet',
                 'granted' => false,
-                'message' => 'No hay recompensas disponibles en este momento.'
-            ];
+                'message' => 'Ya has reclamado la recompensa de hoy.',
+            ]);
         }
 
-        return DB::transaction(function () use ($user, $now, $canClaimXuxes, $canClaimXuxemon) {
-            $response = [
+        return DB::transaction(function () use ($user, $now, $canClaimXuxes, $canClaimXuxemon, $baseResponse) {
+            $response = array_merge($baseResponse, [
                 'status' => 'granted',
                 'granted' => true,
-                'message' => 'Has recibido recompensas diarias.'
-            ];
+                'message' => 'Has recibido la recompensa diaria.',
+            ]);
 
             if ($canClaimXuxes) {
-                $dailyXuxes = (int) SystemConfig::get('xuxes_quantitat_diaria', 10);
+                $dailyXuxes = min(
+                    (int) SystemConfig::get('xuxes_quantitat_diaria', self::MAX_REWARD_ITEMS),
+                    self::MAX_REWARD_ITEMS
+                );
+
                 $rewardXuxes = $this->buildRandomXuxesReward($dailyXuxes);
                 $xuxesSummary = $this->storeXuxesReward($user->id, $rewardXuxes);
-                
+
                 $response['xuxes'] = $xuxesSummary['items'];
                 $response['xuxes_requested'] = $dailyXuxes;
                 $response['xuxes_added'] = $xuxesSummary['added'];
                 $response['xuxes_discarded'] = $xuxesSummary['discarded'];
-                
+
                 $user->ultima_recompensa_at = $now->copy()->setTimezone('UTC');
             }
 
             if ($canClaimXuxemon) {
                 $this->xuxedexService->ensureStarterXuxedex($user->id);
                 $xuxemonReward = $this->unlockRandomSmallXuxemon($user->id);
-                
+
                 $response['xuxemon'] = $xuxemonReward;
                 $response['xuxemon_unlocked'] = $xuxemonReward !== null;
-                
+
                 $user->ultima_recompensa_xuxemon_at = $now->copy()->setTimezone('UTC');
             }
 
+            $user->last_reward_summary = $this->extractRewardSummary($response);
             $user->save();
 
             return $response;
         });
     }
 
-    // Genera una col·lecció aleatòria de Xuxes del catàleg fins arribar al total diari
-    private function buildRandomXuxesReward(int $totalXuxes = 10): Collection
+    private function resolveCurrentWindowStart(Carbon $now, int $hour): Carbon
+    {
+        $availableAt = $now->copy()->startOfDay()->setHour($hour);
+
+        if ($now->lessThan($availableAt)) {
+            $availableAt->subDay();
+        }
+
+        return $availableAt;
+    }
+
+    private function buildRandomXuxesReward(int $totalXuxes): Collection
     {
         $catalog = Xuxes::query()->get(['id', 'nombre_xuxes', 'imagen', 'apilable']);
         if ($catalog->isEmpty()) {
             return collect();
         }
 
-        return collect(range(1, $totalXuxes))
-            ->map(fn () => $catalog->random())
-            ->groupBy('id')
-            ->map(function ($items) {
-                $first = $items->first();
+        $rewardSize = min($totalXuxes, self::MAX_REWARD_ITEMS, $catalog->count());
 
+        return $catalog
+            ->shuffle()
+            ->take($rewardSize)
+            ->map(function ($item) {
                 return [
-                    'id' => $first->id,
-                    'nombre_xuxes' => $first->nombre_xuxes,
-                    'imagen' => $first->imagen,
-                    'apilable' => (bool) $first->apilable,
-                    'cantidad' => $items->count(),
+                    'id' => $item->id,
+                    'nombre_xuxes' => $item->nombre_xuxes,
+                    'imagen' => $item->imagen,
+                    'apilable' => (bool) $item->apilable,
+                    'cantidad' => 1,
                 ];
             })
             ->values();
     }
 
-    // Afegeix al inventari les Xuxes guanyades i retorna un resum d'añadides i descartades
     private function storeXuxesReward(int $userId, Collection $rewardXuxes): array
     {
         $items = [];
@@ -150,7 +156,6 @@ class DailyRewardService
         ];
     }
 
-    // Afegeix un ítem a l'inventari respectant MAX_STACK i MAX_SLOTS. Retorna les unitats añadides i descartades
     private function addItemToInventory(int $userId, int $xuxeId, int $cantidad): array
     {
         $xuxe = Xuxes::findOrFail($xuxeId);
@@ -203,7 +208,6 @@ class DailyRewardService
         ];
     }
 
-    // Desbloqueja un Xuxemon Petit aleatori no capturat de l'usuari. Retorna null si ja els té tots
     private function unlockRandomSmallXuxemon(int $userId): ?array
     {
         $blockedEntry = DB::table('xuxedex')
@@ -242,6 +246,45 @@ class DailyRewardService
             'tamano' => $blockedEntry->tamano,
             'descripcio' => $blockedEntry->descripcio,
             'imagen' => $blockedEntry->imagen,
+        ];
+    }
+
+    private function buildBaseResponse(User $user, Carbon $xuxesAvailableAt, Carbon $xuxemonAvailableAt, Carbon $now): array
+    {
+        $lastRewardSummary = $user->last_reward_summary ?? [];
+
+        return [
+            'status' => 'already_claimed',
+            'granted' => false,
+            'message' => 'No hay recompensas disponibles en este momento.',
+            'available_at' => $xuxesAvailableAt->toIso8601String(),
+            'next_available_at' => $this->resolveNextRewardAt($xuxesAvailableAt, $xuxemonAvailableAt, $now)->toIso8601String(),
+            'xuxes' => $lastRewardSummary['xuxes'] ?? [],
+            'xuxes_requested' => $lastRewardSummary['xuxes_requested'] ?? 0,
+            'xuxes_added' => $lastRewardSummary['xuxes_added'] ?? 0,
+            'xuxes_discarded' => $lastRewardSummary['xuxes_discarded'] ?? 0,
+            'xuxemon' => $lastRewardSummary['xuxemon'] ?? null,
+            'xuxemon_unlocked' => $lastRewardSummary['xuxemon_unlocked'] ?? false,
+        ];
+    }
+
+    private function resolveNextRewardAt(Carbon $xuxesAvailableAt, Carbon $xuxemonAvailableAt, Carbon $now): Carbon
+    {
+        $nextXuxesAt = $xuxesAvailableAt->copy()->addDay();
+        $nextXuxemonAt = $xuxemonAvailableAt->copy()->addDay();
+
+        return $nextXuxesAt->lessThan($nextXuxemonAt) ? $nextXuxesAt : $nextXuxemonAt;
+    }
+
+    private function extractRewardSummary(array $response): array
+    {
+        return [
+            'xuxes' => $response['xuxes'] ?? [],
+            'xuxes_requested' => $response['xuxes_requested'] ?? 0,
+            'xuxes_added' => $response['xuxes_added'] ?? 0,
+            'xuxes_discarded' => $response['xuxes_discarded'] ?? 0,
+            'xuxemon' => $response['xuxemon'] ?? null,
+            'xuxemon_unlocked' => $response['xuxemon_unlocked'] ?? false,
         ];
     }
 }

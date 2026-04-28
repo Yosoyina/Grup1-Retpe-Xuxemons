@@ -23,6 +23,7 @@
   --clr-sortir:         #e46b5f;
   --clr-reward-close:   #2fb35f;
   --clr-modal-overlay:  rgba(7, 12, 27, .78);
+  --clr-reward-badge:   #ff5b4d;
 
   /* Tipografies */
   --font-title:   'Fredoka', system-ui, sans-serif;
@@ -83,6 +84,55 @@
     radial-gradient(circle at 50% 16%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 55%),
     linear-gradient(to bottom, rgba(10, 20, 60, .18), rgba(10, 20, 60, .06));
   pointer-events: none;
+}
+
+/* ── Regalo diario ───────────────────────────────────── */
+.reward-menu-button {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 3;
+  width: 92px;
+  height: 92px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.reward-menu-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .30));
+  transition: var(--transition-btn);
+}
+
+.reward-menu-button:hover img {
+  transform: scale(1.04);
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .36));
+}
+
+.reward-menu-button:active img {
+  transform: scale(.98);
+}
+
+.reward-menu-badge {
+  position: absolute;
+  top: 2px;
+  right: -2px;
+  min-width: 30px;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  border: 2px solid #fff;
+  background: var(--clr-reward-badge);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-weight: var(--fw-black);
+  font-size: .72rem;
+  line-height: 1;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
 }
 
 /* ── H1 · Fredoka ExtraBold, stroke blau ────────────── */
@@ -279,23 +329,6 @@
 .btn-admin img,
 .btn-sortir img { width: 24px; height: 24px; display: block; }
 
-/* ── Botó testing (simular recompensa) ───────────────── */
-.btn-simular-recompensa {
-  position:     fixed;
-  bottom:       1.2rem;
-  right:        1.2rem;
-  padding:      0.4rem 1rem;
-  font-size:    var(--fs-small);
-  background:   #f0f0f0;
-  border:       1px dashed #aaa;
-  border-radius: 8px;
-  cursor:       pointer;
-  color:        #555;
-  opacity:      0.75;
-  z-index:      999;
-}
-.btn-simular-recompensa:hover { opacity: 1; background: #e8e8e8; }
-
 /* ═══════════════════════════════════════════════════════
    MODAL RECOMPENSA DIÀRIA
    ═══════════════════════════════════════════════════════ */
@@ -353,12 +386,21 @@
 }
 
 .reward-text {
-  margin:      12px auto 24px;
+  margin:      12px auto 16px;
   max-width:   560px;
   color:       #31415f;
   font-family: var(--font-ui);
   font-weight: var(--fw-bold);
   font-size:   1.02rem;
+}
+
+.reward-next-time {
+  margin:      0 auto 24px;
+  max-width:   560px;
+  color:       var(--clr-text-dark);
+  font-family: var(--font-ui);
+  font-weight: var(--fw-extrabold);
+  font-size:   .98rem;
 }
 
 /* Seccions internes */
@@ -466,10 +508,23 @@
 .reward-close-button:active { transform: translateY(0) scale(.99); }
 
 /* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 720px) {
+  .menu-general-container {
+    padding-top: 120px;
+  }
+
+  .reward-menu-button {
+    top: 16px;
+    right: 16px;
+    width: 82px;
+    height: 82px;
+  }
+}
+
 @media (max-width: 560px) {
   .menu-general-container {
     justify-content: flex-start;
-    padding: 18px 14px 26px;
+    padding: 112px 14px 26px;
   }
   .titulo-general {
     -webkit-text-stroke: 7px rgba(25, 40, 95, .95);
@@ -491,6 +546,16 @@
   }
   .btn-menu img    { width: 140px; }
   .btn-sortir      { padding: 13px 28px; font-size: 15px; }
+  .reward-menu-button {
+    top: 14px;
+    right: 14px;
+    width: 72px;
+    height: 72px;
+  }
+  .reward-menu-badge {
+    font-size: .68rem;
+    padding: 4px 7px;
+  }
   .reward-modal    { padding: 22px 16px; border-radius: 24px; }
   .reward-xuxemon-card { flex-direction: column; text-align: center; }
 }
