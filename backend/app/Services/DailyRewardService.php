@@ -60,9 +60,9 @@ class DailyRewardService
             ]);
 
             if ($canClaimXuxes) {
-                $dailyXuxes = min(
-                    (int) SystemConfig::get('xuxes_quantitat_diaria', self::MAX_REWARD_ITEMS),
-                    self::MAX_REWARD_ITEMS
+                $dailyXuxes = max(
+                    1,
+                    (int) SystemConfig::get('xuxes_quantitat_diaria', 10)
                 );
 
                 $rewardXuxes = $this->buildRandomXuxesReward($dailyXuxes);
@@ -112,17 +112,24 @@ class DailyRewardService
         }
 
         $rewardSize = min($totalXuxes, self::MAX_REWARD_ITEMS, $catalog->count());
+        $selectedItems = $catalog->shuffle()->take($rewardSize)->values();
+        $remainingXuxes = $totalXuxes;
 
-        return $catalog
-            ->shuffle()
-            ->take($rewardSize)
-            ->map(function ($item) {
+        return $selectedItems
+            ->map(function ($item, $index) use ($selectedItems, &$remainingXuxes) {
+                $remainingSlots = $selectedItems->count() - $index;
+                $cantidad = $remainingSlots === 1
+                    ? $remainingXuxes
+                    : random_int(1, $remainingXuxes - ($remainingSlots - 1));
+
+                $remainingXuxes -= $cantidad;
+
                 return [
                     'id' => $item->id,
                     'nombre_xuxes' => $item->nombre_xuxes,
                     'imagen' => $item->imagen,
                     'apilable' => (bool) $item->apilable,
-                    'cantidad' => 1,
+                    'cantidad' => $cantidad,
                 ];
             })
             ->values();
