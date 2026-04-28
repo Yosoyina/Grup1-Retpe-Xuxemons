@@ -3,7 +3,7 @@
   /* Colors */
   --clr-brand: #FED430;
   --clr-brand-hover: #FFE46B;
-  --clr-brand-focus: #FED430;
+  --clr-brand-focus: rgba(255, 204, 0, .28);
   --clr-brand-active: #D4AA1E;
   --clr-brand-disabled: #E0D8B6;
   --clr-brand-border: #FED430;
