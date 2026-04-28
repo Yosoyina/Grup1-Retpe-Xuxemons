@@ -1,40 +1,88 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@700;800&display=swap');
+/* ═══════════════════════════════════════════════════════
+   INFO-USUARI  –  Variables + Estils
+   Tipografies: Fredoka (H1/títols) · Nunito (H2-H4) · Inter (UI)
+   ═══════════════════════════════════════════════════════ */
 
-/* -- HOST + VARIABLES ------------------------------ */
+/* ── Variables ───────────────────────────────────────── */
 :host {
-  display: block;
-  min-height: 100dvh;
+  /* Colors de marca */
+  --clr-brand:          #FED430;
+  --clr-brand-hover:    #FFE46B;
+  --clr-brand-active:   #D4AA1E;
+  --clr-brand-disabled: #E0D8B6;
+  --clr-brand-light:  rgba(255, 214, 0, .98);
+  --clr-brand-border: rgba(255, 214, 0, .98);
+  --clr-text:         #1f2a44;
+  --clr-text-dark:    #1e2a78;
+  --clr-ink:          rgba(0, 0, 0, .82);
 
-  --yellow:   #FFD400;
-  --yellow-2: rgba(255, 214, 0, .98);
-  --ink:      rgba(0, 0, 0, .82);
-  --panelOpacity: .80;
-  --glassBlur:    16px;
+  /* Botó Sortir + Baixa (vermell) */
+  --clr-red-default:  #e26a5a;
+  --clr-red-hover:    #f08475;
+  --clr-red-active:   #c65142;
+  --clr-red-disabled: #d0b5b1;
 
-  --radius-xl: 36px;
-  --radius-md: 18px;
-  --pill:      999px;
+  /* Botó Guardar (verd) */
+  --clr-green:        #55AD3F;
+  --clr-green-hover:  #78C961;
+  --clr-green-active: #3B822A;
+  --clr-green-disabled: #B5C8B0;
 
+  /* Fons i panells */
+  --clr-panel-opacity: .80;
+  --clr-glass-blur:    16px;
+  --clr-modal-overlay: rgba(0, 0, 0, .75);
+
+  /* Tipografies */
+  --font-title:   'Fredoka', system-ui, sans-serif;
+  --font-heading: 'Nunito',  system-ui, sans-serif;
+  --font-ui:      'Inter',   system-ui, -apple-system, Segoe UI, sans-serif;
+
+  /* Mides de text */
+  --fs-h1:      clamp(38px, 5.5vw, 72px);
+  --fs-h2:      1.40rem;
+  --fs-body:    16px;
+  --fs-caption: 14px;
+  --fs-small:   0.82rem;
+
+  /* Pesos */
+  --fw-regular:   400;
+  --fw-semibold:  600;
+  --fw-bold:      700;
+  --fw-extrabold: 800;
+  --fw-black:     900;
+
+  /* Forma */
+  --radius-pill: 999px;
+  --radius-xl:   36px;
+  --radius-md:   18px;
+
+  /* Ombres */
   --shadow-1: 0 14px 26px rgba(0, 0, 0, .18);
   --shadow-2: 0 28px 62px rgba(0, 0, 0, .26);
+  --shadow-btn: 0 16px 28px rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .30);
 
-  --btn-border:   5px solid var(--ink);
-  --font-ui:      Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  --transition-btn: filter .12s ease, opacity .12s ease, background-color .12s ease;
+  /* Transicions */
+  --ease-quick: .12s ease;
+  --ease-std:   .18s ease;
+  --transition-btn: background var(--ease-std), transform var(--ease-quick), filter var(--ease-quick), box-shadow var(--ease-quick);
+
+  --btn-border: 5px solid var(--clr-ink);
+
+  display: block;
+  min-height: 100dvh;
+  font-family: var(--font-ui);
 }
 
-/* -- PAGINA ----------------------------------------- */
+/* ── Pàgina ──────────────────────────────────────────── */
 .pagina {
   min-height: 100dvh;
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  align-items: center;
+  align-items:    center;
   justify-content: center;
   padding: clamp(14px, 2.2vw, 26px) 16px clamp(96px, 10vh, 140px);
-  background-image: url('/Fondo-Principal.webp');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: url('/Fondo-Principal.webp') center / cover no-repeat;
   position: relative;
   overflow: hidden;
   font-family: var(--font-ui);
@@ -50,177 +98,219 @@
   pointer-events: none;
 }
 
-/* -- TITOL ----------------------------------------- */
+/* ── H1 · Fredoka ExtraBold, stroke blau ────────────── */
 .titol {
-  position: relative;
-  z-index: 2;
-  margin: 0 0 clamp(18px, 2.5vw, 28px);
-  text-align: center;
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 800;
+  position:       relative;
+  z-index:        2;
+  margin:         0 0 clamp(18px, 2.5vw, 28px);
+  text-align:     center;
+  font-family:    var(--font-title);
+  font-weight:    var(--fw-extrabold);
+  font-size:      var(--fs-h1);
   text-transform: uppercase;
   letter-spacing: .03em;
-  font-size: clamp(44px, 6.2vw, 92px);
-  line-height: .95;
-  color: var(--yellow);
-  -webkit-text-stroke: clamp(5px, .75vw, 8px) #1E2A78;
-  paint-order: stroke fill;
-  text-shadow: 0 10px 0 rgba(30, 42, 120, .35), 0 18px 30px rgba(0, 0, 0, .26);
+  line-height:    .95;
+  color:          var(--clr-brand);
+  -webkit-text-stroke: 6px var(--clr-text-dark);
+  paint-order:    stroke fill;
+  text-shadow:    0 10px 0 rgba(30, 42, 120, .35), 0 18px 30px rgba(0, 0, 0, .26);
 }
 
-/* -- LAYOUT ---------------------------------------- */
+/* ── Layout contingut ───────────────────────────────── */
 .contingut {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  gap: clamp(26px, 4vw, 70px);
-  align-items: center;
+  position:        relative;
+  z-index:         2;
+  display:         flex;
+  gap:             clamp(26px, 4vw, 70px);
+  align-items:     center;
   justify-content: center;
-  width: min(1240px, 94vw);
+  width:           min(1240px, 94vw);
 }
 
-/* -- COLUMNA ESQUERRA ------------------------------ */
+/* ── Columna esquerra ────────────────────────────────── */
 .columna-esquerra {
-  position: relative;
-  display: flex;
+  position:       relative;
+  display:        flex;
   flex-direction: column;
-  align-items: center;
-  gap: clamp(12px, 1.6vw, 18px);
-  min-width: min(360px, 92vw);
-  z-index: 3;
+  align-items:    center;
+  gap:            clamp(12px, 1.6vw, 18px);
+  min-width:      min(360px, 92vw);
+  z-index:        3;
   padding-bottom: 6px;
 }
 
-/* -- AVATAR ---------------------------------------- */
+/* ── Avatar ──────────────────────────────────────────── */
 .cercle-avatar {
-  width: clamp(240px, 26vw, 360px);
-  height: clamp(240px, 26vw, 360px);
+  width:         clamp(240px, 26vw, 360px);
+  height:        clamp(240px, 26vw, 360px);
   border-radius: 50%;
-  border: clamp(10px, 1vw, 12px) solid var(--yellow-2);
-  background: radial-gradient(circle at 50% 35%, #f6fbff, #cfe0ff);
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  box-shadow: 0 26px 60px rgba(0, 0, 0, .28);
+  border:        clamp(10px, 1vw, 12px) solid var(--clr-brand-light);
+  background:    radial-gradient(circle at 50% 35%, #f6fbff, #cfe0ff);
+  display:       grid;
+  place-items:   center;
+  overflow:      hidden;
+  box-shadow:    0 26px 60px rgba(0, 0, 0, .28);
 }
 
 .avatar-img {
-  width: 85%;
-  height: 85%;
-  object-fit: contain;
+  width:          85%;
+  height:         85%;
+  object-fit:     contain;
   object-position: center bottom;
-  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .18));
+  filter:         drop-shadow(0 10px 14px rgba(0, 0, 0, .18));
 }
 
 .avatar-img[src="/avatarpordefecto.webp"] {
-  width: 108% !important;
-  height: 108% !important;
-  object-fit: cover !important;
-  object-position: center !important;
+  width: 108% !important; height: 108% !important;
+  object-fit: cover !important; object-position: center !important;
   transform: scale(1.3) !important;
 }
 
-/* -- ID JUGADOR ------------------------------------ */
+/* ── ID jugador ──────────────────────────────────────── */
 .id-jugador {
-  width: min(280px, 86vw);
-  background: rgba(255, 255, 255, .88);
-  border: 5px solid var(--yellow-2);
-  border-radius: var(--radius-md);
-  padding: 10px 52px;
-  font-weight: 900;
-  font-size: clamp(0.90rem, 1.1vw, 1.10rem);
-  box-shadow: var(--shadow-1);
-  position: relative;
-  display: flex;
-  align-items: center;
+  width:           min(280px, 86vw);
+  background:      rgba(255, 255, 255, .88);
+  border:          5px solid var(--clr-brand-light);
+  border-radius:   var(--radius-md);
+  padding:         10px 52px;
+  font-family:     var(--font-ui);
+  font-weight:     var(--fw-black);
+  font-size:       clamp(0.90rem, 1.1vw, 1.10rem);
+  box-shadow:      var(--shadow-1);
+  position:        relative;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
 }
 
 .id-jugador span { display: block; text-align: center; width: 100%; }
 
 .btn-copiar {
-  position: absolute;
-  right: 7px;
+  position:    absolute;
+  right:       7px;
   top: 0; bottom: 0; margin: auto 0;
-  width: 36px;
-  height: 36px;
-  padding: 0;
+  width:       36px;
+  height:      36px;
+  padding:     0;
   border-radius: 10px;
-  background: rgba(255, 214, 0, .96);
-  border: 3px solid rgba(0, 0, 0, .72);
-  display: flex;
+  background:  rgba(255, 214, 0, .96);
+  border:      3px solid rgba(0, 0, 0, .72);
+  display:     flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.05rem;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, .16);
-  transform: none !important;
-  transition: var(--transition-btn);
-  font-variation-settings: normal;
+  font-size:   1.05rem;
+  cursor:      pointer;
+  box-shadow:  0 6px 12px rgba(0, 0, 0, .16);
+  transition:  var(--transition-btn);
 }
 
-/* -- ICONES BOTONS --------------------------------- */
+.btn-copiar:hover { filter: brightness(1.08); }
+
+/* ── Icones botons ───────────────────────────────────── */
 .btn-icon { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; pointer-events: none; }
 
-/* -- BOTONS ESQUERRA ------------------------------- */
-.btn-avatar,
-.btn-baixa {
-  max-width: 92vw;
-  border-radius: var(--pill);
-  font-weight: 900;
-  letter-spacing: .04em;
-  cursor: pointer;
-  box-shadow: 0 18px 28px rgba(0, 0, 0, .22);
-  border: var(--btn-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transform: none !important;
-  transition: var(--transition-btn);
-}
-
+/* ── Botó canviar avatar · groc (igual que login/register) ── */
 .btn-avatar {
-  width: min(320px, 92vw);
-  background: rgba(255, 214, 0, .95);
-  padding: 16px 30px;
-  font-size: 1.10rem;
-  gap: 10px;
-  position: relative;
-  z-index: 6;
+  width:         min(320px, 92vw);
+  max-width:     92vw;
+  background:    var(--clr-brand);
+  color:         #101010;
+  border:        var(--btn-border);
+  border-radius: var(--radius-pill);
+  padding:       16px 30px;
+  font-family:   var(--font-ui);
+  font-weight:   var(--fw-black);
+  font-size:     1.10rem;
+  letter-spacing: .04em;
+  cursor:        pointer;
+  box-shadow:    var(--shadow-btn);
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  gap:           10px;
+  position:      relative;
+  z-index:       6;
   margin-bottom: 78px;
+  transition:    var(--transition-btn);
 }
 
+.btn-avatar:hover:not(:disabled)  { background: var(--clr-brand-hover); transform: translateY(-2px); }
+.btn-avatar:active:not(:disabled) { background: var(--clr-brand-active); transform: translateY(0) scale(.98); }
+.btn-avatar:focus-visible          { outline: 3px solid #8a38f5; outline-offset: 3px; }
+.btn-avatar:disabled {
+  background:   var(--clr-brand-disabled);
+  border-color: rgba(0, 0, 0, .25);
+  cursor:       not-allowed;
+  box-shadow:   none;
+  transform:    none;
+}
+
+/* ── Botó dona-se de baixa · vermell (igual que sortir) ─ */
 .btn-baixa {
-  width: min(360px, 92vw);
-  background: #e46b5f;
-  color: #101010;
-  padding: 18px 32px;
-  font-size: 1.12rem;
+  width:         min(360px, 92vw);
+  max-width:     92vw;
+  background:    var(--clr-red-default);
+  color:         #101010;
+  border:        var(--btn-border);
+  border-radius: var(--radius-pill);
+  padding:       18px 32px;
+  font-family:   var(--font-ui);
+  font-weight:   var(--fw-black);
+  font-size:     1.12rem;
+  letter-spacing: .04em;
+  cursor:        pointer;
+  box-shadow:    var(--shadow-btn);
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  gap:           8px;
+  transition:    var(--transition-btn);
 }
 
-/* -- GRID AVATARS ---------------------------------- */
+.btn-baixa:hover:not(:disabled) {
+  background: var(--clr-red-hover);
+  transform:  translateY(-2px);
+  box-shadow: 0 20px 34px rgba(0, 0, 0, .28), inset 0 2px 0 rgba(255, 255, 255, .28);
+}
+
+.btn-baixa:active:not(:disabled) {
+  background: var(--clr-red-active);
+  transform:  translateY(0) scale(.98);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
+}
+
+.btn-baixa:focus-visible { outline: 3px solid #8a38f5; outline-offset: 3px; }
+
+.btn-baixa:disabled {
+  background:   var(--clr-red-disabled);
+  border-color: rgba(0, 0, 0, .25);
+  color:        rgba(255, 255, 255, .50);
+  cursor:       not-allowed;
+  box-shadow:   none;
+  transform:    none;
+}
+
+/* ── Grid selecció avatars ───────────────────────────── */
 .grid-avatars {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 86px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  position:   absolute;
+  left:       50%;
+  transform:  translateX(-50%);
+  bottom:     86px;
+  display:    flex;
+  flex-wrap:  wrap;
+  gap:        10px;
   justify-content: center;
   background: rgba(255, 255, 255, .92);
   border-radius: 18px;
-  padding: 14px;
-  width: min(360px, 92vw);
-  border: 4px solid var(--yellow-2);
+  padding:    14px;
+  width:      min(360px, 92vw);
+  border:     4px solid var(--clr-brand-light);
   box-shadow: 0 18px 34px rgba(0, 0, 0, .22);
   backdrop-filter: blur(10px);
-  z-index: 10;
+  z-index:    10;
   max-height: 180px;
-  overflow: auto;
-  animation: avatarPop .18s ease-out both;
+  overflow:   auto;
+  animation:  avatarPop .18s ease-out both;
 }
 
 @keyframes avatarPop {
@@ -229,218 +319,253 @@
 }
 
 .grid-avatars::-webkit-scrollbar { height: 8px; width: 8px; }
-.grid-avatars::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, .18); border-radius: var(--pill); }
+.grid-avatars::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, .18); border-radius: var(--radius-pill); }
 
 .avatar-opcio {
-  width: 62px;
-  height: 62px;
+  width:         62px;
+  height:        62px;
   border-radius: 50%;
-  cursor: pointer;
-  border: 4px solid transparent;
-  object-fit: cover;
-  transform: none !important;
-  transition: var(--transition-btn);
+  cursor:        pointer;
+  border:        4px solid transparent;
+  object-fit:    cover;
+  transition:    var(--transition-btn);
 }
 
-/* -- MISSATGES ------------------------------------- */
+.avatar-opcio:hover { filter: brightness(1.06); transform: scale(1.06); }
+
+/* ── Missatges ───────────────────────────────────────── */
 .msg-exit,
 .msg-error {
-  font-weight: 900;
-  font-size: 1rem;
-  padding: 8px 14px;
-  border-radius: var(--pill);
-  background: rgba(255, 255, 255, .86);
-  border: 3px solid rgba(0, 0, 0, .12);
-  box-shadow: 0 10px 18px rgba(0, 0, 0, .12);
+  font-family:   var(--font-ui);
+  font-weight:   var(--fw-black);
+  font-size:     1rem;
+  padding:       8px 14px;
+  border-radius: var(--radius-pill);
+  background:    rgba(255, 255, 255, .86);
+  border:        3px solid rgba(0, 0, 0, .12);
+  box-shadow:    0 10px 18px rgba(0, 0, 0, .12);
 }
 
 .msg-exit  { color: #1e8e50; }
 .msg-error { color: #c9443a; }
 
-/* -- COLUMNA DRETA --------------------------------- */
+/* ── Columna dreta ───────────────────────────────────── */
 .columna-dreta { flex: 1; max-width: 760px; width: 100%; z-index: 2; }
 
 .card-form {
-  position: relative;
-  border-radius: var(--radius-xl);
-  border: 10px solid var(--yellow-2);
-  padding: 110px 46px 44px;
-  box-shadow: var(--shadow-2);
-  overflow: hidden;
+  position:       relative;
+  border-radius:  var(--radius-xl);
+  border:         10px solid var(--clr-brand-light);
+  padding:        110px 46px 44px;
+  box-shadow:     var(--shadow-2);
+  overflow:       hidden;
   background:
     linear-gradient(to bottom,
-      rgba(190, 210, 255, calc(.62 * var(--panelOpacity))),
-      rgba(220, 235, 255, calc(.42 * var(--panelOpacity))) 55%,
-      rgba(170, 205, 190, calc(.40 * var(--panelOpacity))));
-  backdrop-filter: blur(var(--glassBlur));
-  -webkit-backdrop-filter: blur(var(--glassBlur));
+      rgba(190, 210, 255, calc(.62 * var(--clr-panel-opacity))),
+      rgba(220, 235, 255, calc(.42 * var(--clr-panel-opacity))) 55%,
+      rgba(170, 205, 190, calc(.40 * var(--clr-panel-opacity))));
+  backdrop-filter: blur(var(--clr-glass-blur));
+  -webkit-backdrop-filter: blur(var(--clr-glass-blur));
 }
 
-.card-form::before {
-  content: "";
-  position: absolute;
-  inset: 14px;
-  border-radius: 28px;
-  border: none;
-  pointer-events: none;
-}
-
+/* H2 · Fredoka ExtraBold */
 .card-form h2 {
-  position: absolute;
+  position:    absolute;
   top: 16px; left: 16px; right: 16px;
-  margin: 0;
-  text-align: center;
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 800;
-  font-size: 1.40rem;
-  color: #0f0f0f;
-  background: rgba(220, 235, 255, .88);
-  border: 7px solid var(--yellow-2);
+  margin:      0;
+  text-align:  center;
+  font-family: var(--font-title);
+  font-weight: var(--fw-extrabold);
+  font-size:   var(--fs-h2);
+  color:       #0f0f0f;
+  background:  rgba(220, 235, 255, .88);
+  border:      7px solid var(--clr-brand-light);
   border-radius: 22px;
-  padding: 14px 18px;
-  box-shadow: 0 16px 24px rgba(0, 0, 0, .16);
+  padding:     14px 18px;
+  box-shadow:  0 16px 24px rgba(0, 0, 0, .16);
 }
 
-/* -- CAMPS FORMULARI ------------------------------- */
+/* ── Camps formulari ─────────────────────────────────── */
 .fila-dos { display: flex; gap: 26px; }
 .fila-dos .camp { flex: 1; }
 .camp { display: flex; flex-direction: column; margin-bottom: 18px; }
 
+/* Label · Nunito Bold (H4) */
 label {
-  font-weight: 900;
-  font-size: 0.95rem;
-  background: rgba(255, 255, 255, .90);
-  color: #0f0f0f;
-  border-radius: var(--pill);
-  padding: 9px 18px;
-  width: fit-content;
-  margin: 0 0 10px;
-  border: 3px solid rgba(0, 0, 0, .10);
-  box-shadow: 0 10px 16px rgba(0, 0, 0, .10);
+  font-family:   var(--font-heading);
+  font-weight:   var(--fw-bold);
+  font-size:     0.95rem;
+  background:    rgba(255, 255, 255, .90);
+  color:         #0f0f0f;
+  border-radius: var(--radius-pill);
+  padding:       9px 18px;
+  width:         fit-content;
+  margin:        0 0 10px;
+  border:        3px solid rgba(0, 0, 0, .10);
+  box-shadow:    0 10px 16px rgba(0, 0, 0, .10);
 }
 
+/* Input · Inter Regular 16px */
 input {
-  padding: 16px 22px;
-  border: 0;
-  border-radius: var(--pill);
-  background: rgba(255, 255, 255, .94);
-  font-family: var(--font-ui);
-  font-size: 1rem;
-  font-weight: 400;
-  color: #1c1c1c;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-  box-shadow: 0 14px 22px rgba(0, 0, 0, .14), inset 0 -2px 0 rgba(0, 0, 0, .10);
+  padding:       16px 22px;
+  border:        0;
+  border-radius: var(--radius-pill);
+  background:    rgba(255, 255, 255, .94);
+  font-family:   var(--font-ui);
+  font-size:     var(--fs-body);
+  font-weight:   var(--fw-regular);
+  color:         #1c1c1c;
+  outline:       none;
+  width:         100%;
+  box-sizing:    border-box;
+  box-shadow:    0 14px 22px rgba(0, 0, 0, .14), inset 0 -2px 0 rgba(0, 0, 0, .10);
+  transition:    box-shadow var(--ease-std), outline var(--ease-std);
 }
 
-input::placeholder { font-family: var(--font-ui); font-weight: 400; color: rgba(40, 40, 40, .55); }
+input::placeholder {
+  font-family: var(--font-ui);
+  font-weight: var(--fw-regular);
+  color:       rgba(40, 40, 40, .55);
+}
 
 input:focus {
-  outline: 4px solid rgba(255, 214, 0, .55);
+  outline:    4px solid rgba(255, 214, 0, .55);
   box-shadow: 0 0 0 6px rgba(255, 204, 0, .22), 0 14px 22px rgba(0, 0, 0, .14);
 }
 
 .error-camp {
-  display: block;
-  color: #c9443a;
-  font-size: 0.82rem;
-  font-weight: 700;
-  margin-top: -8px;
-  padding: 4px 16px;
-  border-radius: var(--pill);
-  background: rgba(255, 255, 255, .72);
-  width: fit-content;
+  display:       block;
+  color:         #c9443a;
+  font-family:   var(--font-ui);
+  font-size:     var(--fs-small);
+  font-weight:   var(--fw-bold);
+  margin-top:    -8px;
+  padding:       4px 16px;
+  border-radius: var(--radius-pill);
+  background:    rgba(255, 255, 255, .72);
+  width:         fit-content;
 }
 
-/* -- BOTONS FORMULARI + SORTIR --------------------- */
-.btn-guardar,
-.btn-sortir,
-.btn-tancar-modal {
-  border: var(--btn-border);
-  border-radius: var(--pill);
-  font-family: var(--font-ui);
-  font-weight: 900;
-  letter-spacing: .04em;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transform: none !important;
-  transition: var(--transition-btn);
-}
-
+/* ── Botó Guardar · verd ─────────────────────────────── */
 .btn-guardar {
-  background: #2fb35f;
-  color: #101010;
-  padding: 18px 78px;
-  font-size: 1.22rem;
-  box-shadow: 0 18px 28px rgba(0, 0, 0, .22);
+  background:     var(--clr-green);
+  color:          #101010;
+  padding:        18px 78px;
+  font-family:    var(--font-ui);
+  font-weight:    var(--fw-black);
+  font-size:      1.22rem;
+  letter-spacing: .04em;
+  border:         var(--btn-border);
+  border-radius:  var(--radius-pill);
+  cursor:         pointer;
+  box-shadow:     var(--shadow-btn);
+  display:        flex;
+  align-items:    center;
+  justify-content: center;
+  gap:            8px;
+  transition:     var(--transition-btn);
 }
 
-.btn-sortir {
-  position: fixed;
-  right: 22px;
-  bottom: 18px;
-  background: #e46b5f;
-  color: #101010;
-  padding: 18px 44px;
-  font-size: 1.12rem;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  box-shadow: 0 16px 28px rgba(0, 0, 0, .28), inset 0 2px 0 rgba(255, 255, 255, .35);
-  z-index: 9999;
-}
-
-.btn-tancar-modal {
-  background: #2fb35f;
-  color: #0d1a0d;
-  padding: 16px 52px;
-  font-size: 1.08rem;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  box-shadow: 0 14px 24px rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .28);
-  display: inline-flex;
-  width: auto;
-}
+.btn-guardar:hover:not(:disabled)  { background: var(--clr-green-hover); transform: translateY(-1px); }
+.btn-guardar:active:not(:disabled) { background: var(--clr-green-active); transform: translateY(0) scale(.98); }
 
 .boto-guardar-container { display: flex; justify-content: center; margin-top: 6px; }
 
-/* -- HOVER GLOBAL BOTONS --------------------------- */
-.btn-avatar:hover, .btn-baixa:hover,
-.btn-guardar:hover, .btn-sortir:hover,
-.btn-copiar:hover,  .avatar-opcio:hover,
-.btn-guardar:hover, .btn-tancar-modal:hover { filter: brightness(1.06); }
-
-.btn-avatar:focus, .btn-baixa:focus,
-.btn-guardar:focus, .btn-sortir:focus, .btn-copiar:focus,
-.btn-avatar:focus-visible, .btn-baixa:focus-visible,
-.btn-guardar:focus-visible, .btn-sortir:focus-visible,
-.btn-copiar:focus-visible { outline: none !important; box-shadow: none !important; }
-
-/* -- MODAL ----------------------------------------- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
-  align-items: center;
+/* ── Botó Sortir (fix baix dreta) · vermell ─────────── */
+/* Mateixos estats que el botó Sortir del menú principal  */
+.btn-sortir {
+  position:       fixed;
+  right:          22px;
+  bottom:         18px;
+  background:     var(--clr-red-default);
+  color:          #101010;
+  padding:        18px 44px;
+  font-family:    var(--font-ui);
+  font-weight:    var(--fw-black);
+  font-size:      1.12rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border:         var(--btn-border);
+  border-radius:  var(--radius-pill);
+  cursor:         pointer;
+  box-shadow:     var(--shadow-btn);
+  display:        flex;
+  align-items:    center;
   justify-content: center;
-  z-index: 10000;
+  gap:            8px;
+  z-index:        9999;
+  transition:     var(--transition-btn);
+}
+
+.btn-sortir:hover:not(:disabled) {
+  background: var(--clr-red-hover);
+  transform:  translateY(-2px);
+  box-shadow: 0 20px 34px rgba(0, 0, 0, .30), inset 0 2px 0 rgba(255, 255, 255, .28);
+}
+
+.btn-sortir:active:not(:disabled) {
+  background: var(--clr-red-active);
+  transform:  translateY(0) scale(.98);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
+}
+
+.btn-sortir:focus-visible { outline: 3px solid #8a38f5; outline-offset: 3px; }
+
+.btn-sortir:disabled {
+  background:   var(--clr-red-disabled);
+  border-color: rgba(0, 0, 0, .25);
+  color:        rgba(255, 255, 255, .50);
+  cursor:       not-allowed;
+  box-shadow:   none;
+  transform:    none;
+}
+
+/* ── Botó tancar modal · verd ────────────────────────── */
+.btn-tancar-modal {
+  background:     var(--clr-green);
+  color:          #0d1a0d;
+  padding:        16px 52px;
+  font-family:    var(--font-ui);
+  font-weight:    var(--fw-black);
+  font-size:      1.08rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border:         var(--btn-border);
+  border-radius:  var(--radius-pill);
+  cursor:         pointer;
+  box-shadow:     var(--shadow-btn);
+  display:        inline-flex;
+  align-items:    center;
+  justify-content: center;
+  width:          auto;
+  transition:     var(--transition-btn);
+}
+
+.btn-tancar-modal:hover  { background: var(--clr-green-hover); filter: brightness(1.04); }
+.btn-tancar-modal:active { background: var(--clr-green-active); }
+
+/* ── Modal overlay ───────────────────────────────────── */
+.modal-overlay {
+  position:        fixed;
+  inset:           0;
+  background:      var(--clr-modal-overlay);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  z-index:         10000;
   backdrop-filter: blur(4px);
 }
 
 .modal {
-  background: rgba(255, 255, 255, .95);
-  padding: 38px 48px;
+  background:    rgba(255, 255, 255, .95);
+  padding:       38px 48px;
   border-radius: 26px;
-  text-align: center;
-  border: 6px solid var(--yellow-2);
-  box-shadow: 0 26px 60px rgba(0, 0, 0, .30);
+  text-align:    center;
+  border:        6px solid var(--clr-brand-light);
+  box-shadow:    0 26px 60px rgba(0, 0, 0, .30);
 }
 
-/* -- MODAL PERILL ---------------------------------- */
+/* ── Modal perill (baixa) ────────────────────────────── */
 .modal-perill {
   border-color: #e53935;
   max-width: 420px;
@@ -452,78 +577,78 @@ input:focus {
   to   { transform: scale(1);    opacity: 1; }
 }
 
-.modal-icona { font-size: 3.5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 2px 6px rgba(229, 57, 53, 0.4)); }
-.modal-titol { font-size: 1.4rem; font-weight: 900; color: #c62828; margin: 0 0 0.5rem; }
-.modal-text  { font-size: 1.05rem; color: #1f2a44; font-weight: 700; margin-bottom: 4px; }
-.modal-subtext { font-size: 0.88rem; color: #666; font-weight: 500; margin-bottom: 1.2rem; }
-.modal-botons { display: flex; gap: 12px; justify-content: center; margin-top: 16px; }
+.modal-icona   { font-size: 3.5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 2px 6px rgba(229, 57, 53, 0.4)); }
+.modal-titol   { font-family: var(--font-ui); font-size: 1.4rem; font-weight: var(--fw-black); color: #c62828; margin: 0 0 0.5rem; }
+.modal-text    { font-family: var(--font-ui); font-size: 1.05rem; color: var(--clr-text); font-weight: var(--fw-bold); margin-bottom: 4px; }
+.modal-subtext { font-family: var(--font-ui); font-size: 0.88rem; color: #666; font-weight: var(--fw-semibold); margin-bottom: 1.2rem; }
+.modal-botons  { display: flex; gap: 12px; justify-content: center; margin-top: 16px; }
 
 .btn-confirmar-baixa,
 .btn-cancelar {
-  padding: 12px 28px;
-  border-radius: var(--pill);
-  font-weight: 900;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: filter .15s ease;
+  padding:       12px 28px;
+  border-radius: var(--radius-pill);
+  font-family:   var(--font-ui);
+  font-weight:   var(--fw-black);
+  font-size:     0.95rem;
+  cursor:        pointer;
+  transition:    filter var(--ease-quick);
 }
 
 .btn-confirmar-baixa {
-  border: none;
+  border:     none;
   background: linear-gradient(135deg, #e53935, #b71c1c);
-  color: white;
+  color:      white;
   box-shadow: 0 6px 18px rgba(229, 57, 53, 0.45);
 }
 
 .btn-confirmar-baixa:hover { filter: brightness(1.1); }
 
 .btn-cancelar {
-  border: 2px solid #ccc;
+  border:     2px solid #ccc;
   background: white;
-  color: #444;
+  color:      #444;
 }
 
 .btn-cancelar:hover { filter: brightness(0.97); }
 
-/* -- MODAL EXIT ------------------------------------ */
+/* ── Modal exit (perfil actualitzat) ─────────────────── */
 .modal-exit {
-  border-color: var(--yellow-2);
-  border-width: 10px;
-  max-width: 400px;
-  width: 88vw;
-  padding: 82px 34px 32px;
+  border-color:  var(--clr-brand-light);
+  border-width:  10px;
+  max-width:     400px;
+  width:         88vw;
+  padding:       82px 34px 32px;
   border-radius: var(--radius-xl);
-  overflow: visible;
-  position: relative;
-  text-align: center;
+  overflow:      visible;
+  position:      relative;
+  text-align:    center;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(255, 230, 70, .20), transparent 58%),
     linear-gradient(to bottom,
       rgba(120, 175, 255, .94),
       rgba(165, 205, 255, .88) 50%,
       rgba(130, 210, 185, .82));
-  backdrop-filter: blur(var(--glassBlur));
-  -webkit-backdrop-filter: blur(var(--glassBlur));
+  backdrop-filter: blur(var(--clr-glass-blur));
   box-shadow:
     0 0 0 4px rgba(255, 214, 0, .35),
     0 28px 62px rgba(0, 0, 0, .28),
     inset 0 2px 0 rgba(255, 255, 255, .70);
-  animation: modalEntrada 0.28s cubic-bezier(.34,1.36,.64,1) both;
+  animation: modalEntrada 0.28s cubic-bezier(.34, 1.36, .64, 1) both;
 }
 
 .modal-exit-avatar {
-  position: absolute;
-  top: -56px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 108px;
-  height: 108px;
+  position:      absolute;
+  top:           -56px;
+  left:          50%;
+  transform:     translateX(-50%);
+  width:         108px;
+  height:        108px;
   border-radius: 50%;
-  border: 8px solid var(--yellow-2);
-  background: radial-gradient(circle at 50% 35%, #f6fbff, #cfe0ff);
-  display: grid;
-  place-items: center;
-  overflow: hidden;
+  border:        8px solid var(--clr-brand-light);
+  background:    radial-gradient(circle at 50% 35%, #f6fbff, #cfe0ff);
+  display:       grid;
+  place-items:   center;
+  overflow:      hidden;
   box-shadow:
     0 0 0 3px rgba(255, 255, 255, .65),
     0 0 22px rgba(255, 214, 0, .60),
@@ -531,36 +656,40 @@ input:focus {
 }
 
 .modal-avatar-img {
-  width: 85%;
-  height: 85%;
-  object-fit: contain;
-  object-position: center bottom;
+  width: 85%; height: 85%;
+  object-fit: contain; object-position: center bottom;
 }
 
 .modal-avatar-img[src="/avatarpordefecto.webp"] {
-  width: 108% !important;
-  height: 108% !important;
-  object-fit: cover !important;
-  object-position: center !important;
+  width: 108% !important; height: 108% !important;
+  object-fit: cover !important; object-position: center !important;
   transform: scale(1.3) !important;
 }
 
+/* H3 modal exit · Fredoka */
 .modal-titol-exit {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 800;
-  font-size: clamp(1.65rem, 4vw, 2rem);
-  color: var(--yellow);
-  -webkit-text-stroke: 3px #1E2A78;
-  paint-order: stroke fill;
-  text-shadow: 0 6px 0 rgba(30, 42, 120, .38), 0 12px 24px rgba(0, 0, 0, .22);
-  margin: 0 0 10px;
-  letter-spacing: .02em;
-  text-transform: uppercase;
+  font-family:     var(--font-title);
+  font-weight:     var(--fw-extrabold);
+  font-size:       clamp(1.65rem, 4vw, 2rem);
+  color:           var(--clr-brand);
+  -webkit-text-stroke: 3px var(--clr-text-dark);
+  paint-order:     stroke fill;
+  text-shadow:     0 6px 0 rgba(30, 42, 120, .38), 0 12px 24px rgba(0, 0, 0, .22);
+  margin:          0 0 10px;
+  letter-spacing:  .02em;
+  text-transform:  uppercase;
 }
 
-.modal-exit-subtitol { font-size: 18px; font-weight: 700; color: black; text-shadow: 0 1px 5px rgba(0, 0, 0, .40); margin: 0 0 22px; }
+.modal-exit-subtitol {
+  font-family:  var(--font-ui);
+  font-size:    18px;
+  font-weight:  var(--fw-bold);
+  color:        black;
+  text-shadow:  0 1px 5px rgba(0, 0, 0, .40);
+  margin:       0 0 22px;
+}
 
-/* -- RESPONSIVE ------------------------------------ */
+/* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 980px) {
   .contingut  { gap: 28px; }
   .card-form  { padding: 88px 28px 42px; }
