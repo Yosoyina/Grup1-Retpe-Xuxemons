@@ -22,7 +22,7 @@
 
   /* Mides de text */
   --fs-h1: 72px;
-  --fs-body: 16px;
+  --fs-body: 14px;
   --fs-caption: 14px;
 
   /* Pesos */
@@ -175,6 +175,7 @@ input:focus {
 /* ── Paràgraf i link · Inter Regular/SemiBold ────────── */
 p {
   margin: 8px 0 4px;
+  padding-left: 18px; /* alineat amb el text interior dels inputs */
   font-family: var(--font-ui);
   font-weight: var(--fw-regular);
   font-size: var(--fs-body);
