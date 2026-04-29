@@ -1504,23 +1504,219 @@
 
 @media (max-width: 900px) {
   .xuxedex-header { width: min(1640px, calc(100vw - 20px)); }
-  .container { width: min(1640px, calc(100vw - 20px)); }
-  .xuxedex-header h1 { font-size: clamp(3.6rem, 10vw, 5.4rem); -webkit-text-stroke: 8px var(--blue-deep); }
-  .mini-grid, .big-grid { grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: none; grid-auto-rows: 300px; height: auto; }
+  .container { width: min(1640px, calc(100vw - 20px)); gap: 18px; }
+  .xuxedex-header h1 { font-size: clamp(3.2rem, 9vw, 4.8rem); -webkit-text-stroke: 7px var(--blue-deep); }
+  .mini-grid, .big-grid { grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: none; grid-auto-rows: 240px; height: auto; }
   .detalle { grid-template-columns: 1fr; min-height: auto; }
-  .detalle-visual { min-height: 200px; }
+  .detalle-visual { min-height: 170px; }
   .detalle-texto { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
 
 @media (max-width: 720px) {
-  .xuxedex-header { flex-direction: column; gap: 12px; width: min(1640px, calc(100vw - 16px)); }
-  .container { width: min(1640px, calc(100vw - 16px)); }
-  .panel-esquerra, .panel-dreta { padding: 16px; border-radius: 28px; }
-  .filter-button { width: 64px; height: 64px; }
-  .mini-grid, .big-grid { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-rows: 280px; height: auto; }
-  .detalle { padding: 18px; }
-  .detalle-texto { grid-template-columns: 1fr; gap: 14px; }
-  .detalle h2 { font-size: 2rem; }
+  :host {
+    min-height: 100dvh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .xuxedex-header {
+    flex-direction: column;
+    gap: 8px;
+    width: min(1640px, calc(100vw - 16px));
+    padding: 10px 0 8px;
+  }
+
+  .xuxedex-header h1 {
+    font-size: clamp(2.8rem, 13vw, 4rem);
+    -webkit-text-stroke-width: 6px;
+  }
+
+  .container {
+    width: min(1640px, calc(100vw - 16px));
+    gap: 14px;
+    padding: 0 0 96px;
+  }
+
+  .panel-esquerra,
+  .panel-dreta {
+    padding: 12px;
+    gap: 12px;
+    border-width: 5px;
+    border-radius: 24px;
+  }
+
+  .filtros {
+    justify-content: center;
+    gap: 9px;
+  }
+
+  .tipus-filtros,
+  .mides,
+  .mini-grid {
+    margin-bottom: 8px;
+  }
+
+  .filter-button {
+    width: 50px;
+    height: 50px;
+    border-width: 3px;
+  }
+
+  .filter-todos .filter-icon::before {
+    font-size: .72rem;
+  }
+
+  .type-agua .filter-icon::before,
+  .type-tierra .filter-icon::before,
+  .type-aire .filter-icon::before {
+    font-size: 1.42rem;
+  }
+
+  .size-button {
+    min-width: 82px;
+    height: 36px;
+    padding: 0 12px;
+    border-width: 3px;
+    font-size: .82rem;
+  }
+
+  .mini-grid,
+  .big-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: 150px;
+    gap: 10px;
+    height: auto;
+  }
+
+  .xuxemon-card {
+    padding: 10px 8px 46px;
+    border-radius: 18px;
+  }
+
+  .card-badge {
+    top: -6px;
+    left: -6px;
+    width: 34px;
+    height: 34px;
+    border-width: 2px;
+  }
+
+  .card-badge.type-agua::before,
+  .card-badge.type-tierra::before,
+  .card-badge.type-aire::before,
+  .lock-badge::before {
+    font-size: 1.22rem;
+  }
+
+  .xuxemon-card img,
+  .placeholder-img {
+    width: min(100%, 118px);
+    height: 118px;
+    margin: 4px auto 6px;
+  }
+
+  .xuxemon-card h2,
+  .xuxemon-card h3,
+  .bloqueig-text {
+    bottom: 8px;
+    min-width: 92px;
+    max-width: calc(100% - 14px);
+    padding: 7px 9px;
+    border-width: 2px;
+    font-size: .76rem;
+  }
+
+  .bloqueig-icona {
+    width: 62px;
+    height: 62px;
+  }
+
+  .bloqueig-icona::before {
+    top: 8px;
+    width: 34px;
+    height: 28px;
+    border-width: 6px;
+  }
+
+  .bloqueig-icona::after {
+    top: 28px;
+    width: 48px;
+    height: 34px;
+    border-width: 4px;
+  }
+
+  .detalle {
+    padding: 12px;
+    border-radius: 22px;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .detalle-texto {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .detalle h2 { font-size: 1.55rem; }
+  .detalle-texto > p { padding: 8px 10px; font-size: .82rem; }
+  .detalle-texto > p:not(:last-child),
+  .detalle-texto > p:last-child,
+  .detalle-malaltia {
+    display: none;
+  }
+  .detalle-visual { min-height: 116px; padding: 4px; }
+  .detalle img, .placeholder-gran { max-height: 132px; width: min(100%, 132px); }
+
+  .detalle-accions {
+    position: static;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    margin-top: 2px;
+  }
+
+  .btn-evolucio,
+  .btn-accio {
+    min-height: 32px;
+    padding: 6px 10px;
+    font-size: .74rem;
+  }
+
+  .paginacion {
+    gap: 8px;
+    padding-top: 2px;
+    margin-top: clamp(24px, 5dvh, 54px);
+    margin-bottom: 76px;
+  }
+
+  .paginacion button,
+  .paginacion span {
+    min-width: 104px;
+    min-height: 42px;
+    padding: 0 16px;
+    border-width: 3px;
+    font-size: .82rem;
+  }
+
+  .sortir-btn {
+    left: 50%;
+    right: auto;
+    bottom: 12px;
+    padding: 12px 28px;
+    font-size: .95rem;
+    transform: translateX(-50%);
+  }
+
+  .sortir-btn:hover:not(:disabled) {
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  .sortir-btn:active:not(:disabled) {
+    transform: translateX(-50%) scale(.98);
+  }
+
   .evolucio-modal { padding: 28px 18px 24px; }
   .evolucio-cadena { flex-direction: column; align-items: center; }
   .evolucio-fletxa::after { content: '\2193'; }
@@ -1529,17 +1725,20 @@
 
 @media (max-width: 520px) {
   .xuxedex-header { width: min(1640px, calc(100vw - 12px)); }
-  .container { width: min(1640px, calc(100vw - 12px)); padding-bottom: 120px; }
-  .xuxedex-header h1 { font-size: clamp(3rem, 16vw, 4.2rem); -webkit-text-stroke: 6px var(--blue-deep); }
-  .filter-button { width: 58px; height: 58px; }
-  .size-button { min-width: 92px; height: 42px; padding: 0 14px; font-size: .94rem; }
-  .mini-grid, .big-grid { grid-template-rows: none; grid-auto-rows: 260px; }
-  .xuxemon-card { padding: 18px 12px 70px; }
-  .xuxemon-card img, .placeholder-img { width: min(100%, 156px); height: 156px; }
-  .detalle { padding: 16px; }
-  .detalle-texto > p { font-size: 1rem; }
-  .paginacion button, .paginacion span { min-width: 128px; min-height: 46px; font-size: .92rem; }
-  .sortir-btn { right: 12px; bottom: 12px; padding: 12px 26px; font-size: 0.95rem; }
+  .container { width: min(1640px, calc(100vw - 12px)); padding-bottom: 88px; }
+  .xuxedex-header h1 { font-size: clamp(2.4rem, 13vw, 3.4rem); -webkit-text-stroke-width: 5px; }
+  .panel-esquerra, .panel-dreta { padding: 10px; border-radius: 22px; }
+  .filter-button { width: 46px; height: 46px; }
+  .size-button { min-width: 74px; height: 34px; padding: 0 10px; font-size: .78rem; }
+  .mini-grid, .big-grid { grid-template-rows: none; grid-auto-rows: 150px; gap: 8px; }
+  .xuxemon-card { padding: 8px 7px 42px; border-radius: 16px; }
+  .xuxemon-card img, .placeholder-img { width: min(100%, 104px); height: 104px; }
+  .xuxemon-card h2, .xuxemon-card h3, .bloqueig-text { min-width: 80px; font-size: .7rem; }
+  .detalle { padding: 12px; }
+  .detalle-texto > p { font-size: .82rem; }
+  .paginacion button, .paginacion span { min-width: 94px; min-height: 40px; font-size: .78rem; }
+  .paginacion { margin-bottom: 84px; }
+  .sortir-btn { padding: 11px 26px; font-size: 0.92rem; }
 }
 
 /* Detall accions */
@@ -1788,4 +1987,37 @@
 .btn-modal-confirmar:active:not(:disabled) { transform: translateY(0) scale(.97); }
 .btn-modal-confirmar:disabled { opacity: .45; cursor: not-allowed; }
 
-@media (max-width: 520px) { .accio-modal { padding: 28px 18px 24px; } }
+@media (max-width: 720px) {
+  .detalle-accions {
+    position: static;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    margin-top: 2px;
+  }
+
+  .btn-evolucio,
+  .btn-accio {
+    min-height: 32px;
+    padding: 6px 10px;
+    font-size: .74rem;
+  }
+
+  .alimentar-controls-modal {
+    padding: 18px 14px;
+  }
+
+  .feed-toast {
+    top: 12px;
+    padding: 10px 14px;
+    font-size: .86rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .accio-modal { padding: 28px 18px 24px; }
+
+  .btn-evolucio,
+  .btn-accio {
+    flex: 1 1 30%;
+  }
+}
