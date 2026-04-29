@@ -6,6 +6,13 @@ import { AuthService } from '../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 
+/**
+ * Component de registre d'usuari.
+ *
+ * Mostra el formulari de creació de compte, valida els camps,
+ * envia les dades al backend i mostra l'ID de jugador generat
+ * en un modal perquè l'usuari el pugui copiar.
+ */
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -39,7 +46,9 @@ export class RegisterComponent {
 
   }, { validators: this.contrasenyesIgualsValidator });
 
-  // Inyectamos los servicios necesarios en el constructor
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
+  // Injecta els serveis d'autenticació, router i detector de canvis
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   // Validador personalizado para comprobar que las contraseñas coinciden
@@ -49,7 +58,9 @@ export class RegisterComponent {
     return password === confirm ? null : { contrasenyesDiferents: true };
   }
   
-  // Función para manejar el envío del formulario de registro
+  // ── ACCIONS ─────────────────────────────────────────────────────────────────
+
+  // Valida el formulari, envia les dades i mostra el modal amb l'ID de jugador generat
   onSubmit() {
     this.submitted = true;
     this.registerForm.markAllAsTouched();

@@ -4,6 +4,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
+/**
+ * Component del perfil d'usuari.
+ *
+ * Mostra i permet editar les dades personals (nom, cognoms, email, contrasenya),
+ * canviar l'avatar i eliminar permanentment el compte de l'usuari autenticat.
+ */
 @Component({
   selector: 'app-info-usuari',
   imports: [ReactiveFormsModule, CommonModule],
@@ -60,7 +66,9 @@ export class InfoUsuari {
     return null;
   }
 
-  // Inyectamos los servicios necesarios en el constructor
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
+  // Carrega el perfil des de la caché immediatament i el refresca des del servidor en segon pla
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {
 
     // 1. Mostrar dades de la caché immediatament (sense esperar HTTP)
@@ -93,7 +101,9 @@ export class InfoUsuari {
     });
   }
 
-  // retorna la URL correcta per a cada avatar
+  // ── AVATAR ─────────────────────────────────────────────────────────────────
+
+  // Retorna la URL correcta per a cada avatar; si no en té, usa l'avatar per defecte
   getAvatarSrc(avatar: string | null): string {
     if (!avatar || avatar.startsWith('avatarpordefecto')) {
       return '/avatarpordefecto.webp';
@@ -116,7 +126,9 @@ export class InfoUsuari {
     });
   }
 
-  // Funció per a guardar els canvis del perfil
+  // ── PERFIL ─────────────────────────────────────────────────────────────────
+
+  // Desa els canvis del formulari d'edició (nom, cognoms, email i contrasenya opcional)
   guardarCanvis() {
     if (this.editForm.invalid) {
       this.editForm.markAllAsTouched();
@@ -154,7 +166,9 @@ export class InfoUsuari {
     });
   }
 
-  // Funció per a mostrar el modal de confirmació d'eliminació
+  // ── COMPTE ─────────────────────────────────────────────────────────────────
+
+  // Elimina permanentment el compte de l'usuari i redirigeix al login
   confirmarEliminar() {
     this.authService.eliminarCompte().subscribe({
       next: () => {

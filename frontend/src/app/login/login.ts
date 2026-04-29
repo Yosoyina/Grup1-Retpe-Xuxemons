@@ -5,6 +5,13 @@ import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 
+/**
+ * Component de login.
+ *
+ * Mostra el formulari d'inici de sessió, valida les dades,
+ * crida al servei d'autenticació i redirigeix al menú principal
+ * si les credencials són correctes.
+ */
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
@@ -24,14 +31,18 @@ export class LoginComponent {
     password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
 
-  // Inyectamos los servicios necesarios en el constructor
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
+  // Injecta els serveis d'autenticació, router i detecctor de canvis
   constructor(
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
 
-  // Función para manejar el envío del formulario de login
+  // ── ACCIONS ─────────────────────────────────────────────────────────────────
+
+  // Valida el formulari, envia les credencials i navega al menú principal si és correcte
   onSubmit() {
     if (this.isLoading) return;
 

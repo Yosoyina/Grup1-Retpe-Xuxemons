@@ -8,6 +8,13 @@ import { AdminService, UsuarioAdmin, XuxeItem } from '../services/admin.service'
 import { API_URL } from '../config/api.config';
 import { finalize } from 'rxjs';
 
+/**
+ * Component del panell d'administració.
+ *
+ * Gestiona usuaris (activar/desactivar, canviar rol, afegir xuxemons),
+ * inventari i vacunes dels jugadors, configuració global del sistema
+ * i els xuxes necessaris per pujar de nivell cada xuxemon.
+ */
 @Component({
   selector: 'app-admin',
   imports: [CommonModule, FormsModule],
@@ -73,6 +80,9 @@ export class Admin implements OnInit {
     return this.xuxemons.filter(x => x.tipo_elemento === 'Terra');
   }
 
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
+  // Injecta els serveis d'admin, xuxemon, configuració, router i detector de canvis
   constructor(
     private adminService: AdminService,
     private xuxemonService: XuxemonService,
@@ -81,6 +91,8 @@ export class Admin implements OnInit {
     private router: Router
   ) { }
 
+  // ── CICLE DE VIDA ─────────────────────────────────────────────────────────
+
   // Al cargar el componente, obtenemos la lista de usuarios
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -88,6 +100,8 @@ export class Admin implements OnInit {
     this.cargarConfig();
     this.cargarXuxemonsNivell();
   }
+
+  // ── USUARIS ─────────────────────────────────────────────────────────────────
 
   // Al cargar el componente, obtenemos la lista de usuarios
   cargarUsuarios(): void {

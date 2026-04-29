@@ -6,6 +6,13 @@ import { InventarioService } from '../services/inventario.service';
 import { DailyRewardResponse, RewardService } from '../services/reward.service';
 import { AmicsService } from '../services/amics.service';
 
+/**
+ * Component del menú principal.
+ *
+ * Punt d'entrada de l'aplicació un cop autenticat. Gestiona la reclamació
+ * de la recompensa diària, el compte enrere fins a la pròxima recompensa
+ * i el badge de sol·licituds d'amistat pendents.
+ */
 @Component({
   selector: 'app-menu-principal',
   imports: [RouterLink, CommonModule],
@@ -32,6 +39,8 @@ export class MenuPrincipal implements OnInit, OnDestroy {
     private inventarioService: InventarioService,
     private cdr: ChangeDetectorRef,
   ) {}
+
+  // ── CICLE DE VIDA ─────────────────────────────────────────────────────────
 
   // intentarAutoLogin a app.component ja ha validat el token abans d'arribar aquí.
   // Només cal comprovar la recompensa diària.

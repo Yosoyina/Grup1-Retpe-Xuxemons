@@ -11,6 +11,13 @@ import { Admin } from './admin/admin';
 import { adminGuard } from './guards/admin-guard';
 import { Amics } from './amics/amics';
 
+/**
+ * Definició de les rutes de l'aplicació.
+ *
+ * Les rutes públiques (login, registre) està protegides per noAuthGuard.
+ * Les rutes privades està agrupades sota authGuard.
+ * El panell d'administració requereix a més el adminGuard.
+ */
 export const routes: Routes = [
   {
     path: '',

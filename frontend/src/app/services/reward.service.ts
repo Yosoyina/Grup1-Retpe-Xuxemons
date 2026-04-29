@@ -35,14 +35,26 @@ export interface DailyRewardResponse {
   xuxemon_unlocked: boolean;
 }
 
+/**
+ * Servei de recompensa diària.
+ *
+ * Crida al backend per reclamar la recompensa diària del jugador
+ * i retorna les xuxes i el xuxemon obtinguts (si n'hi ha),
+ * així com la data de la pròxima recompensa disponible.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class RewardService {
   private apiUrl = API_URL;
 
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
   constructor(private http: HttpClient) {}
 
+  // ── RECOMPENSA ───────────────────────────────────────────────────────────
+
+  // Reclama la recompensa diària del jugador autenticat
   claimDailyReward(): Observable<DailyRewardResponse> {
     return this.http.post<DailyRewardResponse>(`${this.apiUrl}/reward`, {});
   }

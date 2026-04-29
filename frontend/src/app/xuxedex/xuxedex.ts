@@ -5,6 +5,13 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { XuxemonService, Xuxemon, EtapaEvoluciones, FeedResult, AplicarVacunaResult } from '../services/xuxemon.service';
 import { InventarioService, Slot } from '../services/inventario.service';
 
+/**
+ * Component de la Xuxedex.
+ *
+ * Mostra la col·lecció de xuxemons de l'usuari amb filtres per tipus i mida,
+ * paginació, detall de cada xuxemon, panells d'alimentació, vacunes i evolució
+ * amb animació visual.
+ */
 @Component({
   selector: 'app-xuxedex',
   standalone: true,
@@ -58,6 +65,9 @@ export class Xuxedex implements OnDestroy {
     return this.getTotalPagines(this.xuxemons$.getValue()) > 1;
   }
 
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
+  // Injecta els serveis, subscriu als observables de xuxemons i slots i carrega la llista inicial
   constructor(public xuxemonService: XuxemonService, private router: Router) {
     this.xuxemons$ = this.xuxemonService.xuxemons$;
     this.xuxemonsSub = this.xuxemons$.subscribe((xuxemons) => {

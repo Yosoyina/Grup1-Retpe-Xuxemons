@@ -5,6 +5,13 @@ import { Meta, Title } from '@angular/platform-browser';
 import { filter } from 'rxjs';
 import { AuthService } from './services/auth.service';
 
+/**
+ * Component arrel de l'aplicació.
+ *
+ * Gestiona l'auto-login en arrencar, actualitza les etiquetes SEO
+ * (title, description, keywords, canonical) en cada canvi de ruta
+ * i escolta els events de navegació del Router.
+ */
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -29,6 +36,8 @@ export class App implements OnInit {
     @Inject(DOCUMENT) private document: Document
   ) {}
  
+  // ── CICLE DE VIDA ─────────────────────────────────────────────────────────
+
   // En arrencar l'app, intenta restaurar la sessió validant el token al backend.
   // Si el token ha caducat o és invàlid, el neteja i l'authInterceptor
   // redirigirà al login quan el guard rebutgi la ruta.
@@ -41,6 +50,10 @@ export class App implements OnInit {
       .subscribe(() => this.updateSeoTags());
   }
 
+  // ── SEO ─────────────────────────────────────────────────────────────────
+
+  // Actualitza el títol, la descripció, les paraules clau, el robots i l'URL canònica
+  // a partir de les dades de la ruta activa més profunda.
   private updateSeoTags(): void {
     const activeRoute = this.getDeepestActiveRoute();
     const routeTitle = activeRoute.snapshot.title;

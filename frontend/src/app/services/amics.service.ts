@@ -27,6 +27,13 @@ export interface PeticioAmistadEnviada {
   destinatario: Amic;
 }
 
+/**
+ * Servei d'amistats.
+ *
+ * Gestiona la cerca d'usuaris, les sol·licituds d'amistat rebudes i enviades,
+ * l'acceptació, el rebuig i l'eliminació d'amics. Manté l'estat en
+ * BehaviorSubjects reactius per a tots els components subscriptors.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -43,14 +50,20 @@ export class AmicsService {
   private peticionsEnviades$ = new BehaviorSubject<PeticioAmistadEnviada[]>([]);
   peticionsEnviades = this.peticionsEnviades$.asObservable();
 
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
   constructor(private http: HttpClient) {}
 
-  // cerca usuaris per ID de jugador (mínim 3 caràcters)
+  // ── CERCA ─────────────────────────────────────────────────────────────────
+
+  // Cerca usuaris per ID de jugador (mínim 3 caràcters)
   cercarUsuaris(q: string): Observable<Amic[]> {
     return this.http.get<Amic[]>(`${this.apiUrl}/users/search`, { params: { q } });
   }
 
-  // carrega la llista d'amics i actualitza el BehaviorSubject
+  // ── AMICS ─────────────────────────────────────────────────────────────────
+
+  // Carrega la llista d'amics i actualitza el BehaviorSubject
   carregarAmics(): void {
     this.http.get<Amic[]>(`${this.apiUrl}/amigos`).subscribe({
       next: (amics) => this.amics$.next(amics),

@@ -3,6 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, map, catchError, of } from 'rxjs';
 import { API_URL } from '../config/api.config';
 
+/**
+ * Servei d'autenticació.
+ *
+ * Gestiona el registre, el login, el logout, la consulta i l'actualizació
+ * del perfil. Manté l'usuari actual en un BehaviorSubject accessible per
+ * tots els components, i permet l'auto-login en arrencar l'aplicació.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -16,8 +23,13 @@ export class AuthService {
   // observable public perque els components puguin escoltar els canvis
   usuari$ = this.usuariActual.asObservable();
 
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
   constructor(private http: HttpClient) { }
 
+  // ── AUTENTICACIÓ ──────────────────────────────────────────────────────────
+
+  // Registra un nou usuari i desa el token retornat
   register(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data).pipe(
       tap((response: any) => localStorage.setItem('token', response.token))
@@ -35,7 +47,9 @@ export class AuthService {
     );
   }
 
-  // obte les dades del perfil de l'usuari autenticat
+  // ── PERFIL ─────────────────────────────────────────────────────────────────
+
+  // Obte les dades del perfil de l'usuari autenticat
   getPerfil(): Observable<any> {
     return this.http.get(`${this.apiUrl}/profile`).pipe(
       tap((response: any) => {
@@ -70,6 +84,8 @@ export class AuthService {
       })
     );
   }
+
+  // ── UTILITATS ─────────────────────────────────────────────────────────────────
 
   // Retorna el valor actual de l'usuari sense fer cap petició HTTP
   getUsuariActual(): any {

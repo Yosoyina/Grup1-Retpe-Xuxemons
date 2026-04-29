@@ -4,6 +4,13 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { InventarioService, Slot } from '../services/inventario.service';
 
+/**
+ * Component de l'inventari del jugador.
+ *
+ * Mostra els slots d'items apilables i no apilables (xuxes i vacunes),
+ * permet seleccionar un slot per veure'n els detalls
+ * i navega de tornada al menú principal.
+ */
 @Component({
   selector: 'app-inventario',
   standalone: true,
@@ -22,7 +29,9 @@ export class Inventario implements OnInit, OnDestroy {
   slots: Slot[] = [];
   slotSeleccionat: Slot | null = null;
 
-  // Mètodes per gestionar l'inventari i la interacció amb els slots
+  // ── CICLE DE VIDA ─────────────────────────────────────────────────────────
+
+  // Subscriu l'estat dels slots i carrega l'inventari des del backend
   ngOnInit(): void {
     this.slotsSub = this.inventarioService.slots$.subscribe(slots => {
       this.slots = slots;
@@ -31,12 +40,14 @@ export class Inventario implements OnInit, OnDestroy {
     this.inventarioService.cargarInventario();
   }
 
-  // Mètode per gestionar el clic en un slot, pot ser per eliminar o mostrar informació
+  // Cancella la subscripció a l'observable en destruir el component
   ngOnDestroy(): void {
     this.slotsSub?.unsubscribe();
   }
 
-  // Getters per filtrar els slots segons les seves característiques
+  // ── GETTERS ─────────────────────────────────────────────────────────────────
+
+  // Filtra els slots per tipus (apilable / no apilable) i estat (buit / ple)
   get apilablesFills(): Slot[] { return this.slots.filter(s => s.apilable && !s.empty); }
   get apilablesEmpties(): Slot[] { return this.slots.filter(s => s.apilable && s.empty); }
   get noApilablesFills(): Slot[] { return this.slots.filter(s => !s.apilable && !s.empty); }
@@ -56,7 +67,9 @@ export class Inventario implements OnInit, OnDestroy {
     };
   }
 
-  // Mètode per sortir de l'inventari i tornar al menú principal
+  // ── NAVEGACIÓ ─────────────────────────────────────────────────────────────────
+
+  // Navega de tornada al menú principal
   sortir(): void {
     this.router.navigate(['/menu-principal']);
   }

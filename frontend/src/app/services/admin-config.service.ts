@@ -18,30 +18,43 @@ export interface XuxemonNivell {
   imagen: string | null;
 }
 
+/**
+ * Servei de configuració global del sistema (admin).
+ *
+ * Permet llegir i actualitzar els paràmetres de configuració global
+ * (hores de recompensa, quantitats diàries, percentatges d'infecció)
+ * i els xuxes necessaris per pujar de nivell cada xuxemon.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class AdminConfigService {
   private adminUrl = `${API_URL}/admin`;
 
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
   constructor(private http: HttpClient) {}
 
-  /** Retorna tota la configuració global del sistema. */
+  // ── CONFIGURACIÓ GLOBAL ───────────────────────────────────────────────────────
+
+  // Retorna tota la configuració global del sistema
   getConfig(): Observable<SystemConfigItem[]> {
     return this.http.get<SystemConfigItem[]>(`${this.adminUrl}/config`);
   }
 
-  /** Actualitza una clau de configuració. */
+  // Actualitza una clau de configuració
   updateConfig(clave: string, valor: number): Observable<any> {
     return this.http.put(`${this.adminUrl}/config/${clave}`, { valor });
   }
 
-  /** Retorna tots els Xuxemons amb el seu xuxes_per_pujar. */
+  // ── XUXEMONS NIVELL ──────────────────────────────────────────────────────
+
+  // Retorna tots els Xuxemons amb el seu xuxes_per_pujar
   getXuxemonsNivell(): Observable<XuxemonNivell[]> {
     return this.http.get<XuxemonNivell[]>(`${this.adminUrl}/xuxemons-nivell`);
   }
 
-  /** Actualitza les xuxes necessàries per fer créixer un xuxemon. */
+  // Actualitza les xuxes necessàries per fer créixer un xuxemon
   updateXuxesPerPujar(id: number, xuxes_per_pujar: number): Observable<any> {
     return this.http.put(`${this.adminUrl}/xuxemons-nivell/${id}`, { xuxes_per_pujar });
   }

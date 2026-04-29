@@ -3,7 +3,13 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
-// afegeix el token a cada peticio i redirigeix al login si el token es invalid
+/**
+ * Interceptor d'autenticació HTTP.
+ *
+ * Afegeix el token JWT a totes les peticions sortints com a capçalera
+ * Authorization Bearer. Captura els errors 401 i redirigeix al login,
+ * excepte durant la crida de validació inicial del token (auto-login).
+ */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const token = localStorage.getItem('token');

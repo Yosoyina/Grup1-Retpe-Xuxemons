@@ -26,9 +26,18 @@ export interface AdminInventarioItems {
   xuxes: XuxeItem[];
 }
 
+/**
+ * Servei d'administració d'usuaris i inventari.
+ *
+ * Permet llistar usuaris, activar/desactivar comptes, canviar rols
+ * i gestionar els items de l'inventari dels jugadors
+ * des del panell d'administració.
+ */
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   private adminUrl = `${API_URL}/admin`;
+
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
 
   constructor(private http: HttpClient) {}
 

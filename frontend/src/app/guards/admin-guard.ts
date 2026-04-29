@@ -3,7 +3,13 @@ import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 
-// Guard para proteger rutas de administrador
+/**
+ * Guard d'administrador.
+ *
+ * Verifica que l'usuari estigui autenticat i tingui el rol 'admin'.
+ * Si el perfil no està carregat, el sol·licita al backend en primer lloc.
+ * Si no té permisos, redirigeix al menú principal.
+ */
 export const adminGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);

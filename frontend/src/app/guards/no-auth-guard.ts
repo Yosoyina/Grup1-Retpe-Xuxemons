@@ -2,7 +2,12 @@ import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
-// Guard para proteger rutas de usuarios no autenticados
+/**
+ * Guard per a rutes públiques.
+ *
+ * Impedeix que un usuari ja autenticat accedeixi al login o al registre,
+ * redirigint-lo directament al menú principal.
+ */
 export const noAuthGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);

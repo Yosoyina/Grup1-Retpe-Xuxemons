@@ -51,6 +51,13 @@ function CreaciondeSlots(): Slot[] {
   return slots;
 }
 
+/**
+ * Servei de l'inventari.
+ *
+ * Manté l'estat reactiu dels slots del jugador (apilables i no apilables)
+ * a través d'un BehaviorSubject. Gestiona la càrrega des del backend
+ * i l'eliminació d'items de l'inventari.
+ */
 @Injectable({ providedIn: 'root' })
 export class InventarioService {
 
@@ -61,7 +68,7 @@ export class InventarioService {
   readonly slots$ = this._slots$.asObservable();
 
   get slots(): Slot[] { return this._slots$.getValue(); }
-
+  // ── CÀRREGA ─────────────────────────────────────────────────────────────────
   // ── Carga las Xuxes guardadas del jugador ───────
   cargarInventario(): void {
     this.http.get<{ items: InventarioItemApi[] }>(`${API_URL}/inventario`).subscribe({

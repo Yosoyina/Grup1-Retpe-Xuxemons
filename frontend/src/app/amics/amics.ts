@@ -6,61 +6,51 @@ import { debounceTime, distinctUntilChanged, filter, merge, switchMap, Subscript
 import { AmicsService, Amic, PeticioAmistat, PeticioAmistadEnviada } from '../services/amics.service';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog';
 
+/**
+ * Component de gestió d'amistats.
+ *
+ * Permet cercar usuaris, enviar i gestionar sol·licituds d'amistat,
+ * acceptar o rebutjar peticions rebudes i eliminar amics amb animació.
+ * Es refresca automàticament cada 30 segons i en tornar el focus a la finestra.
+ */
 @Component({
   selector: 'app-amics',
   imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent],
   templateUrl: './amics.html',
   styleUrl: './amics.css',
 })
-
-// Componente para gestionar la lista de amigos, búsqueda de usuarios y peticiones de amistad.
 export class Amics implements OnDestroy {
-  // Campo de texto reactivo para el buscador de usuarios
   cercaBusqueda = new FormControl('');
-  // Lista de resultados devueltos por la búsqueda
   resultatsCerca: Amic[] = [];
-  // Indica si hay una búsqueda en curso (para mostrar spinner, etc.)
   cercant = false;
 
-  // Lista completa de amigos del usuario
   amics: Amic[] = [];
-  // Lista de amigos que se muestran en pantalla (puede diferir durante animaciones de eliminación)
+  // Pot diferir d'amics durant l'animació de sortida d'un element eliminat
   amicsVisibles: Amic[] = [];
-  // Peticiones de amistad pendientes recibidas
   peticionsRebudes: PeticioAmistat[] = [];
-  // Peticiones de amistad pendientes enviadas
   peticionsEnviades: PeticioAmistadEnviada[] = [];
 
-  // Mensajes de feedback para el usuario (éxito o error)
   missatgeExit = '';
   missatgeError = '';
 
-  // ID del amigo cuya eliminación está pendiente de confirmar
   confirmantEliminar: number | null = null;
-  // ID del amigo recién añadido (para animar su entrada)
   amicNouId: number | null = null;
-  // ID del amigo que está siendo eliminado en este momento
   amicEliminantId: number | null = null;
 
-  // ID del amigo que debe animarse al entrar, guardado mientras se espera que llegue de la API
+  // Desa l'ID que s'ha d'animar fins que arribi en el BehaviorSubject
   private amicPendentAnimacioId: number | null = null;
-  // Almacén de suscripcions per poder netejar-les en destruir el component
   private subs: Subscription[] = [];
-  // Subject per disparar la cerca manualment (botó o Enter) sense duplicar la petició del stream reactiu
+  // Subject per disparar cerques manuals sense duplicar la petició del stream reactiu
   private cercaManual$ = new Subject<string>();
-  // Timers para controlar la duración de las animaciones de entrada y salida
   private timeoutAnimacioEntrada: ReturnType<typeof setTimeout> | null = null;
   private timeoutAnimacioSortida: ReturnType<typeof setTimeout> | null = null;
-  // Interval per refrescar la llista d'amics periòdicament
   private refreshInterval: ReturnType<typeof setInterval> | null = null;
 
-  // Inyectamos el servicio de amigos, el router para navegación y el ChangeDetectorRef para actualizar la vista.
   constructor(
     private amicsService: AmicsService,
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {
-    // Al iniciar el component demanem les dades al servei
     this.amicsService.carregarAmics();
     this.amicsService.carregarPeticionsRebudes();
     this.amicsService.carregarPeticionsEnviades();
@@ -73,15 +63,13 @@ export class Amics implements OnDestroy {
     }, 30_000);
 
     this.subs.push(
-      // Nos suscribimos a la lista de amigos del servicio para mantenerla actualizada
       this.amicsService.amics.subscribe(amics => {
         const idsAbans = new Set(this.amics.map(amic => amic.id));
 
         this.amics = amics;
-        // Excluimos de la vista al amigo que está en proceso de eliminación (animación de salida)
         this.amicsVisibles = amics.filter(amic => amic.id !== this.amicEliminantId);
 
-        // Si había un amigo pendiente de animar y ya aparece en la lista, lanzamos la animación
+        // Si l'amic nou ja ha arribat al BehaviorSubject, llancem l'animació d'entrada
         if (
           this.amicPendentAnimacioId !== null &&
           !idsAbans.has(this.amicPendentAnimacioId) &&
@@ -93,12 +81,10 @@ export class Amics implements OnDestroy {
 
         this.cdr.markForCheck();
       }),
-      // Nos suscribimos a las peticiones recibidas para tenerlas siempre al día
       this.amicsService.peticionsRebudes.subscribe(peticions => {
         this.peticionsRebudes = peticions;
         this.cdr.markForCheck();
       }),
-      // Nos suscribimos a las peticiones enviadas para saber a quién ya invitamos
       this.amicsService.peticionsEnviades.subscribe(peticions => {
         this.peticionsEnviades = peticions;
         this.cdr.markForCheck();
@@ -106,7 +92,7 @@ export class Amics implements OnDestroy {
     );
 
     this.subs.push(
-      // Un sol stream: unifica les tecles (amb debounce) i els clicks manuals del botó/Enter
+      // Stream unificat: debounce del camp de text + emissions manuals del botó/Enter
       merge(
         this.cercaBusqueda.valueChanges.pipe(debounceTime(300), distinctUntilChanged()),
         this.cercaManual$
@@ -131,7 +117,6 @@ export class Amics implements OnDestroy {
     );
 
     this.subs.push(
-      // Si el text buscat té menys de 3 caràcters, netejem els resultats
       this.cercaBusqueda.valueChanges.pipe(
         filter(q => (q ?? '').trim().length < 3),
       ).subscribe(() => {
@@ -141,7 +126,7 @@ export class Amics implements OnDestroy {
     );
   }
 
-  // Refresca la llista quan l'usuari torna a la pestaña (cas: l'amic ha esborrat mentre estava en una altra pestaña)
+  // Refresca quan l'usuari torna a la pestanya (l'amic pot haver esborrat mentre estava fora)
   @HostListener('window:focus')
   onWindowFocus(): void {
     this.amicsService.carregarAmics();
@@ -149,7 +134,6 @@ export class Amics implements OnDestroy {
     this.amicsService.carregarPeticionsEnviades();
   }
 
-  // Limpieza al destruir el componente: cancelamos suscripciones y timers pendientes
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe());
     this.cercaManual$.complete();
@@ -158,22 +142,18 @@ export class Amics implements OnDestroy {
     if (this.refreshInterval) clearInterval(this.refreshInterval);
   }
 
-  // Comprueba si un usuario ya está en la lista de amigos
   esAmic(id: number): boolean {
     return this.amics.some(amic => amic.id === id);
   }
 
-  // Comprueba si hay una petición de amistad pendiente por parte de ese usuario (recibida)
   peticioPendent(id: number): boolean {
     return this.peticionsRebudes.some(peticio => peticio.remitente.id === id);
   }
 
-  // Comprueba si hemos enviado una petición de amistad pendiente a ese usuario
   peticioPendentEnviada(id: number): boolean {
     return this.peticionsEnviades.some(peticio => peticio.destinatario.id === id);
   }
 
-  // Envía una solicitud de amistad al usuario seleccionado
   enviarPeticio(destinatari: Amic): void {
     this.amicsService.enviarPeticio(destinatari.id).subscribe({
       next: () => {
@@ -185,7 +165,7 @@ export class Amics implements OnDestroy {
     });
   }
 
-  // Acepta una petición de amistad recibida y guarda el ID para animarlo al entrar en la lista
+  // Guarda l'ID per animar-lo quan arribi al BehaviorSubject després d'acceptar
   acceptarPeticio(peticio: PeticioAmistat): void {
     this.amicPendentAnimacioId = peticio.remitente.id;
 
@@ -198,7 +178,6 @@ export class Amics implements OnDestroy {
     });
   }
 
-  // Rechaza una petición de amistad recibida
   rebutjarPeticio(peticio: PeticioAmistat): void {
     this.amicsService.rebutjarPeticio(peticio.id).subscribe({
       next: () => this.mostrarExit('Solicitud rechazada.'),
@@ -206,31 +185,27 @@ export class Amics implements OnDestroy {
     });
   }
 
-  // Retorna l'amic pendent de confirmar eliminació (usat al ConfirmDialogComponent)
   get amicAConfirmar(): Amic | null {
     return this.amics.find(a => a.id === this.confirmantEliminar) ?? null;
   }
 
-  // Rep l'òrden de confirmació del ConfirmDialogComponent i executa l'eliminació
   onConfirmatEliminar(): void {
     const amic = this.amicAConfirmar;
     if (amic) this.eliminarAmic(amic);
     else this.confirmantEliminar = null;
   }
 
-  // Marca el amigo como pendiente de confirmación antes de eliminarlo
   confirmarEliminar(id: number): void {
     this.confirmantEliminar = id;
   }
 
-  // Cancela la confirmación de eliminación
   cancelarEliminar(): void {
     this.confirmantEliminar = null;
   }
 
-  // Elimina un amigo con animación de salida: primero lo marca, espera ~420ms para la animación CSS y luego llama a la API
+  // Espera ~420 ms (durada de l'animació CSS de sortida) abans de cridar la API
   eliminarAmic(amic: Amic): void {
-    if (this.amicEliminantId !== null) return; // Evita eliminaciones simultáneas
+    if (this.amicEliminantId !== null) return;
 
     this.confirmantEliminar = null;
     this.amicEliminantId = amic.id;
@@ -238,7 +213,6 @@ export class Amics implements OnDestroy {
 
     if (this.timeoutAnimacioSortida) clearTimeout(this.timeoutAnimacioSortida);
     this.timeoutAnimacioSortida = setTimeout(() => {
-      // Quitamos el amigo de la vista y llamamos a la API
       this.amicsVisibles = this.amicsVisibles.filter(item => item.id !== amic.id);
       this.cdr.markForCheck();
 
@@ -257,13 +231,12 @@ export class Amics implements OnDestroy {
     }, 420);
   }
 
-  // Devuelve la ruta de la imagen del avatar; si no tiene, usa el avatar por defecto
   getAvatarSrc(avatar: string | null): string {
     if (!avatar || avatar.startsWith('avatarpordefecto')) return '/avatarpordefecto.webp';
     return '/Imatges/Xuxemons/' + avatar;
   }
 
-  // Cerca manual: emet al Subject compartit amb el stream reactiu (no fa cap crida HTTP addicional)
+  // Emet al Subject compartit sense fer una crida HTTP addicional
   cercar(): void {
     const q = (this.cercaBusqueda.value ?? '').trim();
     if (q.length >= 3) {
@@ -271,22 +244,18 @@ export class Amics implements OnDestroy {
     }
   }
 
-  // Navega de vuelta al menú principal
   sortir(): void {
     this.router.navigate(['/menu-principal']);
   }
 
-  // Indica si este amigo es el recién añadido (para aplicar la animación de entrada)
   esAmicNou(id: number): boolean {
     return this.amicNouId === id;
   }
 
-  // Indica si este amigo está siendo eliminado (para aplicar la animación de salida)
   estaEliminantAmic(id: number): boolean {
     return this.amicEliminantId === id;
   }
 
-  // Muestra un mensaje de éxito durante 3,5 segundos y luego lo oculta
   private mostrarExit(msg: string): void {
     this.missatgeExit = msg;
     this.missatgeError = '';
@@ -297,7 +266,6 @@ export class Amics implements OnDestroy {
     }, 3500);
   }
 
-  // Muestra un mensaje de error durante 3,5 segundos y luego lo oculta
   private mostrarError(msg: string): void {
     this.missatgeError = msg;
     this.missatgeExit = '';
@@ -308,7 +276,7 @@ export class Amics implements OnDestroy {
     }, 3500);
   }
 
-  // Marca un amigo como nuevo durante 1,8 segundos para que la plantilla pueda aplicarle la animación de entrada
+  // Marca l'amic com a nou durant 1,8 s perquè la plantilla apliqui l'animació d'entrada
   private activarAnimacioNouAmic(id: number): void {
     this.amicNouId = id;
 

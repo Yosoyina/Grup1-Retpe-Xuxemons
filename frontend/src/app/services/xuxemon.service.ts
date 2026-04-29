@@ -46,6 +46,13 @@ export interface AplicarVacunaResult {
   };
 }
 
+/**
+ * Servei de la Xuxedex.
+ *
+ * Gestiona la càrrega i el filtratge dels xuxemons de l'usuari,
+ * i les accions sobre ells: alimentar, aplicar vacuna, evolucionar
+ * i afegir un xuxemon aleatori a un usuari (admin).
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -54,7 +61,11 @@ export class XuxemonService {
   private apiUrl = `${API_URL}/xuxedex`;
   private adminUrl = `${API_URL}/admin/xuxedex`;
 
+  // ── CONSTRUCTOR ─────────────────────────────────────────────────────────
+
   constructor(private http: HttpClient) { }
+
+  // ── XUXEDEX ─────────────────────────────────────────────────────────────────
 
   // Carrega els xuxemons de la API segons el filtre de tipus
   carregarXuxemons(tipo: string): void {
