@@ -9,11 +9,6 @@
   [class.toast-infectat]="feedResultat.infectat"
   [class.toast-bloquejat]="feedResultat.bloquejat"
   [class.toast-ok]="!feedResultat.infectat && !feedResultat.bloquejat">
-  <span class="toast-icon">
-    @if (feedResultat.bloquejat) { 🚫 }
-    @else if (feedResultat.infectat) { 🦠 }
-    @else { ✅ }
-  </span>
   <span class="toast-msg">{{ feedResultat.message }}</span>
   <button class="toast-tancar" (click)="feedResultat = null" aria-label="Tancar missatge">
     ✕
@@ -25,7 +20,6 @@
 <!-- TOAST VACUNA -->
 @if (vacunaResultat) {
 <div class="feed-toast toast-ok">
-  <span class="toast-icon">💉</span>
   <span class="toast-msg">{{ vacunaResultat.message }}</span>
   <button class="toast-tancar" (click)="vacunaResultat = null" aria-label="Tancar missatge">
     ✕
@@ -35,7 +29,6 @@
 }
 @if (vacunaError) {
 <div class="feed-toast toast-infectat">
-  <span class="toast-icon">❌</span>
   <span class="toast-msg">{{ vacunaError }}</span>
   <button class="toast-tancar" (click)="vacunaError = null" aria-label="Tancar missatge">
     ✕
@@ -71,8 +64,7 @@
 
     @if (getFiltrats(xuxemons).length === 0) {
     <div class="missatge-buit-panel">
-      <div class="missatge-buit-icona">🔍</div>
-      <p class="missatge-buit-titol">Cap Xuxemon trobat</p>
+        <p class="missatge-buit-titol">Cap Xuxemon trobat</p>
       <p class="missatge-buit-sub">No tens cap Xuxemon de mida <strong>{{ filtroMida }}</strong>{{ filtroActual !==
         'Todos' ? ' de tipus ' + filtroActual : '' }}.</p>
       <button type="button" class="btn-reset-filtres" (click)="canviarMida('Tots')">Veure tots</button>
@@ -165,12 +157,12 @@
           [disabled]="xuxemonSeleccionado.enfermedad === 'Atracon'"
           [title]="xuxemonSeleccionado.enfermedad === 'Atracon' ? 'No pot menjar (Atracón)' : 'Alimentar'"
           (click)="togglePanellAlimentar()">
-          🍬 Alimentar
+          Alimentar
         </button>
 
         <button type="button" class="btn-accio btn-accio-vacuna"
           (click)="togglePanellVacuna()">
-          💉 Aplicar vacuna
+          Aplicar vacuna
         </button>
       </div>
     </div>
@@ -185,8 +177,7 @@
   <section class="panel panel-dreta" aria-label="Tots els Xuxemons">
     @if (getFiltrats(xuxemons).length === 0) {
     <div class="missatge-buit-panel missatge-buit-dreta">
-      <div class="missatge-buit-icona">🌟</div>
-      <p class="missatge-buit-titol">Cap resultat</p>
+        <p class="missatge-buit-titol">Cap resultat</p>
       <p class="missatge-buit-sub">Evoluciona els teus Xuxemons per desbloquejar noves mides!</p>
     </div>
     } @else {
@@ -300,7 +291,7 @@
       </button>
 
       <div class="evolucio-titol">
-        <span class="evolucio-titol-icon">✦</span>
+
         <h2>Cadena Evolutiva</h2>
       </div>
 
@@ -341,7 +332,7 @@
       <div class="evolucio-accio">
         @if (xuxemonSeleccionado?.enfermedad === 'Sobredosis') {
         <p class="evolucio-bloqueig">
-          <span>💊</span> El Xuxemon té <strong>Sobredosis</strong> i no pot evolucionar fins que es curi.
+          El Xuxemon té <strong>Sobredosis</strong> i no pot evolucionar fins que es curi.
         </p>
         } @else if (getSegurentEtapa(); as seguent) {
         @if (potEvolucionar()) {
@@ -367,7 +358,6 @@
         }
         } @else {
         <p class="evolucio-maxim">
-          <span class="maxim-icon">👑</span>
           Forma final assolida!
         </p>
         }
@@ -398,14 +388,13 @@
     </button>
 
     <div class="evolucio-titol">
-      <span class="evolucio-titol-icon">🍬</span>
       <h2>Alimentar</h2>
     </div>
     <p class="accio-modal-sub">{{ xuxemonSeleccionado.nombre_xuxemon }}</p>
     <hr class="accio-modal-divider">
 
     @if (xuxemonSeleccionado.enfermedad === 'Atracon') {
-    <p class="alimentar-bloqueig">🚫 No pot menjar per l'Atracón</p>
+    <p class="alimentar-bloqueig">No pot menjar per l'Atracón</p>
     } @else if (getMaxFeed() === 0) {
     <p class="vacunes-buit">No tens xuxes a l'inventari.</p>
     } @else {
@@ -428,7 +417,7 @@
       <button type="button" class="btn-modal-confirmar"
         [disabled]="feedCarregant"
         (click)="alimentar()">
-        {{ feedCarregant ? '🍬 Alimentant...' : '🍬 Confirmar' }}
+        {{ feedCarregant ? 'Alimentant...' : 'Confirmar' }}
       </button>
     </div>
     }
@@ -449,17 +438,15 @@
     </button>
 
     <div class="evolucio-titol">
-      <span class="evolucio-titol-icon">💉</span>
       <h2>Aplicar Vacuna</h2>
     </div>
     <p class="accio-modal-sub">{{ xuxemonSeleccionado.nombre_xuxemon }}</p>
     <hr class="accio-modal-divider">
 
     @if (!xuxemonSeleccionado.enfermedad) {
-    <p class="vacunes-buit vacunes-buit-modal">✅ Aquest Xuxemon no té cap malaltia.</p>
+    <p class="vacunes-buit vacunes-buit-modal">Aquest Xuxemon no té cap malaltia.</p>
     } @else if (getVacunesDisponibles().length === 0) {
     <div class="vacunes-no-disponibles">
-      <span class="vacunes-no-disp-icon">🛒</span>
       <p>No tens cap vacuna adequada a l'inventari.</p>
       <span class="vacunes-no-disp-sub">Necessites: <strong>{{ getEnfermedadIcon(xuxemonSeleccionado.enfermedad) }} {{ xuxemonSeleccionado.enfermedad }}</strong></span>
     </div>
@@ -481,7 +468,7 @@
           @if (slot.xuxe?.imagen) {
           <img [src]="slot.xuxe!.imagen" [alt]="slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes ?? 'Vacuna'" loading="lazy" decoding="async" />
           } @else {
-          <span class="vacuna-emoji">💊</span>
+          <span class="vacuna-emoji">?</span>
           }
         </div>
         <span class="vacuna-slot-nom">{{ slot.xuxe?.nom ?? slot.xuxe?.nombre_xuxes }}</span>
@@ -498,7 +485,7 @@
         class="btn-modal-confirmar"
         [disabled]="!vacunaSlotSeleccionat || vacunaCarregant"
         (click)="aplicarVacuna()">
-        {{ vacunaCarregant ? '💉 Aplicant...' : '💉 Confirmar vacuna' }}
+        {{ vacunaCarregant ? 'Aplicant...' : 'Confirmar vacuna' }}
       </button>
     </div>
     }

@@ -1,29 +1,62 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&display=swap');
+/* ═══════════════════════════════════════════════════════
+   XUXEDEX – Variables + Estils
+   Tipografies: Fredoka (títols) · Nunito (etiquetes) · Inter (UI)
+   (Fonts carregades globalment al index.html)
+   ═══════════════════════════════════════════════════════ */
 
+/* ── Variables ───────────────────────────────────────── */
 :host {
-  --yellow: #FFD400;
-  --blue: #203f98;
-  --blue-deep: #1E2A78;
-  --panel-border: rgba(255,255,255,.6);
-  --ink: #1b2237;
-  --muted: #5c647b;
-  --shadow-lg: 0 26px 54px rgba(9,20,60,.24);
-  --shadow-md: 0 14px 28px rgba(18,30,75,.16);
-  --shadow-hover: 0 18px 24px rgba(21,39,97,.14);
-  --grad-btn: linear-gradient(180deg,#fffcee,#fff5c8);
-  --grad-btn-hover: linear-gradient(180deg,#fff5c8,#ffe890);
-  --trans-std: transform .18s ease, box-shadow .18s ease;
+  /* Colors de marca */
+  --yellow:       #FFD400;
+  --blue:         #203f98;
+  --blue-deep:    #1E2A78;
+  --panel-border: rgba(255, 255, 255, .6);
+  --ink:          #1b2237;
+  --muted:        #5c647b;
+
+  /* Boto Sortir (vermell) */
+  --clr-red-default:    #e26a5a;
+  --clr-red-hover:      #f08475;
+  --clr-red-active:     #c65142;
+  --clr-red-disabled:   #d0b5b1;
+  --clr-ink:            rgba(0, 0, 0, .82);
+
+  /* Ombres */
+  --shadow-lg:    0 26px 54px rgba(9, 20, 60, .24);
+  --shadow-md:    0 14px 28px rgba(18, 30, 75, .16);
+  --shadow-hover: 0 18px 24px rgba(21, 39, 97, .14);
+  --shadow-btn:   0 16px 28px rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .30);
+
+  /* Gradients botons */
+  --grad-btn:       linear-gradient(180deg, #fffcee, #fff5c8);
+  --grad-btn-hover: linear-gradient(180deg, #fff5c8, #ffe890);
+
+  /* Transicions */
+  --ease-quick:     .12s ease;
+  --ease-std:       .18s ease;
+  --trans-std:      transform .18s ease, box-shadow .18s ease;
+  --transition-btn: background var(--ease-std), transform var(--ease-quick), filter var(--ease-quick), box-shadow var(--ease-quick);
+  --btn-border:     5px solid var(--clr-ink);
+
+  /* Radis */
   --radius-panel: 40px;
-  --radius-card: 32px;
+  --radius-card:  32px;
+
+  /* Mides targetes */
   --card-height: clamp(240px, 30vh, 340px);
-  --card-image: clamp(130px, 16vh, 190px);
+  --card-image:  clamp(130px, 16vh, 190px);
+
+  /* Tipografies */
+  --font-title:   'Fredoka', system-ui, sans-serif;
+  --font-heading: 'Nunito',  system-ui, sans-serif;
+  --font-ui:      'Inter',   system-ui, -apple-system, Segoe UI, sans-serif;
 
   display: block;
   min-height: 100dvh;
   position: relative;
   overflow: hidden;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: url('/Fondo-Principal.webp') center/cover no-repeat;
+  font-family: var(--font-ui);
+  background: url('/Fondo-Principal.webp') center / cover no-repeat;
 }
 
 :host::before {
@@ -60,14 +93,14 @@
 
 .xuxedex-header h1 {
   margin: 0;
-  color: #FFD400;
+  color: var(--yellow);
   font-size: clamp(42px, 4.8vw, 72px);
   line-height: 1;
   letter-spacing: .06em;
   text-transform: uppercase;
   font-weight: 800;
-  font-family: 'Fredoka', sans-serif;
-  -webkit-text-stroke: 7px #1E2A78;
+  font-family: var(--font-title);
+  -webkit-text-stroke: 7px var(--blue-deep);
   paint-order: stroke fill;
   text-shadow:
     0 8px 0 rgba(30, 42, 120, .40),
@@ -160,7 +193,7 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(243, 246, 252, 0.98));
   box-shadow: var(--shadow-md);
   cursor: pointer;
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-title);
   font-weight: 700;
   color: var(--ink);
   transition:
@@ -466,7 +499,7 @@
   background: rgba(255, 255, 255, 0.96);
   text-align: center;
   color: #151515;
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-title);
   font-size: 1rem;
   font-weight: 700;
   line-height: 1;
@@ -600,7 +633,7 @@
   padding-bottom: 6px;
   border-bottom: 4px solid #111;
   color: #111;
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-title);
   font-size: clamp(1.7rem, 2vw, 2.3rem);
   line-height: 0.95;
   grid-column: 1 / -1;
@@ -680,7 +713,7 @@
   border-radius: 999px;
   background: var(--grad-btn);
   color: var(--ink);
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-title);
   font-weight: 700;
   cursor: pointer;
   box-shadow: var(--shadow-md);
@@ -693,11 +726,6 @@
   font-size: 0.88rem;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   flex: 1;
-}
-
-.btn-evolucio::before {
-  content: '✦';
-  font-size: 0.85rem;
 }
 
 .btn-evolucio:hover {
@@ -726,7 +754,7 @@
   justify-content: center;
   border: 4px solid var(--yellow);
   border-radius: 999px;
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-title);
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: .04em;
@@ -764,41 +792,56 @@
   box-shadow: 0 8px 22px rgba(255,212,0,.45), inset 0 1px 0 rgba(255,255,255,.6);
 }
 
+/* ── Boto Sortir (fix baix dreta) · vermell ─────────── */
+/* Mateixos estats que menu-principal, info-usuari, motxilla */
 .sortir-btn {
-  position: fixed;
-  right: 22px;
-  bottom: 18px;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 18px 44px;
-  border-radius: 999px;
-  background: #e46b5f;
-  border: 5px solid var(--ink);
-  color: #101010;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 900;
-  font-size: 1.12rem;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow:
-    0 16px 28px rgba(0, 0, 0, .28),
-    inset 0 2px 0 rgba(255, 255, 255, .35);
-  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  position:        fixed;
+  right:           22px;
+  bottom:          18px;
+  z-index:         9999;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             10px;
+  padding:         18px 44px;
+  border-radius:   999px;
+  background:      var(--clr-red-default);
+  border:          var(--btn-border);
+  color:           #101010;
+  font-family:     var(--font-ui);
+  font-weight:     900;
+  font-size:       1.12rem;
+  letter-spacing:  .06em;
+  text-transform:  uppercase;
+  cursor:          pointer;
+  box-shadow:      var(--shadow-btn);
+  transition:      var(--transition-btn);
 }
 
-.sortir-btn:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 22px 34px rgba(0, 0, 0, .32),
-    inset 0 2px 0 rgba(255, 255, 255, .38);
-  filter: saturate(1.06);
-}
-
-.sortir-btn:active { transform: translateY(0) scale(.99); }
 .sortir-btn img { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; pointer-events: none; }
+
+.sortir-btn:hover:not(:disabled) {
+  background: var(--clr-red-hover);
+  transform:  translateY(-2px);
+  box-shadow: 0 20px 34px rgba(0, 0, 0, .30), inset 0 2px 0 rgba(255, 255, 255, .28);
+}
+
+.sortir-btn:active:not(:disabled) {
+  background: var(--clr-red-active);
+  transform:  translateY(0) scale(.98);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
+}
+
+.sortir-btn:focus-visible { outline: 3px solid #8a38f5; outline-offset: 3px; }
+
+.sortir-btn:disabled {
+  background:   var(--clr-red-disabled);
+  border-color: rgba(0, 0, 0, .25);
+  color:        rgba(0, 0, 0, .35);
+  cursor:       not-allowed;
+  box-shadow:   none;
+  transform:    none;
+}
 
 .missatge-buit-panel {
   flex: 1;
@@ -1091,7 +1134,7 @@
 .evo-nom-text {
   margin: 0;
   color: rgba(255, 255, 255, 0.65);
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-title);
   font-size: 1.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1101,7 +1144,7 @@
 .evo-nom-reveal {
   margin: 0;
   color: #fff;
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-title);
   font-size: 2.8rem;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -1169,6 +1212,7 @@
 .accio-modal h2 {
   margin: 0;
   color: var(--ink);
+  font-family: var(--font-title);
   font-size: clamp(1.6rem, 2.4vw, 2.2rem);
   font-weight: 800;
   text-align: center;
@@ -1495,7 +1539,7 @@
   .detalle { padding: 16px; }
   .detalle-texto > p { font-size: 1rem; }
   .paginacion button, .paginacion span { min-width: 128px; min-height: 46px; font-size: .92rem; }
-  .sortir-btn { right: 12px; bottom: 12px; padding: 12px 26px; font-size: 15px; }
+  .sortir-btn { right: 12px; bottom: 12px; padding: 12px 26px; font-size: 0.95rem; }
 }
 
 /* Detall accions */
@@ -1552,8 +1596,8 @@
   padding: 14px 22px;
   border-radius: 18px;
   border: 3px solid transparent;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.25);
-  font-family: 'Fredoka', sans-serif;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  font-family: var(--font-title);
   font-size: 1rem;
   font-weight: 700;
   max-width: min(540px, 92vw);
@@ -1580,10 +1624,10 @@
 
 .alimentar-label { font-family: 'Fredoka',sans-serif; font-size: .88rem; font-weight: 700; color: var(--muted); }
 .alimentar-quantitat-wrapper { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,.9); border: 2px solid var(--yellow); border-radius: 999px; padding: 2px 6px; }
-.qty-btn { width: 28px; height: 28px; border: none; border-radius: 50%; background: linear-gradient(180deg,#fffcee,#ffe890); color: var(--ink); font-family: 'Fredoka',sans-serif; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: grid; place-items: center; transition: background .15s ease, transform .12s ease; flex-shrink: 0; }
+.qty-btn { width: 28px; height: 28px; border: none; border-radius: 50%; background: linear-gradient(180deg,#fffcee,#ffe890); color: var(--ink); font-family: var(--font-title); font-size: 1.1rem; font-weight: 800; cursor: pointer; display: grid; place-items: center; transition: background .15s ease, transform .12s ease; flex-shrink: 0; }
 .qty-btn:hover:not(:disabled) { background: #ffd84f; transform: scale(1.12); }
 .qty-btn:disabled { opacity: .35; cursor: not-allowed; }
-.qty-valor { min-width: 26px; text-align: center; font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 800; color: var(--ink); }
+.qty-valor { min-width: 26px; text-align: center; font-family: var(--font-title); font-size: 1rem; font-weight: 800; color: var(--ink); }
 .qty-stock { font-size: .78rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
 
 /* ── BOTONS ACCIO AL DETALL ──────────────────────────────────────── */
@@ -1649,7 +1693,7 @@
   display: block;
   text-align: center;
   margin: -4px 0 0;
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-title);
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--ink);
@@ -1703,7 +1747,7 @@
   box-shadow: 0 4px 12px rgba(22, 34, 88, 0.08);
   cursor: pointer;
   text-align: left;
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-ui);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 
@@ -1721,11 +1765,11 @@
 
 /* Panell quantitat */
 .alimentar-controls-modal { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 22px 20px 20px; border-radius: 24px; background: rgba(255,255,255,.65); border: 1px solid rgba(32,63,152,.09); box-shadow: inset 0 1px 0 rgba(255,255,255,.85); }
-.alimentar-controls-modal .alimentar-label { font-family: 'Fredoka',sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); letter-spacing: .04em; }
+.alimentar-controls-modal .alimentar-label { font-family: var(--font-title); font-size: 1.1rem; font-weight: 700; color: var(--ink); letter-spacing: .04em; }
 .alimentar-controls-modal .alimentar-quantitat-wrapper { transform: none; display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,.92); border: 3px solid var(--yellow); border-radius: 999px; padding: 4px 8px; box-shadow: 0 4px 14px rgba(18,30,75,.1); }
 .alimentar-controls-modal .qty-btn { width: 40px; height: 40px; font-size: 1.3rem; }
 .alimentar-controls-modal .qty-valor { font-size: 1.6rem; min-width: 36px; font-weight: 800; }
-.alimentar-controls-modal .qty-stock { font-family: 'Fredoka',sans-serif; font-size: .88rem; font-weight: 700; color: var(--muted); background: rgba(32,63,152,.07); padding: 5px 14px; border-radius: 999px; border: 1px solid rgba(32,63,152,.1); }
+.alimentar-controls-modal .qty-stock { font-family: var(--font-title); font-size: .88rem; font-weight: 700; color: var(--muted); background: rgba(32,63,152,.07); padding: 5px 14px; border-radius: 999px; border: 1px solid rgba(32,63,152,.1); }
 
 
 

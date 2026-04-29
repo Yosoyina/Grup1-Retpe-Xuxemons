@@ -1,11 +1,83 @@
-/* -- HOST ------------------------------------------ */
+/* ═══════════════════════════════════════════════════════
+   ADMIN – Variables + Estils
+   Tipografies: Fredoka (títols) · Nunito (etiquetes) · Inter (UI)
+   (Fonts carregades globalment al index.html)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Variables ───────────────────────────────────────── */
 :host {
+  /* Tipografies */
+  --font-title:   'Fredoka', system-ui, sans-serif;
+  --font-heading: 'Nunito',  system-ui, sans-serif;
+  --font-ui:      'Inter',   system-ui, -apple-system, Segoe UI, sans-serif;
+
+  --clr-ink: rgba(0, 0, 0, .82);
+
+  /* Botó Tornar al menú (vermell suau) */
+  --clr-red-default:    #e26a5a;
+  --clr-red-hover:      #f08475;
+  --clr-red-active:     #c65142;
+  --clr-red-disabled:   #d0b5b1;
+
+  /* Botó Veure Xuxemons (lila) */
+  --clr-purple-default:  #903AA2;
+  --clr-purple-hover:    #B55BD3;
+  --clr-purple-active:   #6D287B;
+  --clr-purple-disabled: #C0B4C2;
+
+  /* Botó Donar Xuxemons (taronja) */
+  --clr-orange-default:  #FF8904;
+  --clr-orange-hover:    #FFB04C;
+  --clr-orange-active:   #CC6D00;
+  --clr-orange-disabled: #E0C4A4;
+
+  /* Botó Afegir Xuxes i Habilitar (verd) */
+  --clr-green-default:  #55AD3F;
+  --clr-green-hover:    #78C961;
+  --clr-green-active:   #3B822A;
+  --clr-green-disabled: #B5C8B0;
+
+  /* Botó Afegir Vacunes (blau) */
+  --clr-blue-default:  #2fa3c8;
+  --clr-blue-hover:    #4bbfe6;
+  --clr-blue-active:   #1f7b9a;
+  --clr-blue-disabled: #9fcedd;
+
+  /* Botó Fer Admin (violeta) */
+  --clr-violet-default:  #7c4dff;
+  --clr-violet-hover:    #9d76ff;
+  --clr-violet-active:   #5a2ed6;
+  --clr-violet-disabled: #bdb0e0;
+
+  /* Botó Treure Admin (taronja fosc) */
+  --clr-deeporange-default:  #f57c00;
+  --clr-deeporange-hover:    #ff9e33;
+  --clr-deeporange-active:   #bf5e00;
+  --clr-deeporange-disabled: #d9b99a;
+
+  /* Botó Deshabilitar (vermell viu) */
+  --clr-red-action:          #F22A0F;
+  --clr-red-action-hover:    #F5634D;
+  --clr-red-action-active:   #BA200C;
+  --clr-red-action-disabled: #D4B4B0;
+
+  /* Botó Desar config (blau clar) */
+  --clr-save-default:  #4facfe;
+  --clr-save-hover:    #74c2ff;
+  --clr-save-active:   #2e85d4;
+  --clr-save-disabled: #a8d4f5;
+
+  /* Transicions boto */
+  --ease-quick:     .12s ease;
+  --ease-std:       .18s ease;
+  --transition-btn: background var(--ease-std), transform var(--ease-quick), filter var(--ease-quick), box-shadow var(--ease-quick);
+  --btn-border:     5px solid var(--clr-ink);
+  --shadow-btn:     0 16px 28px rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .30);
+
   display: block;
   min-height: 100dvh;
-  background-image: url('/Fondo-Principal.webp');
-  background-size: cover;
-  background-position: center;
-  font-family: 'Fredoka', Inter, system-ui, sans-serif;
+  background: url('/Fondo-Principal.webp') center / cover no-repeat;
+  font-family: var(--font-ui);
 }
 
 .admin-wrapper {
@@ -17,7 +89,6 @@
   --text:           #1b2237;
   --green:          #3a9f7a;
   --pill:           999px;
-  --transition-btn: transform 0.1s ease, filter 0.1s ease;
 
   height: 100dvh;
   box-sizing: border-box;
@@ -33,6 +104,7 @@
 .admin-titulo {
   margin: 0;
   text-align: center;
+  font-family:    var(--font-title);
   font-weight: 800;
   font-size: clamp(2.4rem, 5vw, 4.2rem);
   text-transform: uppercase;
@@ -69,7 +141,7 @@
   background: var(--card-bg);
   border: 3px solid var(--accent);
   color: var(--text);
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-title);
   font-weight: 700;
   font-size: 1.1rem;
   padding: 12px 24px;
@@ -180,30 +252,53 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* -- FOOTER ---------------------------------------- */
+/* ── Boto Sortir (fix baix centre) · vermell ──────── */
+/* Mateixos estats que menu-principal, info-usuari, motxilla, xuxedex */
 .admin-footer { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10; }
 
 .btn-salir {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 3px solid rgba(0, 0, 0, 0.85);
-  border-radius: var(--pill);
-  padding: 14px 32px;
-  background: #e46b5f;
-  color: #fff;
-  font-family: inherit;
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
-  white-space: nowrap;
-  transition: var(--transition-btn);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             10px;
+  padding:         18px 44px;
+  border-radius:   var(--pill);
+  background:      var(--clr-red-default);
+  border:          var(--btn-border);
+  color:           #101010;
+  font-family:     var(--font-ui);
+  font-weight:     900;
+  font-size:       1.12rem;
+  letter-spacing:  0.06em;
+  text-transform:  uppercase;
+  cursor:          pointer;
+  box-shadow:      var(--shadow-btn);
+  white-space:     nowrap;
+  transition:      var(--transition-btn);
 }
 
-.btn-salir:hover  { transform: translateY(-2px); filter: saturate(1.08); }
-.btn-salir:active { transform: scale(0.98); }
+.btn-salir:hover:not(:disabled) {
+  background: var(--clr-red-hover);
+  transform:  translateY(-2px);
+  box-shadow: 0 20px 34px rgba(0, 0, 0, .30), inset 0 2px 0 rgba(255, 255, 255, .28);
+}
+
+.btn-salir:active:not(:disabled) {
+  background: var(--clr-red-active);
+  transform:  translateY(0) scale(.98);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
+}
+
+.btn-salir:focus-visible { outline: 3px solid #8a38f5; outline-offset: 3px; }
+
+.btn-salir:disabled {
+  background:   var(--clr-red-disabled);
+  border-color: rgba(0, 0, 0, .25);
+  color:        rgba(0, 0, 0, .35);
+  cursor:       not-allowed;
+  box-shadow:   none;
+  transform:    none;
+}
 
 /* -- LLISTA USUARIS -------------------------------- */
 .lista-usuarios { display: flex; flex-direction: column; gap: 12px; }
@@ -324,7 +419,7 @@
 .btn-afegir-fila {
   padding: 9px 18px;
   font-size: 0.88rem;
-  background: var(--green);
+  background: var(--clr-green-default);
   color: #fff;
 }
 
@@ -340,15 +435,15 @@
 
 .btn-icon { font-size: 1em; line-height: 1; }
 
-.btn-xuxemon      { background: #f0a13a; color: #1a1000; }
-.btn-ver          { background: #9a5bb0; color: #fff; }
-.btn-inventari    { background: var(--green); color: #fff; width: 130px; }
-.btn-vacunes      { background: #2fa3c8; color: #fff; width: 130px; }
-.btn-fer-admin    { background: #7c4dff; color: #fff; }
-.btn-treure-admin { background: #f57c00; color: #fff; }
-.btn-deshabilitar { background: #e04040; color: #fff; }
+.btn-xuxemon      { background: var(--clr-orange-default);     color: #fff; }
+.btn-ver          { background: var(--clr-purple-default);     color: #fff; }
+.btn-inventari    { background: var(--clr-green-default);      color: #fff; width: 130px; }
+.btn-vacunes      { background: var(--clr-blue-default);       color: #fff; width: 130px; }
+.btn-fer-admin    { background: var(--clr-violet-default);     color: #fff; }
+.btn-treure-admin { background: var(--clr-deeporange-default); color: #fff; }
+.btn-deshabilitar { background: var(--clr-red-action);         color: #fff; }
 .btn-habilitar {
-  background: #3fb65c;
+  background: var(--clr-green-default);
   color: #fff;
   animation: pulso-habilitar 1.4s ease-in-out infinite;
   box-shadow: 0 0 0 0 rgba(63, 182, 92, 0.5);
@@ -379,11 +474,11 @@
 .usuari-deshabilitat-text {
   font-size: 13px;
   font-weight: 700;
-  color: #e04040;
+  color: var(--clr-red-action);
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
-.btn-config-save  { background: #4facfe; color: #fff; }
+.btn-config-save  { background: var(--clr-save-default); color: #fff; }
 
 /* -- MISSATGES ------------------------------------- */
 .mensaje {
