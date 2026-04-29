@@ -15,17 +15,23 @@
   --clr-text-dark:      #1e2a78;
   --clr-ink:            rgba(0, 0, 0, .82);
 
-  /* Boto Sortir (vermell) */
-  --clr-red-default:    #e26a5a;
-  --clr-red-hover:      #f08475;
-  --clr-red-active:     #c65142;
-  --clr-red-disabled:   #d0b5b1;
+  /* Boto Sortir (vermell suau) */
+  --clr-red-sortir:         #e26a5a;
+  --clr-red-sortir-hover:   #f08475;
+  --clr-red-sortir-active:  #c65142;
+  --clr-red-sortir-disabled:#d0b5b1;
 
-  /* Botons accions */
-  --clr-green:          #55AD3F;
-  --clr-green-hover:    #78C961;
-  --clr-red-action:     #e74c3c;
-  --clr-red-action-hover: #f06b5c;
+  /* Boto Enviar Sol·licitud i Acceptar (verd) */
+  --clr-green-default:      #21A631;
+  --clr-green-hover:        #41C853;
+  --clr-green-active:       #187A24;
+  --clr-green-disabled:     #A2BFA5;
+
+  /* Boto Cancelar / Eliminar (vermell viu) */
+  --clr-red-action:         #F22A0F;
+  --clr-red-action-hover:   #F5634D;
+  --clr-red-action-active:  #BA200C;
+  --clr-red-action-disabled:#D4B4B0;
 
   /* Tipografies */
   --font-title:   'Fredoka', system-ui, sans-serif;
@@ -384,12 +390,15 @@
 
 .btn-enviar-sol,
 .btn-acceptar {
-  background: var(--clr-green);
+  background: var(--clr-green-default);
   color:      #fff;
 }
 
 .btn-enviar-sol:hover,
 .btn-acceptar:hover  { background: var(--clr-green-hover); transform: translateY(-1px); }
+
+.btn-enviar-sol:active,
+.btn-acceptar:active { background: var(--clr-green-active); }
 
 .btn-cancellar,
 .btn-eliminar,
@@ -402,6 +411,10 @@
 .btn-eliminar:hover,
 .btn-confirmar-si:hover { background: var(--clr-red-action-hover); transform: translateY(-1px); }
 
+.btn-cancellar:active,
+.btn-eliminar:active,
+.btn-confirmar-si:active { background: var(--clr-red-action-active); }
+
 .btn-confirmar-no {
   background: #eee;
   color:      #333;
@@ -409,18 +422,23 @@
 
 .btn-confirmar-no:hover { filter: brightness(.96); }
 
-.btn-enviar-sol:active,
-.btn-acceptar:active,
-.btn-cancellar:active,
-.btn-eliminar:active,
-.btn-confirmar-si:active,
 .btn-confirmar-no:active { transform: translateY(0); }
 
 .btn-enviar-sol:disabled,
-.btn-acceptar:disabled,
+.btn-acceptar:disabled {
+  background:     var(--clr-green-disabled);
+  cursor:         not-allowed;
+  pointer-events: none;
+}
+
 .btn-cancellar:disabled,
 .btn-eliminar:disabled,
-.btn-confirmar-si:disabled,
+.btn-confirmar-si:disabled {
+  background:     var(--clr-red-action-disabled);
+  cursor:         not-allowed;
+  pointer-events: none;
+}
+
 .btn-confirmar-no:disabled {
   opacity:        .5;
   cursor:         not-allowed;
@@ -555,7 +573,7 @@
   gap:             10px;
   padding:         18px 44px;
   border-radius:   var(--radius-pill);
-  background:      var(--clr-red-default);
+  background:      var(--clr-red-sortir);
   border:          var(--btn-border);
   color:           #101010;
   font-family:     var(--font-ui);
@@ -571,13 +589,13 @@
 .sortir-btn img { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; pointer-events: none; }
 
 .sortir-btn:hover:not(:disabled) {
-  background: var(--clr-red-hover);
+  background: var(--clr-red-sortir-hover);
   transform:  translateY(-2px);
   box-shadow: 0 20px 34px rgba(0, 0, 0, .30), inset 0 2px 0 rgba(255, 255, 255, .28);
 }
 
 .sortir-btn:active:not(:disabled) {
-  background: var(--clr-red-active);
+  background: var(--clr-red-sortir-active);
   transform:  translateY(0) scale(.98);
   box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
 }
@@ -585,7 +603,7 @@
 .sortir-btn:focus-visible { outline: 3px solid #8a38f5; outline-offset: 3px; }
 
 .sortir-btn:disabled {
-  background:   var(--clr-red-disabled);
+  background:   var(--clr-red-sortir-disabled);
   border-color: rgba(0, 0, 0, .25);
   color:        rgba(0, 0, 0, .35);
   cursor:       not-allowed;
