@@ -235,6 +235,39 @@
   text-shadow:    0 2px 0 rgba(255, 255, 255, .92), 0 8px 16px rgba(0, 0, 0, .10);
 }
 
+/* ── Botons desactivats (Pròximament) ────────────────── */
+.btn-menu--aviat {
+  opacity: 0.48;
+  cursor: not-allowed;
+  filter: grayscale(0.45);
+}
+
+.btn-menu--aviat:hover {
+  transform: none;
+  box-shadow: 0 12px 22px rgba(0, 0, 0, .16);
+  filter: grayscale(0.45);
+}
+
+.btn-menu--aviat:active { transform: none; }
+
+.badge-aviat {
+  position:      absolute;
+  bottom:        10px;
+  left:          50%;
+  transform:     translateX(-50%);
+  background:    rgba(20, 30, 80, .72);
+  color:         #fff;
+  font-family:   var(--font-ui);
+  font-weight:   var(--fw-bold);
+  font-size:     0.62rem;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding:       3px 11px;
+  border-radius: var(--radius-pill);
+  white-space:   nowrap;
+  pointer-events: none;
+}
+
 /* ── Badge de notificació ────────────────────────────── */
 .badge-notif {
   position:    absolute;

@@ -226,10 +226,10 @@
   <nav class="paginacion" aria-label="Paginació">
     <button type="button" (click)="paginaAnterior()" [disabled]="paginaActual === 0" aria-label="Pàgina anterior">&larr;
       Anterior</button>
-    <span aria-live="polite">Pagina {{ paginaActual + 1 }} / {{ getTotalPagines(xuxemons) }}</span>
+    <span aria-live="polite">Pàgina {{ paginaActual + 1 }} / {{ getTotalPagines(xuxemons) }}</span>
     <button type="button" (click)="paginaSiguiente(xuxemons)" [disabled]="paginaActual >= getTotalPagines(xuxemons) - 1"
       aria-label="Pàgina següent">
-      Seguent &rarr;
+      Següent &rarr;
     </button>
   </nav>
   }

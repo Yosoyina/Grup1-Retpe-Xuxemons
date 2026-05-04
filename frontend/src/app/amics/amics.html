@@ -34,8 +34,8 @@
 
     <div class="amics-grid">
       <div class="columna-esq">
-        <section class="seccio" aria-label="Sol licituds d'amistat">
-          <h2 class="seccio-titol">SOL LICITUDS D'AMISTAT</h2>
+        <section class="seccio" aria-label="Sol·licituds d'amistat">
+          <h2 class="seccio-titol">SOL·LICITUDS D'AMISTAT</h2>
 
           <ul class="llista-cards" aria-live="polite">
             @if ((cercaBusqueda.value?.trim()?.length ?? 0) < 3 && resultatsCerca.length === 0) {
@@ -60,8 +60,8 @@
                   type="button"
                   class="btn-enviar-sol"
                   (click)="enviarPeticio(usuari)"
-                  aria-label="Enviar solicitud d'amistat a {{ usuari.nombre }}">
-                  ENVIAR SOL LICITUD
+                  aria-label="Enviar sol·licitud d'amistat a {{ usuari.nombre }}">
+                  ENVIAR SOL·LICITUD
                 </button>
                 }
               </div>
@@ -70,17 +70,17 @@
           </ul>
         </section>
 
-        <section class="seccio" aria-label="Sol licituds d'amistat rebudes">
+        <section class="seccio" aria-label="Sol·licituds d'amistat rebudes">
           <h2 class="seccio-titol">
-            SOL LICITUDS REBUDES
+            SOL·LICITUDS REBUDES
             @if (peticionsRebudes.length > 0) {
-            <span class="badge-num" aria-label="{{ peticionsRebudes.length }} sol licituds pendents">{{ peticionsRebudes.length }}</span>
+            <span class="badge-num" aria-label="{{ peticionsRebudes.length }} sol·licituds pendents">{{ peticionsRebudes.length }}</span>
             }
           </h2>
 
           <ul class="llista-cards">
             @if (peticionsRebudes.length === 0) {
-            <li class="card-buit">No tens sol licituds pendents.</li>
+            <li class="card-buit">No tens sol·licituds pendents.</li>
             }
             @for (peticio of peticionsRebudes; track peticio.id) {
             <li class="card-usuari">
@@ -93,15 +93,15 @@
                   type="button"
                   class="btn-acceptar"
                   (click)="acceptarPeticio(peticio)"
-                  aria-label="Acceptar solicitud d'amistat de {{ peticio.remitente.nombre }}">
+                  aria-label="Acceptar sol·licitud d'amistat de {{ peticio.remitente.nombre }}">
                   ACCEPTAR
                 </button>
                 <button
                   type="button"
                   class="btn-cancellar"
                   (click)="rebutjarPeticio(peticio)"
-                  aria-label="Rebutjar solicitud de {{ peticio.remitente.nombre }}">
-                  CANCEL LAR
+                  aria-label="Rebutjar sol·licitud de {{ peticio.remitente.nombre }}">
+                  CANCEL·LAR
                 </button>
               </div>
             </li>

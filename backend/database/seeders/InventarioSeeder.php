@@ -23,9 +23,9 @@ class InventarioSeeder extends Seeder
                 'apilable'     => true,
             ],
             [
-                'nombre_xuxes' => "Xucolate",
+                'nombre_xuxes' => "Xocolata",
                 'descripcio'   => 'Una xuxa sòlida com una roca.',
-                'imagen'       => 'Imatges/Xuxes/Xucolate.webp',
+                'imagen'       => 'Imatges/Xuxes/Xocolata.webp',
                 'apilable'     => true,
             ],
             [

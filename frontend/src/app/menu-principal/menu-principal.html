@@ -1,10 +1,10 @@
 <!-- menu-principal.component.html -->
 <section class="menu-general-container" aria-labelledby="menu-title">
   @if (hasRewardInfo()) {
-    <button class="reward-menu-button" type="button" (click)="openRewardModal()" aria-label="Abrir recompensa diaria">
-      <img src="/regalo.webp" alt="Regalo diario" />
+    <button class="reward-menu-button" type="button" (click)="openRewardModal()" aria-label="Obrir recompensa diària">
+      <img src="/regalo.webp" alt="Regal diari" />
       @if (dailyReward?.granted) {
-        <span class="reward-menu-badge">Nuevo</span>
+        <span class="reward-menu-badge">Nou</span>
       }
     </button>
   }
@@ -40,13 +40,13 @@
       </button>
 
       <!-- BATALLA -->
-      <button class="btn-menu" routerLink="/batalla">
+      <button class="btn-menu btn-menu--aviat" disabled title="Pròximament disponible">
         <img src="/Batalla.webp" alt="Batalla" />
         <span>BATALLA</span>
       </button>
 
       <!-- XAT -->
-      <button class="btn-menu" routerLink="/xat">
+      <button class="btn-menu btn-menu--aviat" disabled title="Pròximament disponible">
         <img src="/Xat.webp" alt="Xat" />
         <span>XAT</span>
       </button>
