@@ -80,18 +80,18 @@
 @if (rewardModalVisible && dailyReward) {
 <div class="reward-modal-overlay" (click)="closeRewardModal()">
   <div class="reward-modal" (click)="$event.stopPropagation()">
-    <div class="reward-badge">Recompensa diaria</div>
+    <div class="reward-badge">Recompensa diària</div>
     <h2>{{ getRewardTitle() }}</h2>
     <p class="reward-text">{{ getRewardMessage() }}</p>
 
     @if (!dailyReward.granted && nextRewardCountdown) {
     <p class="reward-next-time">
-      Siguiente regalo en {{ nextRewardCountdown }}
+      Següent regal en {{ nextRewardCountdown }}
     </p>
     }
 
     <div class="reward-section">
-      <h3>Xuxes obtenidas</h3>
+      <h3>Xuxes obtingudes</h3>
       @if (dailyReward.xuxes.length > 0) {
       <div class="reward-xuxes-grid">
         @for (xuxe of dailyReward.xuxes; track xuxe.id) {
@@ -100,18 +100,18 @@
           <strong>{{ xuxe.nombre_xuxes }}</strong>
           <span>x{{ xuxe.cantidad }}</span>
           @if (xuxe.discarded > 0) {
-          <small>{{ xuxe.discarded }} descartadas por falta de espacio</small>
+          <small>{{ xuxe.discarded }} descartades per falta d'espai</small>
           }
         </article>
         }
       </div>
       } @else {
-      <p class="reward-empty-text">Todavía no hay resumen de xuxes para mostrar.</p>
+      <p class="reward-empty-text">Encara no hi ha resum de xuxes per mostrar.</p>
       }
     </div>
 
     <div class="reward-section reward-xuxemon-section">
-      <h3>Xuxemon pequeño</h3>
+      <h3>Xuxemon petit</h3>
       @if (dailyReward.xuxemon) {
       <article class="reward-xuxemon-card">
         <img [src]="getRewardImage(dailyReward.xuxemon.imagen)" [alt]="dailyReward.xuxemon.nombre_xuxemon" loading="lazy" decoding="async">
@@ -121,13 +121,13 @@
         </div>
       </article>
       } @else {
-      <p class="reward-empty-text">Ya tenías todos los Xuxemon pequeños desbloqueados.</p>
+      <p class="reward-empty-text">Ja tenies tots els Xuxemon petits desbloquejats.</p>
       }
     </div>
 
     @if (dailyReward.xuxes_discarded > 0) {
     <p class="reward-warning">
-      Algunas xuxes no han cabido en la mochila y se han descartado.
+      Algunes xuxes no han cabut a la motxilla i s'han descartat.
     </p>
     }
 

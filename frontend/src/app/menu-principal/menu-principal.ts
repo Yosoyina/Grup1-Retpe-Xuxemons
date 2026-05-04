@@ -77,88 +77,88 @@ export class MenuPrincipal implements OnInit, OnDestroy {
   }
 
   getRewardTitle(): string {
-    return this.dailyReward?.granted ? 'Has recibido tu premio de hoy' : 'Recompensa diaria';
+  return this.dailyReward?.granted ? 'Has rebut el teu premi d’avui' : 'Recompensa diària';
+}
+
+getRewardMessage(): string {
+  if (!this.dailyReward) {
+    return '';
   }
 
-  getRewardMessage(): string {
-    if (!this.dailyReward) {
-      return '';
+  if (this.dailyReward.granted) {
+    return this.dailyReward.xuxemon
+      ? `Avui t’han tocat ${this.dailyReward.xuxes_added} xuxes i un Xuxemon petit nou.`
+      : `Avui t’han tocat ${this.dailyReward.xuxes_added} xuxes. No hi ha cap Xuxemon nou perquè ja tens tots els petits desbloquejats.`;
+  }
+
+  return this.nextRewardCountdown
+    ? `Ja has reclamat la recompensa d’avui. La següent arriba en ${this.nextRewardCountdown}.`
+    : 'Ja has reclamat la recompensa d’avui.';
+}
+
+// Función para cerrar sesión
+logout() {
+  this.authService.logout().subscribe({
+    next: () => this.router.navigate(['/login']),
+    error: () => {
+      localStorage.removeItem('token');
+      this.router.navigate(['/login']);
     }
+  });
+}
 
-    if (this.dailyReward.granted) {
-      return this.dailyReward.xuxemon
-        ? `Hoy te han tocado ${this.dailyReward.xuxes_added} xuxes y un Xuxemon pequeño nuevo.`
-        : `Hoy te han tocado ${this.dailyReward.xuxes_added} xuxes. No hay Xuxemon nuevo porque ya tienes todos los pequeños desbloqueados.`;
-    }
-
-    return this.nextRewardCountdown
-      ? `Ya has reclamado la recompensa de hoy. La siguiente llega en ${this.nextRewardCountdown}.`
-      : 'Ya has reclamado la recompensa de hoy.';
-  }
-
-  // Función para cerrar sesión
-  logout() {
-    this.authService.logout().subscribe({
-      next: () => this.router.navigate(['/login']),
-      error: () => {
-        localStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      }
-    });
-  }
-
-  private checkDailyReward() {
-    this.rewardService.claimDailyReward().subscribe({
-      next: (response) => {
-        this.dailyReward = response;
-        this.rewardModalVisible = response.granted;
-        this.updateRewardCountdown();
-
-        if (response.granted) {
-          this.inventarioService.cargarInventario();
-        }
-
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error obteniendo la recompensa diaria:', error);
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  private startRewardCountdown(): void {
-    this.updateRewardCountdown();
-
-    this.countdownIntervalId = setInterval(() => {
+private checkDailyReward() {
+  this.rewardService.claimDailyReward().subscribe({
+    next: (response) => {
+      this.dailyReward = response;
+      this.rewardModalVisible = response.granted;
       this.updateRewardCountdown();
+
+      if (response.granted) {
+        this.inventarioService.cargarInventario();
+      }
+
       this.cdr.detectChanges();
-    }, 60000);
+    },
+    error: (error) => {
+      console.error('Error obtenint la recompensa diària:', error);
+      this.cdr.detectChanges();
+    }
+  });
+}
+
+private startRewardCountdown(): void {
+  this.updateRewardCountdown();
+
+  this.countdownIntervalId = setInterval(() => {
+    this.updateRewardCountdown();
+    this.cdr.detectChanges();
+  }, 60000);
+}
+
+private updateRewardCountdown(): void {
+  if (!this.dailyReward?.next_available_at) {
+    this.nextRewardCountdown = '';
+    return;
   }
 
-  private updateRewardCountdown(): void {
-    if (!this.dailyReward?.next_available_at) {
-      this.nextRewardCountdown = '';
-      return;
-    }
+  const nextRewardTime = new Date(this.dailyReward.next_available_at).getTime();
+  const remainingMs = nextRewardTime - Date.now();
 
-    const nextRewardTime = new Date(this.dailyReward.next_available_at).getTime();
-    const remainingMs = nextRewardTime - Date.now();
-
-    if (remainingMs <= 0) {
-      this.nextRewardCountdown = 'muy poco';
-      return;
-    }
-
-    const totalMinutes = Math.floor(remainingMs / 60000);
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    if (hours <= 0) {
-      this.nextRewardCountdown = `${minutes} min`;
-      return;
-    }
-
-    this.nextRewardCountdown = `${hours} h ${minutes} min`;
+  if (remainingMs <= 0) {
+    this.nextRewardCountdown = 'molt poc';
+    return;
   }
+
+  const totalMinutes = Math.floor(remainingMs / 60000);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours <= 0) {
+    this.nextRewardCountdown = `${minutes} min`;
+    return;
+  }
+
+  this.nextRewardCountdown = `${hours} h ${minutes} min`;
+}
 }
