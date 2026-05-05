@@ -92,6 +92,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Aquest compte ha estat inhabilitat'], 403);
         }
 
+        //Se guarda el tokken
         $token = Auth::guard('api')->login($user);
 
         return response()->json([
