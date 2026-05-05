@@ -18,11 +18,12 @@ class UserSeeder extends Seeder
         $xuxedexService = app(XuxedexService::class);
 
         $admin = User::create([
-            'nombre'    => 'admin',
-            'apellidos' => 'admin',
-            'email'     => 'admin@gmail.com',
-            'password'  => Hash::make('password'),
-            'role'      => 'admin',
+            'nombre'      => 'admin',
+            'apellidos'   => 'admin',
+            'id_jugador'  => '#admin0000',
+            'email'       => 'admin@gmail.com',
+            'password'    => Hash::make('password'),
+            'role'        => 'admin',
         ]);
         $xuxedexService->ensureStarterXuxedex($admin->id);
 
